@@ -174,6 +174,16 @@ Metinler değişince resx dosyalarını yeniden üret (elle düzenlenmiyorlar):
 python tools/build_strings.py content/strings.tsv src/Ploofy.App/Resources/Strings
 ```
 
+## İlerleme notu
+
+Nerede kalındığı ve sıradaki işler `ilerleme notu.docx` içinde; **her oturum
+sonunda güncelleniyor.** Kaynağı `content/ilerleme-notu.md` — docx üretilen
+çıktı, elle düzenlenmiyor:
+
+```bash
+python tools/build_progress_note.py
+```
+
 ## Yol haritası
 
 - **Faz 1 — İskelet.** Motor + veri katmanı + testler ✅ · MAUI kabuğu, üç dil,
