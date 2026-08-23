@@ -2,13 +2,18 @@
 <!--
     Ploofy ortak stilleri.
 
-    İki kural bütün ekranlarda geçerli:
+    Dört kural bütün ekranlarda geçerli:
 
     1. Dokunma hedefi en az 64 birim. Küçük çocuğun parmağı büyük, isabeti
        düşük; standart 44'lük hedef bu yaş grubunda sürekli ıskalanıyor.
-    2. Yazı büyük ve kalın. Fidan bandında yeni okumaya başlayan çocuk
-       küçük punto ile takılıyor, Filiz bandında yazı zaten okunmuyor —
-       ikisi de büyük puntodan zarar görmüyor.
+    2. Yazı büyük ve kalın. Fidan bandında yeni okumaya başlayan çocuk küçük
+       punto ile takılıyor, Filiz bandında yazı zaten okunmuyor — ikisi de
+       büyük puntodan zarar görmüyor.
+    3. Hiçbir yüzey düz renk değil. Degrade ve gölge, kutucuğu "basılı bir
+       resim" olmaktan çıkarıp dokunulacak bir nesneye çeviriyor; bu yaş
+       grubunun beklediği görsel dil bu.
+    4. Köşeler cömertçe yuvarlak. Keskin köşe bu kategoride "ciddi uygulama"
+       hissi veriyor.
 -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -18,8 +23,65 @@
     <x:Double x:Key="TouchTargetLarge">96</x:Double>
     <Thickness x:Key="PagePadding">20</Thickness>
 
+    <!-- ============ Degradeler ============ -->
+
+    <!-- Sayfa zemini: sıcak üstten serin alta, gökyüzü gibi. -->
+    <LinearGradientBrush x:Key="PageBackdrop" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFF6E4" Offset="0.0" />
+        <GradientStop Color="#FFEDF3" Offset="0.55" />
+        <GradientStop Color="#E6F3FF" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PlayBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#7BE06A" Offset="0.0" />
+        <GradientStop Color="#3FA84E" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="AccentBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFB03A" Offset="0.0" />
+        <GradientStop Color="#FF7A2F" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="QuietBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0.0" />
+        <GradientStop Color="#EFE3D2" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- Oyun kutucuklarının zeminleri; katalog sırasına göre dönüşümlü. -->
+    <LinearGradientBrush x:Key="Card1Brush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFE9A8" Offset="0.0" />
+        <GradientStop Color="#FFC145" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Card2Brush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#C8F0BE" Offset="0.0" />
+        <GradientStop Color="#63C96C" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Card3Brush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#C6E7FA" Offset="0.0" />
+        <GradientStop Color="#54B4EC" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Card4Brush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFD0DF" Offset="0.0" />
+        <GradientStop Color="#FF83AE" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Card5Brush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#DFD1FA" Offset="0.0" />
+        <GradientStop Color="#9E7BEE" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Card6Brush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFDCC2" Offset="0.0" />
+        <GradientStop Color="#FF9457" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- ============ Gölgeler ============ -->
+
+    <Shadow x:Key="SoftShadow" Brush="#38402A1E" Offset="0,6" Radius="14" Opacity="0.55" />
+    <Shadow x:Key="LiftShadow" Brush="#48402A1E" Offset="0,10" Radius="20" Opacity="0.6" />
+
+    <!-- ============ Temel ============ -->
+
     <Style TargetType="Page" ApplyToDerivedTypes="True">
-        <Setter Property="BackgroundColor" Value="{StaticResource Canvas}" />
+        <Setter Property="Background" Value="{StaticResource PageBackdrop}" />
         <Setter Property="Padding" Value="0" />
     </Style>
 
@@ -30,7 +92,7 @@
 
     <Style x:Key="TitleLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource Ink}" />
-        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontSize" Value="34" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
@@ -45,32 +107,60 @@
         <Setter Property="FontSize" Value="16" />
     </Style>
 
-    <!-- Ana eylem düğmesi. Çocuğun bastığı her düğme bu ölçüde. -->
+    <!-- ============ Düğmeler ============ -->
+
+    <!-- Ana eylem düğmesi. Çocuğun bastığı her düğme bu ölçüde ve bu ağırlıkta. -->
     <Style x:Key="BigButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource Leaf}" />
+        <Setter Property="Background" Value="{StaticResource PlayBrush}" />
         <Setter Property="TextColor" Value="{StaticResource OnAccent}" />
         <Setter Property="FontSize" Value="22" />
         <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="CornerRadius" Value="28" />
+        <Setter Property="CornerRadius" Value="30" />
         <Setter Property="HeightRequest" Value="{StaticResource TouchTarget}" />
         <Setter Property="Padding" Value="28,0" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="Shadow" Value="{StaticResource SoftShadow}" />
     </Style>
 
     <Style x:Key="QuietButton" TargetType="Button" BasedOn="{StaticResource BigButton}">
-        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceMuted}" />
+        <Setter Property="Background" Value="{StaticResource QuietBrush}" />
         <Setter Property="TextColor" Value="{StaticResource Ink}" />
     </Style>
 
     <Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource BigButton}">
-        <Setter Property="BackgroundColor" Value="{StaticResource Coral}" />
+        <Setter Property="Background" Value="{StaticResource AccentBrush}" />
     </Style>
 
-    <!-- Kart yüzeyi: oyun kutucukları, profil kartları, sonuç paneli -->
+    <!-- Yuvarlak ikon düğmesi: ayarlar dişlisi, çıkış çarpısı. -->
+    <Style x:Key="RoundIconButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource QuietBrush}" />
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="WidthRequest" Value="{StaticResource TouchTarget}" />
+        <Setter Property="HeightRequest" Value="{StaticResource TouchTarget}" />
+        <Setter Property="CornerRadius" Value="32" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="Shadow" Value="{StaticResource SoftShadow}" />
+    </Style>
+
+    <!-- ============ Yüzeyler ============ -->
+
     <Style x:Key="CardBorder" TargetType="Border">
         <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
         <Setter Property="Stroke" Value="Transparent" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 26" />
         <Setter Property="Padding" Value="16" />
+        <Setter Property="Shadow" Value="{StaticResource SoftShadow}" />
+    </Style>
+
+    <!-- Oyun kutucuğu: kart yüzeyinin daha yüksek, daha renkli hâli. -->
+    <Style x:Key="TileBorder" TargetType="Border">
+        <Setter Property="Stroke" Value="#40FFFFFF" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 28" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Shadow" Value="{StaticResource LiftShadow}" />
     </Style>
 
 </ResourceDictionary>

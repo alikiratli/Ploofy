@@ -11,9 +11,9 @@
     <ContentPage.Resources>
         <!-- Eğlendirici ve öğretici bölümler aynı kutucuğu kullanıyor. -->
         <DataTemplate x:Key="GameTileTemplate" x:DataType="vm:GameTile">
-            <Border Style="{StaticResource CardBorder}"
-                    BackgroundColor="{Binding Background}"
-                    HeightRequest="150"
+            <Border Style="{StaticResource TileBorder}"
+                    Background="{Binding Background}"
+                    HeightRequest="164"
                     Opacity="{Binding TileOpacity}">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer
@@ -22,44 +22,75 @@
                 </Border.GestureRecognizers>
 
                 <Grid RowDefinitions="*,Auto">
-                    <Label Grid.Row="0"
-                           Text="{Binding Glyph}"
-                           FontSize="46"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
 
-                    <!-- Kilit rozeti: okuma bilmeyen çocuk için asma kilit,
-                         okuyan ebeveyn için metin. -->
-                    <Label Grid.Row="0"
-                           Text="🔒"
-                           FontSize="28"
-                           HorizontalOptions="End"
-                           VerticalOptions="Start"
-                           IsVisible="{Binding IsLocked}" />
+                    <!-- Simgenin altındaki açık daire: simgeyi renkli zeminden
+                         ayırıyor ve kutucuğa derinlik veriyor. -->
+                    <Border Grid.Row="0"
+                            WidthRequest="86"
+                            HeightRequest="86"
+                            Padding="0"
+                            StrokeThickness="0"
+                            BackgroundColor="#59FFFFFF"
+                            StrokeShape="RoundRectangle 43"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                        <Label Text="{Binding Glyph}"
+                               FontSize="44"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
 
-                    <Label Grid.Row="0"
-                           Text="{loc:Translate GameFree}"
-                           Style="{StaticResource HintLabel}"
-                           HorizontalOptions="Start"
-                           VerticalOptions="Start"
-                           IsVisible="{Binding ShowsFreeBadge}" />
+                    <!-- Kilit rozeti: okuma bilmeyen çocuk için asma kilit. -->
+                    <Border Grid.Row="0"
+                            IsVisible="{Binding IsLocked}"
+                            WidthRequest="38"
+                            HeightRequest="38"
+                            Padding="0"
+                            StrokeThickness="0"
+                            BackgroundColor="#D9FFFFFF"
+                            StrokeShape="RoundRectangle 19"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start">
+                        <Label Text="🔒" FontSize="19" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
 
-                    <Label Grid.Row="0"
-                           Text="{loc:Translate ComingSoon}"
-                           Style="{StaticResource HintLabel}"
-                           HorizontalOptions="End"
-                           VerticalOptions="Start"
-                           IsVisible="{Binding ShowsComingSoon}" />
+                    <Border Grid.Row="0"
+                            IsVisible="{Binding ShowsFreeBadge}"
+                            Padding="8,3"
+                            StrokeThickness="0"
+                            BackgroundColor="#E6FFFFFF"
+                            StrokeShape="RoundRectangle 12"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Start">
+                        <Label Text="{loc:Translate GameFree}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Ink}" />
+                    </Border>
 
-                    <VerticalStackLayout Grid.Row="1" Spacing="2">
+                    <Border Grid.Row="0"
+                            IsVisible="{Binding ShowsComingSoon}"
+                            Padding="8,3"
+                            StrokeThickness="0"
+                            BackgroundColor="#D9FFFFFF"
+                            StrokeShape="RoundRectangle 12"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start">
+                        <Label Text="{loc:Translate ComingSoon}"
+                               FontSize="12"
+                               TextColor="{StaticResource Ink}" />
+                    </Border>
+
+                    <VerticalStackLayout Grid.Row="1" Spacing="3">
                         <Label Text="{Binding Name}"
                                FontSize="16"
                                FontAttributes="Bold"
+                               TextColor="{StaticResource Ink}"
                                HorizontalTextAlignment="Center"
                                MaxLines="2"
                                LineBreakMode="TailTruncation" />
                         <ui:StarRow Stars="{Binding Stars}"
-                                    StarSize="14"
+                                    StarSize="15"
                                     HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Grid>
@@ -67,24 +98,44 @@
         </DataTemplate>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*" Padding="{StaticResource PagePadding}" RowSpacing="12">
+    <Grid RowDefinitions="Auto,*" Padding="{StaticResource PagePadding}" RowSpacing="14">
 
         <!-- Üst şerit: kim oynuyor, kaç yıldızı var -->
-        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Padding="12">
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Padding="14,10">
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding SwitchProfileCommand}" />
             </Border.GestureRecognizers>
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                <Label Grid.Column="0" Text="{Binding ChildAvatar}" FontSize="34" VerticalOptions="Center" />
+                <Border Grid.Column="0"
+                        WidthRequest="52"
+                        HeightRequest="52"
+                        Padding="0"
+                        StrokeThickness="0"
+                        Background="{StaticResource Card3Brush}"
+                        StrokeShape="RoundRectangle 26">
+                    <Label Text="{Binding ChildAvatar}"
+                           FontSize="28"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+
                 <Label Grid.Column="1"
                        Text="{Binding ChildName}"
                        FontSize="22"
                        FontAttributes="Bold"
                        VerticalOptions="Center" />
-                <Label Grid.Column="2"
-                       Text="{Binding TotalStars, Converter={StaticResource FormatWith}, ConverterParameter=TotalStars}"
-                       Style="{StaticResource HintLabel}"
-                       VerticalOptions="Center" />
+
+                <Border Grid.Column="2"
+                        Padding="12,6"
+                        StrokeThickness="0"
+                        Background="{StaticResource Card1Brush}"
+                        StrokeShape="RoundRectangle 18"
+                        VerticalOptions="Center">
+                    <Label Text="{Binding TotalStars, Converter={StaticResource FormatWith}, ConverterParameter=TotalStars}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Ink}" />
+                </Border>
             </Grid>
         </Border>
 
@@ -100,22 +151,22 @@
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical"
                                          Span="2"
-                                         HorizontalItemSpacing="12"
-                                         VerticalItemSpacing="12" />
+                                         HorizontalItemSpacing="14"
+                                         VerticalItemSpacing="14" />
                     </CollectionView.ItemsLayout>
                 </CollectionView>
 
                 <Label Text="{loc:Translate SectionEducational}"
                        Style="{StaticResource SectionLabel}"
-                       IsVisible="{Binding EducationalGames.Count}" />
+                       IsVisible="{Binding HasEducationalGames}" />
                 <CollectionView ItemsSource="{Binding EducationalGames}"
                                 ItemTemplate="{StaticResource GameTileTemplate}"
                                 SelectionMode="None">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical"
                                          Span="2"
-                                         HorizontalItemSpacing="12"
-                                         VerticalItemSpacing="12" />
+                                         HorizontalItemSpacing="14"
+                                         VerticalItemSpacing="14" />
                     </CollectionView.ItemsLayout>
                 </CollectionView>
 

@@ -51,8 +51,8 @@ public static class GamePresentation
     };
 
     /// <summary>
-    /// Kart zemin rengi. Katalogdaki sıraya göre dönüşümlü: aynı ekranda
-    /// yan yana gelen iki kart hiçbir zaman aynı renkte olmuyor.
+    /// Kutucuğun degrade zemininin kaynak anahtarı. Katalogdaki sıraya göre
+    /// dönüşümlü: aynı ekranda yan yana gelen iki kutucuk aynı renkte olmuyor.
     /// </summary>
     public static string BackgroundKey(string gameId)
     {
@@ -66,7 +66,7 @@ public static class GamePresentation
             }
         }
 
-        return $"Card{(index % 6) + 1}";
+        return $"Card{(index % 6) + 1}Brush";
     }
 
     /// <summary>
@@ -76,6 +76,7 @@ public static class GamePresentation
     public static string? Route(string gameId) => gameId switch
     {
         GameCatalog.MemoryMatch => "memorymatch",
+        GameCatalog.BubblePop => "bubblepop",
         _ => null,
     };
 

@@ -23,17 +23,10 @@ public sealed partial class MemoryCardVm(int index, string symbol) : ObservableO
     public string Symbol { get; } = symbol;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Face))]
-    [NotifyPropertyChangedFor(nameof(IsFaceDown))]
     public partial bool IsRevealed { get; set; }
 
     [ObservableProperty]
     public partial bool IsMatched { get; set; }
-
-    /// <summary>Kapalı kartta sembol görünmüyor — ezberlenecek şey bu.</summary>
-    public string Face => IsRevealed ? Symbol : string.Empty;
-
-    public bool IsFaceDown => !IsRevealed;
 }
 
 /// <summary>

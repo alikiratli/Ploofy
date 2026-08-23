@@ -8,60 +8,84 @@
              x:Class="Ploofy.App.Views.RoundResultPage"
              x:DataType="vm:RoundResultViewModel">
 
-    <Grid RowDefinitions="*,Auto" Padding="{StaticResource PagePadding}" RowSpacing="20">
+    <Grid>
+        <Grid RowDefinitions="*,Auto" Padding="{StaticResource PagePadding}" RowSpacing="20">
 
-        <VerticalStackLayout Grid.Row="0" VerticalOptions="Center" Spacing="20">
+            <VerticalStackLayout Grid.Row="0" VerticalOptions="Center" Spacing="18">
 
-            <Label Text="🎉" FontSize="72" HorizontalOptions="Center" />
+                <!-- Kupa, açılışta yaylanarak büyüyor (kod arkası). -->
+                <Label x:Name="Trophy"
+                       Text="🏆"
+                       FontSize="82"
+                       HorizontalOptions="Center" />
 
-            <Label Text="{Binding Headline}"
-                   Style="{StaticResource TitleLabel}"
-                   HorizontalTextAlignment="Center" />
+                <Label Text="{Binding Headline}"
+                       Style="{StaticResource TitleLabel}"
+                       HorizontalTextAlignment="Center" />
 
-            <Label Text="{Binding GameName}"
-                   Style="{StaticResource HintLabel}"
-                   HorizontalTextAlignment="Center" />
+                <Label Text="{Binding GameName}"
+                       Style="{StaticResource HintLabel}"
+                       HorizontalTextAlignment="Center" />
 
-            <!-- Tek kişilik: yalnızca yıldızlar, kıyas yok. -->
-            <ui:StarRow Stars="{Binding SoloStars}"
-                        StarSize="52"
-                        HorizontalOptions="Center"
-                        IsVisible="{Binding IsMultiplayer, Converter={StaticResource Not}}" />
+                <!-- Tek kişilik: yalnızca yıldızlar, kıyas yok. -->
+                <ui:StarRow x:Name="SoloStars"
+                            Stars="{Binding SoloStars}"
+                            StarSize="56"
+                            HorizontalOptions="Center"
+                            IsVisible="{Binding IsMultiplayer, Converter={StaticResource Not}}" />
 
-            <!-- Sıralı oyun: iki çocuğun satırı yan yana. -->
-            <CollectionView ItemsSource="{Binding Players}"
-                            SelectionMode="None"
-                            IsVisible="{Binding IsMultiplayer}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="services:PlayerResult">
-                        <Border Style="{StaticResource CardBorder}" Margin="0,0,0,8">
-                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                <Label Grid.Column="0" Text="{Binding AvatarId}" FontSize="32" VerticalOptions="Center" />
-                                <Label Grid.Column="1"
-                                       Text="{Binding DisplayName}"
-                                       FontSize="20"
-                                       FontAttributes="Bold"
-                                       VerticalOptions="Center" />
-                                <ui:StarRow Grid.Column="2"
-                                            Stars="{Binding Stars}"
-                                            StarSize="24"
-                                            VerticalOptions="Center" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                <!-- Sıralı oyun: iki çocuğun satırı yan yana. -->
+                <CollectionView ItemsSource="{Binding Players}"
+                                SelectionMode="None"
+                                IsVisible="{Binding IsMultiplayer}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="services:PlayerResult">
+                            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Border Grid.Column="0"
+                                            WidthRequest="50"
+                                            HeightRequest="50"
+                                            Padding="0"
+                                            StrokeThickness="0"
+                                            Background="{StaticResource Card4Brush}"
+                                            StrokeShape="RoundRectangle 25">
+                                        <Label Text="{Binding AvatarId}"
+                                               FontSize="26"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
 
-        </VerticalStackLayout>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding DisplayName}"
+                                           FontSize="20"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center" />
 
-        <VerticalStackLayout Grid.Row="1" Spacing="10">
-            <Button Text="{loc:Translate PlayAgain}"
-                    Style="{StaticResource BigButton}"
-                    Command="{Binding PlayAgainCommand}" />
-            <Button Text="{loc:Translate BackToGames}"
-                    Style="{StaticResource QuietButton}"
-                    Command="{Binding BackToGamesCommand}" />
-        </VerticalStackLayout>
+                                    <ui:StarRow Grid.Column="2"
+                                                Stars="{Binding Stars}"
+                                                StarSize="26"
+                                                VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Row="1" Spacing="10">
+                <Button Text="{loc:Translate PlayAgain}"
+                        Style="{StaticResource BigButton}"
+                        Command="{Binding PlayAgainCommand}" />
+                <Button Text="{loc:Translate BackToGames}"
+                        Style="{StaticResource QuietButton}"
+                        Command="{Binding BackToGamesCommand}" />
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <!-- Konfeti en üstte ve dokunuşları geçiriyor; altındaki düğmeler
+             çalışmaya devam ediyor. -->
+        <ui:ConfettiView x:Name="Confetti" InputTransparent="True" />
     </Grid>
 </ContentPage>

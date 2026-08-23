@@ -87,6 +87,9 @@ public static class MauiProgram
         services.AddTransient<MemoryMatchPage>();
         services.AddTransient<MemoryMatchViewModel>();
 
+        services.AddTransient<BubblePopPage>();
+        services.AddTransient<BubblePopViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 

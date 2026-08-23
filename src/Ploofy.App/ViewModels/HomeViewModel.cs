@@ -26,11 +26,11 @@ public sealed class GameTile(
 
     public string Glyph => GamePresentation.Glyph(Game.Id);
 
-    public Color Background =>
+    public Brush Background =>
         Application.Current?.Resources.TryGetValue(
             GamePresentation.BackgroundKey(Game.Id), out var value) == true
-            ? (Color)value
-            : Colors.White;
+            ? (Brush)value
+            : Brush.White;
 
     /// <summary>Bu bantta bu oyundan alınmış en iyi yıldız.</summary>
     public int Stars { get; } = stars;
@@ -70,6 +70,13 @@ public sealed partial class HomeViewModel(
 
     [ObservableProperty]
     public partial int TotalStars { get; set; }
+
+    /// <summary>
+    /// Filiz bandında öğretici oyun yok; başlığı boş bir bölümün üstünde
+    /// göstermemek için.
+    /// </summary>
+    [ObservableProperty]
+    public partial bool HasEducationalGames { get; set; }
 
     public ObservableCollection<GameTile> FunGames { get; } = [];
 
@@ -120,6 +127,8 @@ public sealed partial class HomeViewModel(
                 FunGames.Add(tile);
             }
         }
+
+        HasEducationalGames = EducationalGames.Count > 0;
     }
 
     [RelayCommand]

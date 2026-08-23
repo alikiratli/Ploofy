@@ -39,6 +39,7 @@ odaklı ayrı bir uygulama) aynı motoru bozmadan üzerine kurulabiliyor.
 | `Entitlements` | `Engine/Access/` | Katman kurallarının tek karar noktası. Hiçbir ekran "abone mi?" diye kendi karar vermez. |
 | `ParentalGateChallenge` | `Engine/Access/` | Ebeveyn kilidi. Meşe bandının üstünde bir aritmetik engel. |
 | `StarRating` | `Engine/Progress/` | Turdan yıldıza çeviren tek yer. Kural bantla değişir. |
+| `BubblePopRound` | `Engine/Games/` | Balonların doğması, yükselmesi, patlaması. Konumlar normalleştirilmiş, yani ekran boyutundan bağımsız ve testte saat elle ilerletilerek doğrulanıyor. |
 
 ### Yeni mini oyun eklemek
 
@@ -46,13 +47,18 @@ odaklı ayrı bir uygulama) aynı motoru bozmadan üzerine kurulabiliyor.
    en küçük bant, çizim tekniği).
 2. Kuralları `Engine/Games/` altında, arayüzden bağımsız bir sınıf olarak yaz;
    zorluk knob'larını `BandValue<T>` ile tanımla.
-3. Uygulama tarafında id'ye karşılık bir sayfa ve üç dilde bir ad.
+3. Uygulama tarafında id'ye karşılık bir sayfa, `GamePresentation` içinde bir
+   satır (ad, simge, rota) ve `content/strings.tsv` içinde üç dilde bir ad.
+
+Sürekli hareketli bir oyunsa çizimi `Ploofy.Ui/Controls` altında bir
+`SKCanvasView` olarak yaz ve `Painting/` içindeki hazır parçaları kullan
+(`BubblePainter`, `ParticleField`, `PloofyPalette`).
 
 Kilit, bant filtresi, yıldız kaydı ve ebeveyn ekranı otomatik çalışır.
 
 ## Oyun kütüphanesi
 
-**Eğlendirici (7):** Eşleştirme Kartları · Balon Patlatma · Şekil Ayırma ·
+**Eğlendirici (7):** Eşleştirme Kartları ✅ · Balon Patlatma ✅ · Şekil Ayırma ·
 Yolu Bul · Yapboz · Sırayı Tekrarla · Sepeti Tut
 
 **Öğretici (3):** Harf Avı · Sayı Avı · Say ve Eşleştir
@@ -63,6 +69,26 @@ sıra) — "hepsi aynı hissettiriyor" sorununu baştan çözen ölçüt bu.
 **Çizim tekniği:** kart/kutucuk tabanlı oyunlar MAUI kontrolleriyle; sürekli
 hareket, parçacık ve serbest çizim gerektirenler (balon patlatma, yolu bul,
 yapboz, sepeti tut) SkiaSharp ile.
+
+## Görsel dil
+
+Kategorinin en iyileri (Sago Mini, Toca Boca, Khan Academy Kids) tek bir şeyde
+ayrışıyor: ekrandaki hiçbir şey durağan değil. Ploofy'nin görsel kuralları
+`Ploofy.Ui` içinde ve bütün oyunlar için ortak:
+
+| Kural | Nerede | Neden |
+|---|---|---|
+| Hiçbir yüzey düz renk değil | `Theme/PloofyStyles.xaml` degradeleri | Degrade + gölge, kutucuğu "basılı resim" olmaktan çıkarıp dokunulacak nesneye çeviriyor |
+| Nesneler belirmez, yaylanarak gelir | `BubbleSurface.BirthScale`, `MemoryCardView` | Doğrusal büyüme "beliriyor" gibi duruyor; hafif taşma "pat diye çıkıyor" hissi veriyor |
+| Duran nesne bile nefes alır | `BubbleSurface` esneme fazı | Her balonun kendi faz kayması var; hepsi aynı anda esnerse mekanik görünüyor |
+| Her dokunuşun görünür bir sonucu var | `ParticleField` | Balon yok olmuyor, dağılıyor — tatmin hissinin tamamı burada |
+| Yanlış cezalandırmaz, uyarır | Yanlış renk patlamaz, silkelenir | Patlasaydı yanlış da bir ödül olurdu |
+| Dokunma hedefi ≥ 64 birim | `TouchTarget` | Küçük çocuğun parmağı büyük, isabeti düşük |
+| Karanlık tema yok | `PloofyColors.xaml` | Küçük ekranda karanlık zemin renk ayrımını ve okunurluğu düşürüyor |
+
+Balonun kendisi dört katman: yumuşak gölge, ışığı sol üstten alan gövde
+degradesi, ince kenar halkası, iki parlama lekesi. "Cam" hissini veren tek şey
+son ikisi.
 
 ## Katmanlar
 

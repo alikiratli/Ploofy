@@ -28,5 +28,6 @@ public partial class AppShell : Shell
 
         // Mini oyunlar
         Routing.RegisterRoute("memorymatch", typeof(MemoryMatchPage));
+        Routing.RegisterRoute("bubblepop", typeof(BubblePopPage));
     }
 }
