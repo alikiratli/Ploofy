@@ -1,0 +1,26 @@
+# Metin dosyaları depoda LF, çalışma kopyasında platformun kendi sonlandırması.
+* text=auto
+
+*.cs text diff=csharp
+*.csproj text
+*.sln text eol=crlf
+*.props text
+*.targets text
+*.xaml text
+*.resx text
+*.json text
+*.md text
+*.yml text
+*.yaml text
+
+# İkili dosyalar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg text
+*.ttf binary
+*.otf binary
+*.mp3 binary
+*.wav binary
+*.db3 binary

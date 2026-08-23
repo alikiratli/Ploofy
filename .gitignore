@@ -1,0 +1,43 @@
+# Derleme çıktıları
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+
+# MAUI / mobil imzalama — asla depoya girmemeli
+*.keystore
+*.jks
+*.mobileprovision
+*.p12
+*.cer
+signing.properties
+
+# Test ve araç çıktıları
+TestResults/
+*.trx
+*.coverage
+coverage*.json
+coverage*.xml
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+
+# Yerel veritabanı ve geçici dosyalar
+*.db3
+*.db3-shm
+*.db3-wal
+*.log
+Thumbs.db
+.DS_Store

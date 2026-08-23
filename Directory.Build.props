@@ -1,0 +1,26 @@
+<Project>
+
+  <!--
+    Bütün projeler için ortak ayarlar. Tek yerde durmasının sebebi:
+    MAUI projeleri (Android/iOS hedefli) ile saf kütüphaneler arasında
+    dil sürümü ve nullable davranışının ayrışmasını engellemek.
+  -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Uyarılar sessizce birikmesin. Motor katmanında kural sıkı; MAUI
+         projeleri üretilen kod yüzünden bunu kendi içinde gevşetebilir. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <!-- Uygulamanın nötr (yedek) dili İngilizce; tr ve de uydu kaynak
+         dosyalarıyla gelir. Bkz. src/Ploofy.App/Resources/Strings. -->
+    <NeutralLanguage>en</NeutralLanguage>
+
+    <Company>Ploofy</Company>
+    <Product>Ploofy</Product>
+  </PropertyGroup>
+
+</Project>
