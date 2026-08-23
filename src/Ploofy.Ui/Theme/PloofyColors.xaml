@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Ploofy renk paleti.
+
+    Çocuk uygulamalarında renk seçimi süs değil işlev: doygun ve birbirinden
+    açıkça ayrılan renkler, okuma bilmeyen çocuğun "hangi kutu hangisi"
+    sorusunu renkle çözmesini sağlıyor. Bu yüzden ana renkler benzer tonlarda
+    değil, tondan tona ayrık seçildi.
+
+    Karanlık tema yok: küçük ekranda karanlık zemin, çocuk oyunlarında
+    okunurluğu ve renk ayrımını düşürüyor. Uygulama tek bir aydınlık temada
+    kalıyor ve bu bilinçli bir karar.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="Ploofy.Ui.Theme.PloofyColors">
+
+    <!-- Zemin -->
+    <Color x:Key="Canvas">#FFF8EC</Color>
+    <Color x:Key="Surface">#FFFFFF</Color>
+    <Color x:Key="SurfaceMuted">#F1E7D6</Color>
+
+    <!-- Metin. Saf siyah yerine sıcak koyu kahve: uzun süre bakılan
+         ekranda daha yumuşak, kontrast hâlâ WCAG AA üzerinde. -->
+    <Color x:Key="Ink">#3A2A1E</Color>
+    <Color x:Key="InkMuted">#7A6A5C</Color>
+    <Color x:Key="OnAccent">#FFFFFF</Color>
+
+    <!-- Ana vurgular -->
+    <Color x:Key="Sun">#FFC845</Color>
+    <Color x:Key="Leaf">#4CB963</Color>
+    <Color x:Key="Sky">#3EA8DE</Color>
+    <Color x:Key="Berry">#E8557F</Color>
+    <Color x:Key="Grape">#8C6BD8</Color>
+    <Color x:Key="Coral">#FF8C42</Color>
+
+    <!-- Durum. "Yanlış" rengi kasıtlı olarak kırmızı değil:
+         Filiz ve Fidan bantlarında hata cezalandırılmıyor, yumuşak turuncu
+         "tekrar dene" diyor, "kaybettin" demiyor. -->
+    <Color x:Key="Correct">#4CB963</Color>
+    <Color x:Key="Retry">#FF8C42</Color>
+    <Color x:Key="Locked">#B9A896</Color>
+
+    <!-- Yıldız -->
+    <Color x:Key="StarFilled">#FFC845</Color>
+    <Color x:Key="StarEmpty">#E4D8C6</Color>
+
+    <!-- Oyun kartı zeminleri; katalogda sıraya göre dönüşümlü kullanılıyor -->
+    <Color x:Key="Card1">#FFE9A8</Color>
+    <Color x:Key="Card2">#BEE9C6</Color>
+    <Color x:Key="Card3">#BFE1F5</Color>
+    <Color x:Key="Card4">#F8C7D6</Color>
+    <Color x:Key="Card5">#DCCFF5</Color>
+    <Color x:Key="Card6">#FFD5B8</Color>
+
+    <SolidColorBrush x:Key="CanvasBrush" Color="{StaticResource Canvas}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource Surface}" />
+
+</ResourceDictionary>

@@ -9,10 +9,6 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-
-    <!-- Uyarılar sessizce birikmesin. Motor katmanında kural sıkı; MAUI
-         projeleri üretilen kod yüzünden bunu kendi içinde gevşetebilir. -->
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
     <!-- Uygulamanın nötr (yedek) dili İngilizce; tr ve de uydu kaynak
@@ -21,6 +17,16 @@
 
     <Company>Ploofy</Company>
     <Product>Ploofy</Product>
+  </PropertyGroup>
+
+  <!--
+    Uyarılar sessizce birikmesin. Kural yalnızca kendi yazdığımız saf
+    katmanlarda sıkı: MAUI projelerinde XAML ve platform bağlayıcılarının
+    ürettiği kod kendi uyarılarını getiriyor, onları hata saymak derlemeyi
+    bizimle ilgisi olmayan sebeplerle kırıyor.
+  -->
+  <PropertyGroup Condition="'$(UseMaui)' != 'true'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
 </Project>

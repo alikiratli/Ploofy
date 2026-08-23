@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Ploofy</value>
+  </data>
+  <data name="BandFiliz" xml:space="preserve">
+    <value>Sprout</value>
+  </data>
+  <data name="BandFidan" xml:space="preserve">
+    <value>Sapling</value>
+  </data>
+  <data name="BandMese" xml:space="preserve">
+    <value>Oak</value>
+  </data>
+  <data name="BandAgeRange" xml:space="preserve">
+    <value>ages {0}-{1}</value>
+  </data>
+  <data name="BandFilizHint" xml:space="preserve">
+    <value>No losing, no reading. A reward on every tap.</value>
+  </data>
+  <data name="BandFidanHint" xml:space="preserve">
+    <value>Small goals; letters and numbers begin.</value>
+  </data>
+  <data name="BandMeseHint" xml:space="preserve">
+    <value>Timers, scores and beating your own record.</value>
+  </data>
+  <data name="HomeTitle" xml:space="preserve">
+    <value>What shall we play?</value>
+  </data>
+  <data name="SectionFun" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="SectionEducational" xml:space="preserve">
+    <value>Learning</value>
+  </data>
+  <data name="GameLocked" xml:space="preserve">
+    <value>Locked</value>
+  </data>
+  <data name="GameFree" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="ProfilesTitle" xml:space="preserve">
+    <value>Who is playing?</value>
+  </data>
+  <data name="AddProfile" xml:space="preserve">
+    <value>Add a child</value>
+  </data>
+  <data name="ProfileNameLabel" xml:space="preserve">
+    <value>Nickname</value>
+  </data>
+  <data name="ProfileNameHint" xml:space="preserve">
+    <value>No need to use a real name</value>
+  </data>
+  <data name="ProfileAgeLabel" xml:space="preserve">
+    <value>Age group</value>
+  </data>
+  <data name="ProfileAvatarLabel" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="ProfileSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ProfileDelete" xml:space="preserve">
+    <value>Delete profile</value>
+  </data>
+  <data name="ProfileDeleteConfirm" xml:space="preserve">
+    <value>All of {0}'s stars will be deleted. Are you sure?</value>
+  </data>
+  <data name="ProfileLimitReached" xml:space="preserve">
+    <value>More than one child profile is part of the subscription.</value>
+  </data>
+  <data name="ParentalGateTitle" xml:space="preserve">
+    <value>Parents only</value>
+  </data>
+  <data name="ParentalGateHint" xml:space="preserve">
+    <value>Enter the result to continue.</value>
+  </data>
+  <data name="ParentalGateQuestion" xml:space="preserve">
+    <value>{0} × {1} + {2} = ?</value>
+  </data>
+  <data name="ParentalGateWrong" xml:space="preserve">
+    <value>Not quite, try again.</value>
+  </data>
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsSound" xml:space="preserve">
+    <value>Sound</value>
+  </data>
+  <data name="SettingsHaptics" xml:space="preserve">
+    <value>Vibration</value>
+  </data>
+  <data name="SettingsLanguage" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="SettingsProfiles" xml:space="preserve">
+    <value>Child profiles</value>
+  </data>
+  <data name="SettingsSubscription" xml:space="preserve">
+    <value>Subscription</value>
+  </data>
+  <data name="SettingsPrivacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="SettingsPrivacyBody" xml:space="preserve">
+    <value>Ploofy collects no data. Profiles, stars and settings stay on this device only; nothing is sent anywhere. There are no ads on any tier.</value>
+  </data>
+  <data name="SubscriptionTitle" xml:space="preserve">
+    <value>Ploofy Family</value>
+  </data>
+  <data name="SubscriptionPitch" xml:space="preserve">
+    <value>Ad-free and safe. Always.</value>
+  </data>
+  <data name="SubscriptionBenefitAllGames" xml:space="preserve">
+    <value>Every mini game unlocked</value>
+  </data>
+  <data name="SubscriptionBenefitNewGames" xml:space="preserve">
+    <value>Including games added later</value>
+  </data>
+  <data name="SubscriptionBenefitProfiles" xml:space="preserve">
+    <value>Up to {0} child profiles</value>
+  </data>
+  <data name="SubscriptionBenefitOffline" xml:space="preserve">
+    <value>Plays without internet</value>
+  </data>
+  <data name="SubscriptionBenefitNoAds" xml:space="preserve">
+    <value>No ads, no data collection</value>
+  </data>
+  <data name="SubscriptionCta" xml:space="preserve">
+    <value>Start subscription</value>
+  </data>
+  <data name="SubscriptionRestore" xml:space="preserve">
+    <value>Restore purchases</value>
+  </data>
+  <data name="SubscriptionActive" xml:space="preserve">
+    <value>Your subscription is active.</value>
+  </data>
+  <data name="SubscriptionGrace" xml:space="preserve">
+    <value>Payment failed. Games stay unlocked for now.</value>
+  </data>
+  <data name="SubscriptionLockedGameTitle" xml:space="preserve">
+    <value>This game is in the subscription</value>
+  </data>
+  <data name="PlaySolo" xml:space="preserve">
+    <value>On my own</value>
+  </data>
+  <data name="PlayTogether" xml:space="preserve">
+    <value>Take turns</value>
+  </data>
+  <data name="PlayTogetherHint" xml:space="preserve">
+    <value>Same device, one after the other. No internet needed.</value>
+  </data>
+  <data name="PlayLocalNetwork" xml:space="preserve">
+    <value>With a nearby device</value>
+  </data>
+  <data name="PlayFamilyLink" xml:space="preserve">
+    <value>Family link</value>
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Coming soon</value>
+  </data>
+  <data name="ChoosePlayers" xml:space="preserve">
+    <value>Who is playing?</value>
+  </data>
+  <data name="StartGame" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="HandoffTitle" xml:space="preserve">
+    <value>{0}, it's your turn!</value>
+  </data>
+  <data name="HandoffHint" xml:space="preserve">
+    <value>Tap when you're ready</value>
+  </data>
+  <data name="RoundCompleteTitle" xml:space="preserve">
+    <value>Done!</value>
+  </data>
+  <data name="TotalStars" xml:space="preserve">
+    <value>{0} stars in total</value>
+  </data>
+  <data name="PlayAgain" xml:space="preserve">
+    <value>Play again</value>
+  </data>
+  <data name="BackToGames" xml:space="preserve">
+    <value>Back to games</value>
+  </data>
+  <data name="EveryoneWins" xml:space="preserve">
+    <value>You both win!</value>
+  </data>
+  <data name="WinnerIs" xml:space="preserve">
+    <value>Winner: {0}</value>
+  </data>
+  <data name="GameMemoryMatch" xml:space="preserve">
+    <value>Memory Match</value>
+  </data>
+  <data name="GameBubblePop" xml:space="preserve">
+    <value>Bubble Pop</value>
+  </data>
+  <data name="GameShapeSort" xml:space="preserve">
+    <value>Shape Sorting</value>
+  </data>
+  <data name="GameMazeTrace" xml:space="preserve">
+    <value>Find the Path</value>
+  </data>
+  <data name="GameJigsaw" xml:space="preserve">
+    <value>Jigsaw</value>
+  </data>
+  <data name="GameSimonSequence" xml:space="preserve">
+    <value>Repeat the Beat</value>
+  </data>
+  <data name="GameBasketCatch" xml:space="preserve">
+    <value>Catch the Basket</value>
+  </data>
+  <data name="GameLetterHunt" xml:space="preserve">
+    <value>Letter Hunt</value>
+  </data>
+  <data name="GameNumberHunt" xml:space="preserve">
+    <value>Number Hunt</value>
+  </data>
+  <data name="GameCountMatch" xml:space="preserve">
+    <value>Count and Match</value>
+  </data>
+  <data name="CommonCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CommonOk" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="CommonClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="CommonNotYet" xml:space="preserve">
+    <value>This part isn't ready yet.</value>
+  </data>
+</root>

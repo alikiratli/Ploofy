@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.PlaySetupPage"
+             x:Name="Page"
+             x:DataType="vm:PlaySetupViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="{StaticResource PagePadding}" RowSpacing="16">
+
+        <HorizontalStackLayout Grid.Row="0" Spacing="12">
+            <Label Text="{Binding GameGlyph}" FontSize="40" VerticalOptions="Center" />
+            <Label Text="{Binding GameName}"
+                   Style="{StaticResource TitleLabel}"
+                   VerticalOptions="Center" />
+        </HorizontalStackLayout>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16">
+
+                <CollectionView ItemsSource="{Binding Modes}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ModeOption">
+                            <Border Style="{StaticResource CardBorder}"
+                                    Margin="0,0,0,8"
+                                    Opacity="{Binding Opacity}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectModeCommand, x:DataType=ContentPage}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <!-- Seçili mod işareti: renk körlüğünden
+                                         etkilenmesin diye renk değil şekil. -->
+                                    <Label Grid.Column="0"
+                                           Text="✓"
+                                           FontSize="24"
+                                           TextColor="{StaticResource Leaf}"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding IsSelected}" />
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding Title}" FontSize="20" FontAttributes="Bold" />
+                                        <Label Text="{Binding Hint}"
+                                               Style="{StaticResource HintLabel}"
+                                               IsVisible="{Binding HasHint}" />
+                                    </VerticalStackLayout>
+
+                                    <Label Grid.Column="2"
+                                           Text="{Binding ComingSoonLabel}"
+                                           Style="{StaticResource HintLabel}"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding ShowsPlayerPicker}">
+                    <Label Text="{loc:Translate ChoosePlayers}" Style="{StaticResource SectionLabel}" />
+
+                    <CollectionView ItemsSource="{Binding Players}" SelectionMode="None">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical"
+                                             Span="2"
+                                             HorizontalItemSpacing="12"
+                                             VerticalItemSpacing="12" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PlayerChoice">
+                                <Border Style="{StaticResource CardBorder}" HeightRequest="120">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference Page}, Path=BindingContext.TogglePlayerCommand, x:DataType=ContentPage}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+
+                                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                                        <Label Text="{Binding AvatarId}" FontSize="36" HorizontalOptions="Center" />
+                                        <Label Text="{Binding DisplayName}"
+                                               FontSize="17"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center" />
+                                        <Label Text="✓"
+                                               FontSize="20"
+                                               TextColor="{StaticResource Leaf}"
+                                               HorizontalOptions="Center"
+                                               IsVisible="{Binding IsSelected}" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Grid.Row="2"
+                Text="{loc:Translate StartGame}"
+                Style="{StaticResource BigButton}"
+                IsEnabled="{Binding CanStart}"
+                Command="{Binding StartCommand}" />
+
+    </Grid>
+</ContentPage>

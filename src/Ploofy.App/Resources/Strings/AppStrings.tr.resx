@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Ploofy</value>
+  </data>
+  <data name="BandFiliz" xml:space="preserve">
+    <value>Filiz</value>
+  </data>
+  <data name="BandFidan" xml:space="preserve">
+    <value>Fidan</value>
+  </data>
+  <data name="BandMese" xml:space="preserve">
+    <value>Meşe</value>
+  </data>
+  <data name="BandAgeRange" xml:space="preserve">
+    <value>{0}-{1} yaş</value>
+  </data>
+  <data name="BandFilizHint" xml:space="preserve">
+    <value>Kaybetme yok, okuma yok. Her dokunuşta ödül.</value>
+  </data>
+  <data name="BandFidanHint" xml:space="preserve">
+    <value>Küçük hedefler, harf ve sayı tanıma başlar.</value>
+  </data>
+  <data name="BandMeseHint" xml:space="preserve">
+    <value>Süre, puan ve kendi rekorunu kırma.</value>
+  </data>
+  <data name="HomeTitle" xml:space="preserve">
+    <value>Ne oynayalım?</value>
+  </data>
+  <data name="SectionFun" xml:space="preserve">
+    <value>Oyunlar</value>
+  </data>
+  <data name="SectionEducational" xml:space="preserve">
+    <value>Öğreniyorum</value>
+  </data>
+  <data name="GameLocked" xml:space="preserve">
+    <value>Kilitli</value>
+  </data>
+  <data name="GameFree" xml:space="preserve">
+    <value>Ücretsiz</value>
+  </data>
+  <data name="ProfilesTitle" xml:space="preserve">
+    <value>Kim oynuyor?</value>
+  </data>
+  <data name="AddProfile" xml:space="preserve">
+    <value>Çocuk ekle</value>
+  </data>
+  <data name="ProfileNameLabel" xml:space="preserve">
+    <value>Takma ad</value>
+  </data>
+  <data name="ProfileNameHint" xml:space="preserve">
+    <value>Gerçek ad girmene gerek yok</value>
+  </data>
+  <data name="ProfileAgeLabel" xml:space="preserve">
+    <value>Yaş grubu</value>
+  </data>
+  <data name="ProfileAvatarLabel" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="ProfileSave" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="ProfileDelete" xml:space="preserve">
+    <value>Profili sil</value>
+  </data>
+  <data name="ProfileDeleteConfirm" xml:space="preserve">
+    <value>{0} profilinin bütün yıldızları silinecek. Emin misin?</value>
+  </data>
+  <data name="ProfileLimitReached" xml:space="preserve">
+    <value>Birden fazla çocuk profili abonelikle açılır.</value>
+  </data>
+  <data name="ParentalGateTitle" xml:space="preserve">
+    <value>Ebeveyn kontrolü</value>
+  </data>
+  <data name="ParentalGateHint" xml:space="preserve">
+    <value>Devam etmek için sonucu gir.</value>
+  </data>
+  <data name="ParentalGateQuestion" xml:space="preserve">
+    <value>{0} × {1} + {2} = ?</value>
+  </data>
+  <data name="ParentalGateWrong" xml:space="preserve">
+    <value>Yanlış, tekrar dene.</value>
+  </data>
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="SettingsSound" xml:space="preserve">
+    <value>Ses</value>
+  </data>
+  <data name="SettingsHaptics" xml:space="preserve">
+    <value>Titreşim</value>
+  </data>
+  <data name="SettingsLanguage" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="SettingsProfiles" xml:space="preserve">
+    <value>Çocuk profilleri</value>
+  </data>
+  <data name="SettingsSubscription" xml:space="preserve">
+    <value>Abonelik</value>
+  </data>
+  <data name="SettingsPrivacy" xml:space="preserve">
+    <value>Gizlilik</value>
+  </data>
+  <data name="SettingsPrivacyBody" xml:space="preserve">
+    <value>Ploofy hiçbir veri toplamaz. Profiller, yıldızlar ve ayarlar yalnızca bu cihazda kalır; hiçbir yere gönderilmez. Hiçbir katmanda reklam yoktur.</value>
+  </data>
+  <data name="SubscriptionTitle" xml:space="preserve">
+    <value>Ploofy Aile</value>
+  </data>
+  <data name="SubscriptionPitch" xml:space="preserve">
+    <value>Reklamsız ve güvenli. Her zaman.</value>
+  </data>
+  <data name="SubscriptionBenefitAllGames" xml:space="preserve">
+    <value>Bütün mini oyunlar açılır</value>
+  </data>
+  <data name="SubscriptionBenefitNewGames" xml:space="preserve">
+    <value>Yeni eklenen oyunlar dahil</value>
+  </data>
+  <data name="SubscriptionBenefitProfiles" xml:space="preserve">
+    <value>En fazla {0} çocuk profili</value>
+  </data>
+  <data name="SubscriptionBenefitOffline" xml:space="preserve">
+    <value>İnternetsiz oynanır</value>
+  </data>
+  <data name="SubscriptionBenefitNoAds" xml:space="preserve">
+    <value>Hiç reklam yok, hiç veri toplanmaz</value>
+  </data>
+  <data name="SubscriptionCta" xml:space="preserve">
+    <value>Aboneliği başlat</value>
+  </data>
+  <data name="SubscriptionRestore" xml:space="preserve">
+    <value>Satın alımları geri yükle</value>
+  </data>
+  <data name="SubscriptionActive" xml:space="preserve">
+    <value>Aboneliğin etkin.</value>
+  </data>
+  <data name="SubscriptionGrace" xml:space="preserve">
+    <value>Ödeme alınamadı. Oyunlar açık kalmaya devam ediyor.</value>
+  </data>
+  <data name="SubscriptionLockedGameTitle" xml:space="preserve">
+    <value>Bu oyun abonelikte</value>
+  </data>
+  <data name="PlaySolo" xml:space="preserve">
+    <value>Tek başıma</value>
+  </data>
+  <data name="PlayTogether" xml:space="preserve">
+    <value>Sırayla oynayalım</value>
+  </data>
+  <data name="PlayTogetherHint" xml:space="preserve">
+    <value>Aynı cihazda, sırayla. İnternet gerekmez.</value>
+  </data>
+  <data name="PlayLocalNetwork" xml:space="preserve">
+    <value>Yakındaki cihazla</value>
+  </data>
+  <data name="PlayFamilyLink" xml:space="preserve">
+    <value>Aile bağlantısı</value>
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Yakında</value>
+  </data>
+  <data name="ChoosePlayers" xml:space="preserve">
+    <value>Kimler oynuyor?</value>
+  </data>
+  <data name="StartGame" xml:space="preserve">
+    <value>Başla</value>
+  </data>
+  <data name="HandoffTitle" xml:space="preserve">
+    <value>Sıra {0} sende!</value>
+  </data>
+  <data name="HandoffHint" xml:space="preserve">
+    <value>Hazır olduğunda dokun</value>
+  </data>
+  <data name="RoundCompleteTitle" xml:space="preserve">
+    <value>Bitti!</value>
+  </data>
+  <data name="TotalStars" xml:space="preserve">
+    <value>Toplam {0} yıldız</value>
+  </data>
+  <data name="PlayAgain" xml:space="preserve">
+    <value>Tekrar oyna</value>
+  </data>
+  <data name="BackToGames" xml:space="preserve">
+    <value>Oyunlara dön</value>
+  </data>
+  <data name="EveryoneWins" xml:space="preserve">
+    <value>İkiniz de kazandınız!</value>
+  </data>
+  <data name="WinnerIs" xml:space="preserve">
+    <value>Kazanan: {0}</value>
+  </data>
+  <data name="GameMemoryMatch" xml:space="preserve">
+    <value>Eşleştirme Kartları</value>
+  </data>
+  <data name="GameBubblePop" xml:space="preserve">
+    <value>Balon Patlatma</value>
+  </data>
+  <data name="GameShapeSort" xml:space="preserve">
+    <value>Şekil Ayırma</value>
+  </data>
+  <data name="GameMazeTrace" xml:space="preserve">
+    <value>Yolu Bul</value>
+  </data>
+  <data name="GameJigsaw" xml:space="preserve">
+    <value>Yapboz</value>
+  </data>
+  <data name="GameSimonSequence" xml:space="preserve">
+    <value>Sırayı Tekrarla</value>
+  </data>
+  <data name="GameBasketCatch" xml:space="preserve">
+    <value>Sepeti Tut</value>
+  </data>
+  <data name="GameLetterHunt" xml:space="preserve">
+    <value>Harf Avı</value>
+  </data>
+  <data name="GameNumberHunt" xml:space="preserve">
+    <value>Sayı Avı</value>
+  </data>
+  <data name="GameCountMatch" xml:space="preserve">
+    <value>Say ve Eşleştir</value>
+  </data>
+  <data name="CommonCancel" xml:space="preserve">
+    <value>Vazgeç</value>
+  </data>
+  <data name="CommonOk" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="CommonClose" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="CommonNotYet" xml:space="preserve">
+    <value>Bu bölüm henüz hazır değil.</value>
+  </data>
+</root>

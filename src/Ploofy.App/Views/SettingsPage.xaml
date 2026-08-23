@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.SettingsPage"
+             x:Name="Page"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="22">
+
+            <Label Text="{loc:Translate SettingsTitle}" Style="{StaticResource TitleLabel}" />
+
+            <!-- Abonelik -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{loc:Translate SettingsSubscription}" Style="{StaticResource SectionLabel}" />
+                    <Label Text="{Binding SubscriptionStatusText}" Style="{StaticResource HintLabel}" />
+
+                    <Button Text="{loc:Translate SubscriptionCta}"
+                            Style="{StaticResource AccentButton}"
+                            IsVisible="{Binding CanSubscribe}"
+                            Command="{Binding OpenPaywallCommand}" />
+
+                    <Button Text="{loc:Translate SubscriptionRestore}"
+                            Style="{StaticResource QuietButton}"
+                            Command="{Binding RestoreCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Ses ve titreşim -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="4">
+                    <Grid ColumnDefinitions="*,Auto" HeightRequest="{StaticResource TouchTarget}">
+                        <Label Text="{loc:Translate SettingsSound}" VerticalOptions="Center" />
+                        <Switch Grid.Column="1" IsToggled="{Binding SoundEnabled}" VerticalOptions="Center" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto" HeightRequest="{StaticResource TouchTarget}">
+                        <Label Text="{loc:Translate SettingsHaptics}" VerticalOptions="Center" />
+                        <Switch Grid.Column="1" IsToggled="{Binding HapticsEnabled}" VerticalOptions="Center" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Dil -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Translate SettingsLanguage}" Style="{StaticResource SectionLabel}" />
+                    <Picker ItemsSource="{Binding LanguageChoices}"
+                            SelectedItem="{Binding SelectedLanguage}"
+                            ItemDisplayBinding="{Binding Label, x:DataType=vm:LanguageOption}"
+                            FontSize="18"
+                            HeightRequest="{StaticResource TouchTarget}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Profiller -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Translate SettingsProfiles}" Style="{StaticResource SectionLabel}" />
+
+                    <CollectionView ItemsSource="{Binding Profiles}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ProfileRow">
+                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                      ColumnSpacing="12"
+                                      HeightRequest="{StaticResource TouchTarget}">
+                                    <Label Grid.Column="0" Text="{Binding AvatarId}" FontSize="28" VerticalOptions="Center" />
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding DisplayName}" FontAttributes="Bold" />
+                                        <Label Text="{Binding BandName}" Style="{StaticResource HintLabel}" />
+                                    </VerticalStackLayout>
+                                    <Button Grid.Column="2"
+                                            Text="🗑"
+                                            FontSize="18"
+                                            WidthRequest="52"
+                                            HeightRequest="52"
+                                            CornerRadius="26"
+                                            Padding="0"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            Command="{Binding Source={x:Reference Page}, Path=BindingContext.DeleteProfileCommand, x:DataType=ContentPage}"
+                                            CommandParameter="{Binding .}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Gizlilik: bu metin ürünün taahhüdü, süs değil. -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Translate SettingsPrivacy}" Style="{StaticResource SectionLabel}" />
+                    <Label Text="{loc:Translate SettingsPrivacyBody}" Style="{StaticResource HintLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="{loc:Translate CommonClose}"
+                    Style="{StaticResource BigButton}"
+                    Command="{Binding CloseCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -13,8 +13,12 @@ Ploofy.sln
 Directory.Build.props          Bütün projelerin ortak derleme ayarları
 src/Ploofy.Engine/             Oyun mantığı — UI'ya sıfır bağımlılık, net9.0
 src/Ploofy.Data/               SQLite ilerleme deposu (sqlite-net), net9.0
-src/Ploofy.Ui/                 Ortak MAUI arayüz katmanı            [Faz 1]
-src/Ploofy.App/                MAUI uygulaması (Android + iOS)      [Faz 1]
+src/Ploofy.Ui/                 Ortak MAUI arayüz katmanı (tema, ses/haptik,
+                               ebeveyn kilidi, yıldız kontrolü)
+src/Ploofy.App/                MAUI uygulaması (Android + iOS; Windows yalnızca
+                               geliştirme sırasında denemek için)
+content/strings.tsv            Üç dilin metinleri — tek kaynak
+tools/build_strings.py         strings.tsv -> Resources/Strings/*.resx
 tests/Ploofy.Engine.Tests/     xUnit — motor + depo testleri
 ```
 
@@ -106,12 +110,29 @@ dotnet workload install maui
 
 dotnet restore
 dotnet test
+
+# Windows'ta hızlı deneme (mağazaya çıkmayan geliştirme hedefi)
+dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-windows10.0.19041.0
+```
+
+Android'e derlemek için Android SDK gerekiyor:
+
+```bash
+dotnet build src/Ploofy.App/Ploofy.App.csproj -t:InstallAndroidDependencies \n  -f net9.0-android -p:AcceptAndroidSDKLicenses=True
+```
+
+Metinler değişince resx dosyalarını yeniden üret (elle düzenlenmiyorlar):
+
+```bash
+python tools/build_strings.py content/strings.tsv src/Ploofy.App/Resources/Strings
 ```
 
 ## Yol haritası
 
 - **Faz 1 — İskelet.** Motor + veri katmanı + testler ✅ · MAUI kabuğu, üç dil,
-  profil akışı, Eşleştirme Kartları uçtan uca (yıldız dahil) ⏳
+  profil akışı, ana ekran, Eşleştirme Kartları uçtan uca (sıralı oyun ve yıldız
+  kaydı dahil), ebeveyn kilidi, ayarlar, abonelik ekranı ✅ · ses varlıkları ve
+  Android SDK kurulumu ⏳
 - **Faz 2 — Çeşitlilik.** Kalan 9 mini oyun, hepsi aynı bant API'siyle. Sonunda
   "10 oyun, 3 bant, 1 yıldız koleksiyonu" tamam.
 - **Faz 3 — Ebeveyn ve uyum.** Ayarlar, abonelik akışı, veri toplama denetimi,

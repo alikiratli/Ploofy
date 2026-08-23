@@ -1,0 +1,77 @@
+AppTitle	Ploofy	Ploofy	Ploofy
+BandFiliz	Sprout	Filiz	Spross
+BandFidan	Sapling	Fidan	Setzling
+BandMese	Oak	Meşe	Eiche
+BandAgeRange	ages {0}-{1}	{0}-{1} yaş	{0}-{1} Jahre
+BandFilizHint	No losing, no reading. A reward on every tap.	Kaybetme yok, okuma yok. Her dokunuşta ödül.	Kein Verlieren, kein Lesen. Bei jeder Berührung eine Belohnung.
+BandFidanHint	Small goals; letters and numbers begin.	Küçük hedefler, harf ve sayı tanıma başlar.	Kleine Ziele; Buchstaben und Zahlen kommen dazu.
+BandMeseHint	Timers, scores and beating your own record.	Süre, puan ve kendi rekorunu kırma.	Zeit, Punkte und der eigene Rekord.
+HomeTitle	What shall we play?	Ne oynayalım?	Was spielen wir?
+SectionFun	Games	Oyunlar	Spiele
+SectionEducational	Learning	Öğreniyorum	Lernen
+GameLocked	Locked	Kilitli	Gesperrt
+GameFree	Free	Ücretsiz	Gratis
+ProfilesTitle	Who is playing?	Kim oynuyor?	Wer spielt?
+AddProfile	Add a child	Çocuk ekle	Kind hinzufügen
+ProfileNameLabel	Nickname	Takma ad	Spitzname
+ProfileNameHint	No need to use a real name	Gerçek ad girmene gerek yok	Ein echter Name ist nicht nötig
+ProfileAgeLabel	Age group	Yaş grubu	Altersgruppe
+ProfileAvatarLabel	Avatar	Avatar	Avatar
+ProfileSave	Save	Kaydet	Speichern
+ProfileDelete	Delete profile	Profili sil	Profil löschen
+ProfileDeleteConfirm	All of {0}'s stars will be deleted. Are you sure?	{0} profilinin bütün yıldızları silinecek. Emin misin?	Alle Sterne von {0} werden gelöscht. Wirklich fortfahren?
+ProfileLimitReached	More than one child profile is part of the subscription.	Birden fazla çocuk profili abonelikle açılır.	Mehrere Kinderprofile gehören zum Abo.
+ParentalGateTitle	Parents only	Ebeveyn kontrolü	Nur für Eltern
+ParentalGateHint	Enter the result to continue.	Devam etmek için sonucu gir.	Gib das Ergebnis ein, um fortzufahren.
+ParentalGateQuestion	{0} × {1} + {2} = ?	{0} × {1} + {2} = ?	{0} × {1} + {2} = ?
+ParentalGateWrong	Not quite, try again.	Yanlış, tekrar dene.	Leider falsch, versuch es nochmal.
+SettingsTitle	Settings	Ayarlar	Einstellungen
+SettingsSound	Sound	Ses	Ton
+SettingsHaptics	Vibration	Titreşim	Vibration
+SettingsLanguage	Language	Dil	Sprache
+SettingsProfiles	Child profiles	Çocuk profilleri	Kinderprofile
+SettingsSubscription	Subscription	Abonelik	Abo
+SettingsPrivacy	Privacy	Gizlilik	Datenschutz
+SettingsPrivacyBody	Ploofy collects no data. Profiles, stars and settings stay on this device only; nothing is sent anywhere. There are no ads on any tier.	Ploofy hiçbir veri toplamaz. Profiller, yıldızlar ve ayarlar yalnızca bu cihazda kalır; hiçbir yere gönderilmez. Hiçbir katmanda reklam yoktur.	Ploofy sammelt keine Daten. Profile, Sterne und Einstellungen bleiben nur auf diesem Gerät; nichts wird irgendwohin gesendet. In keiner Stufe gibt es Werbung.
+SubscriptionTitle	Ploofy Family	Ploofy Aile	Ploofy Familie
+SubscriptionPitch	Ad-free and safe. Always.	Reklamsız ve güvenli. Her zaman.	Werbefrei und sicher. Immer.
+SubscriptionBenefitAllGames	Every mini game unlocked	Bütün mini oyunlar açılır	Alle Minispiele freigeschaltet
+SubscriptionBenefitNewGames	Including games added later	Yeni eklenen oyunlar dahil	Auch später hinzugefügte Spiele
+SubscriptionBenefitProfiles	Up to {0} child profiles	En fazla {0} çocuk profili	Bis zu {0} Kinderprofile
+SubscriptionBenefitOffline	Plays without internet	İnternetsiz oynanır	Funktioniert ohne Internet
+SubscriptionBenefitNoAds	No ads, no data collection	Hiç reklam yok, hiç veri toplanmaz	Keine Werbung, keine Datensammlung
+SubscriptionCta	Start subscription	Aboneliği başlat	Abo starten
+SubscriptionRestore	Restore purchases	Satın alımları geri yükle	Käufe wiederherstellen
+SubscriptionActive	Your subscription is active.	Aboneliğin etkin.	Dein Abo ist aktiv.
+SubscriptionGrace	Payment failed. Games stay unlocked for now.	Ödeme alınamadı. Oyunlar açık kalmaya devam ediyor.	Zahlung fehlgeschlagen. Die Spiele bleiben vorerst offen.
+SubscriptionLockedGameTitle	This game is in the subscription	Bu oyun abonelikte	Dieses Spiel ist im Abo
+PlaySolo	On my own	Tek başıma	Alleine
+PlayTogether	Take turns	Sırayla oynayalım	Abwechselnd spielen
+PlayTogetherHint	Same device, one after the other. No internet needed.	Aynı cihazda, sırayla. İnternet gerekmez.	Gleiches Gerät, einer nach dem anderen. Kein Internet nötig.
+PlayLocalNetwork	With a nearby device	Yakındaki cihazla	Mit einem Gerät in der Nähe
+PlayFamilyLink	Family link	Aile bağlantısı	Familienverbindung
+ComingSoon	Coming soon	Yakında	Demnächst
+ChoosePlayers	Who is playing?	Kimler oynuyor?	Wer spielt mit?
+StartGame	Start	Başla	Los
+HandoffTitle	{0}, it's your turn!	Sıra {0} sende!	{0}, du bist dran!
+HandoffHint	Tap when you're ready	Hazır olduğunda dokun	Tippe, wenn du bereit bist
+RoundCompleteTitle	Done!	Bitti!	Geschafft!
+TotalStars	{0} stars in total	Toplam {0} yıldız	Insgesamt {0} Sterne
+PlayAgain	Play again	Tekrar oyna	Nochmal spielen
+BackToGames	Back to games	Oyunlara dön	Zurück zu den Spielen
+EveryoneWins	You both win!	İkiniz de kazandınız!	Ihr habt beide gewonnen!
+WinnerIs	Winner: {0}	Kazanan: {0}	Gewinner: {0}
+GameMemoryMatch	Memory Match	Eşleştirme Kartları	Memory
+GameBubblePop	Bubble Pop	Balon Patlatma	Blasen platzen
+GameShapeSort	Shape Sorting	Şekil Ayırma	Formen sortieren
+GameMazeTrace	Find the Path	Yolu Bul	Finde den Weg
+GameJigsaw	Jigsaw	Yapboz	Puzzle
+GameSimonSequence	Repeat the Beat	Sırayı Tekrarla	Wiederhole die Folge
+GameBasketCatch	Catch the Basket	Sepeti Tut	Fang den Korb
+GameLetterHunt	Letter Hunt	Harf Avı	Buchstabenjagd
+GameNumberHunt	Number Hunt	Sayı Avı	Zahlenjagd
+GameCountMatch	Count and Match	Say ve Eşleştir	Zählen und Zuordnen
+CommonCancel	Cancel	Vazgeç	Abbrechen
+CommonOk	OK	Tamam	OK
+CommonClose	Close	Kapat	Schließen
+CommonNotYet	This part isn't ready yet.	Bu bölüm henüz hazır değil.	Dieser Teil ist noch nicht fertig.

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.MemoryMatchPage"
+             x:Name="Page"
+             x:DataType="vm:MemoryMatchViewModel">
+
+    <Grid>
+        <Grid RowDefinitions="Auto,*" Padding="{StaticResource PagePadding}" RowSpacing="12">
+
+            <!-- Üst şerit: kim oynuyor, kaç çift kaldı -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="10">
+                <Label Grid.Column="0" Text="{Binding PlayerAvatar}" FontSize="30" VerticalOptions="Center" />
+                <Label Grid.Column="1"
+                       Text="{Binding PlayerName}"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+
+                <!-- Sayaç yalnızca yazının anlamlı olduğu bantlarda görünüyor. -->
+                <Label Grid.Column="2"
+                       HorizontalOptions="End"
+                       VerticalOptions="Center"
+                       Style="{StaticResource HintLabel}"
+                       IsVisible="{Binding ShowsProgressCounter}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding MatchedPairs}" />
+                            <Span Text=" / " />
+                            <Span Text="{Binding TotalPairs}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Button Grid.Column="3"
+                        Text="✕"
+                        FontSize="20"
+                        WidthRequest="{StaticResource TouchTarget}"
+                        HeightRequest="{StaticResource TouchTarget}"
+                        CornerRadius="32"
+                        Padding="0"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        TextColor="{StaticResource Ink}"
+                        Command="{Binding QuitCommand}" />
+            </Grid>
+
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding Cards}"
+                            SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="{Binding Columns}"
+                                     HorizontalItemSpacing="10"
+                                     VerticalItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MemoryCardVm">
+                        <Border StrokeShape="RoundRectangle 20"
+                                Stroke="Transparent"
+                                HeightRequest="96">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference Page}, Path=BindingContext.FlipCommand, x:DataType=ContentPage}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Border.Triggers>
+                                <!-- Kapalı kart desenli zeminde, açık kart beyaz.
+                                     Eşleşen kart yeşile dönüp yerinde kalıyor:
+                                     çocuk neyi bulduğunu görmeye devam etsin. -->
+                                <DataTrigger TargetType="Border" Binding="{Binding IsFaceDown}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Sky}" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsRevealed}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsMatched}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Correct}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+
+                            <Label Text="{Binding Face}"
+                                   FontSize="44"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <!-- Devir katmanı: sıra kardeşe geçerken tahtayı tamamen kapatıyor.
+             Kapatmasa, sırası gelen çocuk önceki turun kartlarını görürdü. -->
+        <Grid IsVisible="{Binding ShowsHandoff}" BackgroundColor="{StaticResource Sun}">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ConfirmHandoffCommand}" />
+            </Grid.GestureRecognizers>
+
+            <VerticalStackLayout VerticalOptions="Center" Spacing="16" Padding="32">
+                <Label Text="👋" FontSize="72" HorizontalOptions="Center" />
+                <Label Text="{Binding HandoffText}"
+                       Style="{StaticResource TitleLabel}"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="{loc:Translate HandoffHint}"
+                       Style="{StaticResource HintLabel}"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

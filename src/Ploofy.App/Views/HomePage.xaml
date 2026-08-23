@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:ui="clr-namespace:Ploofy.Ui.Controls;assembly=Ploofy.Ui"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.HomePage"
+             x:Name="Page"
+             x:DataType="vm:HomeViewModel">
+
+    <ContentPage.Resources>
+        <!-- Eğlendirici ve öğretici bölümler aynı kutucuğu kullanıyor. -->
+        <DataTemplate x:Key="GameTileTemplate" x:DataType="vm:GameTile">
+            <Border Style="{StaticResource CardBorder}"
+                    BackgroundColor="{Binding Background}"
+                    HeightRequest="150"
+                    Opacity="{Binding TileOpacity}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding Source={x:Reference Page}, Path=BindingContext.OpenCommand, x:DataType=ContentPage}"
+                        CommandParameter="{Binding .}" />
+                </Border.GestureRecognizers>
+
+                <Grid RowDefinitions="*,Auto">
+                    <Label Grid.Row="0"
+                           Text="{Binding Glyph}"
+                           FontSize="46"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+
+                    <!-- Kilit rozeti: okuma bilmeyen çocuk için asma kilit,
+                         okuyan ebeveyn için metin. -->
+                    <Label Grid.Row="0"
+                           Text="🔒"
+                           FontSize="28"
+                           HorizontalOptions="End"
+                           VerticalOptions="Start"
+                           IsVisible="{Binding IsLocked}" />
+
+                    <Label Grid.Row="0"
+                           Text="{loc:Translate GameFree}"
+                           Style="{StaticResource HintLabel}"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Start"
+                           IsVisible="{Binding ShowsFreeBadge}" />
+
+                    <Label Grid.Row="0"
+                           Text="{loc:Translate ComingSoon}"
+                           Style="{StaticResource HintLabel}"
+                           HorizontalOptions="End"
+                           VerticalOptions="Start"
+                           IsVisible="{Binding ShowsComingSoon}" />
+
+                    <VerticalStackLayout Grid.Row="1" Spacing="2">
+                        <Label Text="{Binding Name}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               MaxLines="2"
+                               LineBreakMode="TailTruncation" />
+                        <ui:StarRow Stars="{Binding Stars}"
+                                    StarSize="14"
+                                    HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="{StaticResource PagePadding}" RowSpacing="12">
+
+        <!-- Üst şerit: kim oynuyor, kaç yıldızı var -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Padding="12">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding SwitchProfileCommand}" />
+            </Border.GestureRecognizers>
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                <Label Grid.Column="0" Text="{Binding ChildAvatar}" FontSize="34" VerticalOptions="Center" />
+                <Label Grid.Column="1"
+                       Text="{Binding ChildName}"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+                <Label Grid.Column="2"
+                       Text="{Binding TotalStars, Converter={StaticResource FormatWith}, ConverterParameter=TotalStars}"
+                       Style="{StaticResource HintLabel}"
+                       VerticalOptions="Center" />
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16">
+
+                <Label Text="{loc:Translate HomeTitle}" Style="{StaticResource TitleLabel}" />
+
+                <Label Text="{loc:Translate SectionFun}" Style="{StaticResource SectionLabel}" />
+                <CollectionView ItemsSource="{Binding FunGames}"
+                                ItemTemplate="{StaticResource GameTileTemplate}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="2"
+                                         HorizontalItemSpacing="12"
+                                         VerticalItemSpacing="12" />
+                    </CollectionView.ItemsLayout>
+                </CollectionView>
+
+                <Label Text="{loc:Translate SectionEducational}"
+                       Style="{StaticResource SectionLabel}"
+                       IsVisible="{Binding EducationalGames.Count}" />
+                <CollectionView ItemsSource="{Binding EducationalGames}"
+                                ItemTemplate="{StaticResource GameTileTemplate}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="2"
+                                         HorizontalItemSpacing="12"
+                                         VerticalItemSpacing="12" />
+                    </CollectionView.ItemsLayout>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

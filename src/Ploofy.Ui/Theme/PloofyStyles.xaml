@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Ploofy ortak stilleri.
+
+    İki kural bütün ekranlarda geçerli:
+
+    1. Dokunma hedefi en az 64 birim. Küçük çocuğun parmağı büyük, isabeti
+       düşük; standart 44'lük hedef bu yaş grubunda sürekli ıskalanıyor.
+    2. Yazı büyük ve kalın. Fidan bandında yeni okumaya başlayan çocuk
+       küçük punto ile takılıyor, Filiz bandında yazı zaten okunmuyor —
+       ikisi de büyük puntodan zarar görmüyor.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="Ploofy.Ui.Theme.PloofyStyles">
+
+    <x:Double x:Key="TouchTarget">64</x:Double>
+    <x:Double x:Key="TouchTargetLarge">96</x:Double>
+    <Thickness x:Key="PagePadding">20</Thickness>
+
+    <Style TargetType="Page" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor" Value="{StaticResource Canvas}" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+        <Setter Property="FontSize" Value="18" />
+    </Style>
+
+    <Style x:Key="TitleLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="SectionLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource InkMuted}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="HintLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource InkMuted}" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+
+    <!-- Ana eylem düğmesi. Çocuğun bastığı her düğme bu ölçüde. -->
+    <Style x:Key="BigButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Leaf}" />
+        <Setter Property="TextColor" Value="{StaticResource OnAccent}" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="CornerRadius" Value="28" />
+        <Setter Property="HeightRequest" Value="{StaticResource TouchTarget}" />
+        <Setter Property="Padding" Value="28,0" />
+    </Style>
+
+    <Style x:Key="QuietButton" TargetType="Button" BasedOn="{StaticResource BigButton}">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceMuted}" />
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+    </Style>
+
+    <Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource BigButton}">
+        <Setter Property="BackgroundColor" Value="{StaticResource Coral}" />
+    </Style>
+
+    <!-- Kart yüzeyi: oyun kutucukları, profil kartları, sonuç paneli -->
+    <Style x:Key="CardBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- Yayın hedefleri Android ve iOS. Windows yalnızca geliştirme sırasında
+		     hızlı denemek için; mağazaya çıkmıyor. -->
+		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+
+		<OutputType>Exe</OutputType>
+		<RootNamespace>Ploofy.App</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+
+		<ApplicationTitle>Ploofy</ApplicationTitle>
+		<ApplicationId>io.ploofy.app</ApplicationId>
+
+		<ApplicationDisplayVersion>0.1</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<WindowsPackageType>None</WindowsPackageType>
+
+		<!-- MVVM ureticisi [ObservableProperty] icin partial property biciminde
+		     kod uretiyor; WinUI hedefinde alan bicimi MVVMTK0045 ile hata
+		     veriyor. Uretici bu bicimi yalnizca preview dil surumunde
+		     isliyor, bu yuzden burada acik. Motor ve veri katmani stabil
+		     dil surumunde kaliyor. -->
+		<LangVersion>preview</LangVersion>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFD166" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#FFD166" BaseSize="128,128" />
+
+		<MauiImage Include="Resources\Images\*" />
+		<MauiFont Include="Resources\Fonts\*" />
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" />
+		<!-- MVVM üretici: ObservableProperty / RelayCommand kaynak üretimiyle
+		     görünüm modellerinde standart kalıp kodu yazmıyoruz. -->
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Ploofy.Data\Ploofy.Data.csproj" />
+		<ProjectReference Include="..\Ploofy.Engine\Ploofy.Engine.csproj" />
+		<ProjectReference Include="..\Ploofy.Ui\Ploofy.Ui.csproj" />
+	</ItemGroup>
+
+</Project>

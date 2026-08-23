@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- Yayın hedefleri Android ve iOS. Windows yalnızca geliştirme sırasında
+		     hızlı denemek için; mağazaya çıkmıyor. -->
+		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<RootNamespace>Ploofy.Ui</RootNamespace>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<!-- Sürekli hareketli oyunlar (balon patlatma, yolu bul, sepeti tut)
+		     kontrollerle değil canvas ile çiziliyor. -->
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.0" />
+		<!-- MAUI'nin kendi ses çalma API'si yok; bu paket fiilî standart. -->
+		<PackageReference Include="Plugin.Maui.Audio" Version="4.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Ploofy.Engine\Ploofy.Engine.csproj" />
+	</ItemGroup>
+
+</Project>

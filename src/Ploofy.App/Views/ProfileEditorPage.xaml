@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.ProfileEditorPage"
+             x:Name="Page"
+             x:DataType="vm:ProfileEditorViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="20">
+
+            <Label Text="{loc:Translate AddProfile}" Style="{StaticResource TitleLabel}" />
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{loc:Translate ProfileNameLabel}" Style="{StaticResource SectionLabel}" />
+                <Entry Text="{Binding DisplayName}"
+                       MaxLength="24"
+                       FontSize="20"
+                       HeightRequest="{StaticResource TouchTarget}"
+                       BackgroundColor="{StaticResource Surface}" />
+                <Label Text="{loc:Translate ProfileNameHint}" Style="{StaticResource HintLabel}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8">
+                <Label Text="{loc:Translate ProfileAgeLabel}" Style="{StaticResource SectionLabel}" />
+
+                <CollectionView ItemsSource="{Binding Bands}"
+                                SelectedItem="{Binding SelectedBand}"
+                                SelectionMode="Single"
+                                HeightRequest="270">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:BandOption">
+                            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label FontSize="20" FontAttributes="Bold">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Name}" />
+                                                <Span Text="  " />
+                                                <Span Text="{Binding AgeRange}"
+                                                      TextColor="{StaticResource InkMuted}"
+                                                      FontSize="16" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Text="{Binding Hint}" Style="{StaticResource HintLabel}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8">
+                <Label Text="{loc:Translate ProfileAvatarLabel}" Style="{StaticResource SectionLabel}" />
+
+                <CollectionView ItemsSource="{Binding AvatarChoices}"
+                                SelectedItem="{Binding SelectedAvatar}"
+                                SelectionMode="Single"
+                                HeightRequest="180">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="4"
+                                         HorizontalItemSpacing="8"
+                                         VerticalItemSpacing="8" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border Style="{StaticResource CardBorder}" Padding="4">
+                                <Label Text="{Binding .}"
+                                       FontSize="34"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <Button Text="{loc:Translate ProfileSave}"
+                    Style="{StaticResource BigButton}"
+                    IsEnabled="{Binding CanSave}"
+                    Command="{Binding SaveCommand}" />
+
+            <Button Text="{loc:Translate CommonCancel}"
+                    Style="{StaticResource QuietButton}"
+                    Command="{Binding CancelCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
