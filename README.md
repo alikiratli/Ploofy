@@ -141,10 +141,31 @@ dotnet test
 dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-windows10.0.19041.0
 ```
 
-Android'e derlemek için Android SDK gerekiyor:
+### Android
+
+Android SDK ve **JDK 17** gerekiyor — sistemdeki daha yeni bir JDK kabul
+edilmiyor. Yollar makineye özel olduğu için depoya girmiyor; kök dizine
+`Ploofy.local.props` oluştur:
+
+```xml
+<Project>
+  <PropertyGroup>
+    <AndroidSdkDirectory>C:\Users\...\AppData\Local\Android\Sdk</AndroidSdkDirectory>
+    <JavaSdkDirectory>C:\Users\...\.jdks\ms-17.0.15</JavaSdkDirectory>
+  </PropertyGroup>
+</Project>
+```
+
+Android SDK kurulu değilse:
 
 ```bash
-dotnet build src/Ploofy.App/Ploofy.App.csproj -t:InstallAndroidDependencies \n  -f net9.0-android -p:AcceptAndroidSDKLicenses=True
+dotnet build src/Ploofy.App/Ploofy.App.csproj -t:InstallAndroidDependencies -f net9.0-android -p:AcceptAndroidSDKLicenses=True
+```
+
+Cihaza ya da emülatöre kurup çalıştırmak:
+
+```bash
+dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-android -t:Run
 ```
 
 Metinler değişince resx dosyalarını yeniden üret (elle düzenlenmiyorlar):
@@ -157,8 +178,9 @@ python tools/build_strings.py content/strings.tsv src/Ploofy.App/Resources/Strin
 
 - **Faz 1 — İskelet.** Motor + veri katmanı + testler ✅ · MAUI kabuğu, üç dil,
   profil akışı, ana ekran, Eşleştirme Kartları uçtan uca (sıralı oyun ve yıldız
-  kaydı dahil), ebeveyn kilidi, ayarlar, abonelik ekranı ✅ · ses varlıkları ve
-  Android SDK kurulumu ⏳
+  kaydı dahil), ebeveyn kilidi, ayarlar, abonelik ekranı ✅ · Balon Patlatma ve
+  ortak görsel dil ✅ · Android tablette uçtan uca doğrulandı ✅ ·
+  ses varlıkları ⏳
 - **Faz 2 — Çeşitlilik.** Kalan 9 mini oyun, hepsi aynı bant API'siyle. Sonunda
   "10 oyun, 3 bant, 1 yıldız koleksiyonu" tamam.
 - **Faz 3 — Ebeveyn ve uyum.** Ayarlar, abonelik akışı, veri toplama denetimi,

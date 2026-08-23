@@ -29,4 +29,12 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <!--
+    Makineye özel araç yolları (Android SDK, JDK 17). Bu dosya depoya
+    girmiyor: her geliştiricinin yolu farklı ve birinin yolu diğerinin
+    derlemesini kırar. Örnek içerik README'de.
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)Ploofy.local.props"
+          Condition="Exists('$(MSBuildThisFileDirectory)Ploofy.local.props')" />
+
 </Project>

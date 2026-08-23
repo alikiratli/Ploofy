@@ -1,6 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<application android:allowBackup="false" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
+
+	<!--
+		Titreşim, geri bildirimin yarısı: doğru dokunuşta kısa bir titreşim,
+		bu yaş grubunda animasyondan daha güçlü çalışıyor. Normal izin
+		sınıfında olduğu için çalışırken kullanıcıya soru sorulmuyor.
+	-->
+	<uses-permission android:name="android.permission.VIBRATE" />
+
+	<!--
+		INTERNET ve ACCESS_NETWORK_STATE yalnızca mağaza (satın alma) katmanı
+		için. Uygulama kendi sunucusuna bağlanmıyor, çocuğa ait hiçbir veri
+		cihazdan çıkmıyor; oyunların tamamı çevrimdışı çalışıyor.
+	-->
 	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

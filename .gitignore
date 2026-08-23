@@ -41,3 +41,6 @@ packages/
 *.log
 Thumbs.db
 .DS_Store
+
+# Makineye ozel arac yollari (Android SDK, JDK)
+Ploofy.local.props

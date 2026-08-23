@@ -74,9 +74,14 @@ public sealed class FeedbackService(IAudioManager audioManager) : IFeedbackServi
 
             HapticFeedback.Default.Perform(type);
         }
-        catch (FeatureNotSupportedException)
+        catch (Exception)
         {
-            // Titreşimi olmayan cihaz (çoğu tablet). Ses ve animasyon yeterli.
+            // Titreşimi olmayan cihaz, izni kısıtlanmış cihaz, meşgul donanım…
+            // Sebep ne olursa olsun oyun devam etmeli: geri bildirimin süs
+            // katmanı yüzünden çocuğun oyununu düşürmek kabul edilemez.
+            // (Bu yakalama bir kez gerçek bir çökmeyi önledi: VIBRATE izni
+            // bildirilmediğinde MAUI PermissionException fırlatıyor.)
+            HapticsEnabled = false;
         }
     }
 

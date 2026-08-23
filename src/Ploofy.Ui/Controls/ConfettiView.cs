@@ -10,7 +10,7 @@ namespace Ploofy.Ui.Controls;
 /// </summary>
 /// <remarks>
 /// Sonuç ekranının üstüne saydam bir katman olarak konuyor ve dokunuşları
-/// geçiriyor (<see cref="InputTransparent"/>), yani altındaki düğmeleri
+/// geçiriyor (<c>InputTransparent</c>), yani altındaki düğmeleri
 /// engellemiyor. Konfeti bitince zamanlayıcı kendini durduruyor: arka planda
 /// boşuna dönen bir çizim döngüsü pil yakıyor.
 /// </remarks>

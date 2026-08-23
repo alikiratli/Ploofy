@@ -63,10 +63,13 @@
                     <DataTemplate x:DataType="vm:MemoryCardVm">
                         <!-- Çevirme animasyonu kontrolün içinde; şablon yalnızca
                              durumu bağlıyor. -->
+                        <!-- Kart kareye yakın durmalı: tablette 5 sütunda
+                             100 birim yükseklik kartı basık bir çubuğa
+                             çeviriyordu. -->
                         <ui:MemoryCardView Symbol="{Binding Symbol}"
                                            IsRevealed="{Binding IsRevealed}"
                                            IsMatched="{Binding IsMatched}"
-                                           HeightRequest="100">
+                                           HeightRequest="140">
                             <ui:MemoryCardView.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={x:Reference Page}, Path=BindingContext.FlipCommand, x:DataType=ContentPage}"

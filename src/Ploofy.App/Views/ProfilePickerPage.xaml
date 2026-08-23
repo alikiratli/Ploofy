@@ -39,7 +39,9 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:ProfileCard">
-                    <Border Style="{StaticResource CardBorder}" HeightRequest="180">
+                    <!-- Sabit yükseklik yerine en az yükseklik: tablette ve
+                         büyük yazı ölçeğinde alt satır kırpılıyordu. -->
+                    <Border Style="{StaticResource CardBorder}" MinimumHeightRequest="190">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectCommand, x:DataType=ContentPage}"
