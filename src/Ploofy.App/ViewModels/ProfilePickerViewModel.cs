@@ -95,7 +95,7 @@ public sealed partial class ProfilePickerViewModel(
 
         await feedback.PlayAsync(FeedbackCue.Tap);
         await state.SetActiveProfileAsync(card.Row);
-        await Shell.Current.GoToAsync("home");
+        await Shell.Current.GoToAsync("//home");
     }
 
     [RelayCommand]

@@ -90,6 +90,9 @@ public static class MauiProgram
         services.AddTransient<BubblePopPage>();
         services.AddTransient<BubblePopViewModel>();
 
+        services.AddTransient<ShapeSortPage>();
+        services.AddTransient<ShapeSortViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 

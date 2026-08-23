@@ -5,15 +5,27 @@
     Sekme çubuğu yok: çocuk ekranında kalıcı bir menü, oyunun ortasında
     yanlışlıkla basılan bir çıkış demek. Akış tek yönlü —
     profil seç → oyun seç → nasıl oynanacağını seç → oyna → sonuç.
+
+    İki kök var: profil seçimi ve oyun listesi. İkisi de kabuğun kendi
+    öğesi olduğu için aralarında tek bir mutlak çağrıyla (//profiles,
+    //home) geçiliyor. Oyun listesi kayıtlı bir rota olsaydı ona dönmek
+    iki ardışık GoToAsync gerektirirdi ve bu, diyalog kapanırken
+    çağrıldığında kabuğu kilitliyor.
 -->
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:Ploofy.App.Views"
        x:Class="Ploofy.App.AppShell"
        Shell.FlyoutBehavior="Disabled"
-       Shell.NavBarIsVisible="False">
+       Shell.NavBarIsVisible="False"
+       Shell.TabBarIsVisible="False">
 
     <ShellContent ContentTemplate="{DataTemplate views:ProfilePickerPage}"
-                  Route="profiles" />
+                  Route="profiles"
+                  Shell.TabBarIsVisible="False" />
+
+    <ShellContent ContentTemplate="{DataTemplate views:HomePage}"
+                  Route="home"
+                  Shell.TabBarIsVisible="False" />
 
 </Shell>

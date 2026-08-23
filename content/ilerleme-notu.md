@@ -5,16 +5,18 @@ Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
 
-Faz 1 tamamlandı. Uygulama Android tablette uçtan uca çalışıyor: çocuk profili
-oluşturuluyor, oyun seçiliyor, oynanıyor, yıldız kazanılıyor ve kayıt cihazda
-tutuluyor. İki mini oyun oynanabilir durumda (ücretsiz katmanın ikisi de),
-kalan sekizi katalogda kilitli/"yakında" olarak görünüyor.
+Faz 1 tamamlandı, Faz 2 başladı. Uygulama Android tablette uçtan uca çalışıyor:
+çocuk profili oluşturuluyor, oyun seçiliyor, oynanıyor, yıldız kazanılıyor ve
+kayıt cihazda tutuluyor. Üç mini oyun oynanabilir durumda, kalan yedisi
+katalogda "yakında" olarak görünüyor.
 
-**Son oturumda yapılan:** Balon Patlatma eklendi, ortak görsel dil kuruldu,
-Android SDK yapılandırıldı ve uygulama ilk kez gerçek Android üzerinde
-koşturulup çıkan iki çökme düzeltildi.
+**Son oturumda yapılan:** Şekil Ayırma eklendi — sürükle-bırak yolunu ve şekil
+çizim katmanını açtı. Abonelik akışı (paywall → ebeveyn kilidi → kilitlerin
+açılması) ilk kez uçtan uca doğrulandı. Kabuk gezinmesi tek mutlak çağrıya
+indirildi.
 
-**Sayılar:** 89 test geçiyor · 4 commit · 10 oyun tanımlı, 2'si oynanabilir.
+**Sayılar:** 105 test geçiyor · 10 oyun tanımlı, 3'ü oynanabilir
+(Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma).
 
 ## 2. Depo düzeni
 
@@ -34,10 +36,11 @@ koşturulup çıkan iki çökme düzeltildi.
 - Üç yaş bandı (Filiz/Fidan/Meşe) her oyunun parametrelerini gerçekten ölçekliyor
 - Eşleştirme Kartları: kart çevirme animasyonu, eşleşme zıplaması, sıralı oyun
 - Balon Patlatma: SkiaSharp yüzeyi, parlayan balonlar, patlama parçacıkları, hedef renk, süre
+- Şekil Ayırma: parmağı kare kare takip eden sürükleme, hayalet kutular, yanlış kutuda silkelenme
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
 - Yıldız ve rozet kaydı; bant değişince eski yıldızlar korunuyor
-- Abonelik ekranı ve kilit mantığı (mağaza bağlantısı hariç)
+- Abonelik akışı: paywall → ebeveyn kilidi → kilitlerin açılması (mağaza bağlantısı hariç)
 
 ## 4. Sıradaki işler
 
@@ -52,16 +55,17 @@ boyutu) ve gerçek kare hızı ancak cihazda ölçülebilir. Tableti USB'den
 tak, hata ayıklamayı aç, `dotnet build src/Ploofy.App/Ploofy.App.csproj
 -f net9.0-android -t:Run`.
 
-**Öncelik 3 — Faz 2, kalan sekiz oyun.** Önerilen sıra, her adımda yeni bir
-teknik parça açtığı için:
+**Öncelik 3 — Faz 2, kalan yedi oyun.** Önerilen sıra, her adımda yeni bir
+teknik parça açtığı için (Harf Avı ve Sayı Avı aynı mekaniği paylaştığı için
+birlikte yazılıyor):
 
-1. Şekil Ayırma (sürükle-bırak yolunu açar)
-2. Harf Avı ve Sayı Avı (öğretici içerik + sesli yönerge ihtiyacı)
-3. Sırayı Tekrarla (ritim/zamanlama)
-4. Say ve Eşleştir (sürükle-bırak + öğretici)
-5. Sepeti Tut (canvas + sürekli hareket)
-6. Yolu Bul (canvas + serbest çizgi takibi)
-7. Yapboz (canvas + parça kesme)
+1. Harf Avı ve Sayı Avı (öğretici içerik + sesli yönerge ihtiyacı)
+2. Sırayı Tekrarla (ritim/zamanlama)
+3. Say ve Eşleştir (sürükle-bırak + öğretici; ShapeSortSurface'in sürükleme
+   kalıbı doğrudan kullanılabilir)
+4. Sepeti Tut (canvas + sürekli hareket)
+5. Yolu Bul (canvas + serbest çizgi takibi)
+6. Yapboz (canvas + parça kesme)
 
 **Öncelik 4 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
 başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
@@ -111,6 +115,12 @@ okunmuyor:
   haptik çağrısında PermissionException fırlatıp uygulamayı kapatıyordu.
 - **Windows hedefi yeterli kanıt değil.** Yukarıdaki son iki madde Windows'ta
   sessizce geçiyordu. Değişiklik sonrası Android'de de çalıştır.
+- **Emülatörün SystemUI'ı bu makinede takılıyor.** Takıldığında bütün ekran
+  donuyor: ekran görüntüsü hep aynı kareyi gösteriyor, dokunuşlar işlemiyor ve
+  uygulama kilitlenmiş gibi duruyor. Teşhis için
+  `adb shell "dumpsys window | grep mCurrentFocus"` — "Application Not
+  Responding: com.android.systemui" görünüyorsa sorun bizde değil, emülatörü
+  yeniden başlat. Bir kez var olmayan bir kilitlenmeyi kovalamaya yol açtı.
 
 ## 8. Yeni mini oyun ekleme
 
@@ -122,7 +132,11 @@ okunmuyor:
 4. `content/strings.tsv` içine üç dilde ad, sonra `tools/build_strings.py`
 5. `AppShell.xaml.cs` içinde rotayı kaydet, `MauiProgram` içinde sayfayı ve
    görünüm modelini DI'ya ekle
-6. Sürekli hareketli oyunsa çizimi `Ploofy.Ui/Controls` altında SKCanvasView
-   olarak yaz; `BubblePainter`, `ParticleField`, `PloofyPalette` hazır
+6. Sürekli hareketli ya da sürüklemeli bir oyunsa çizimi `Ploofy.Ui/Controls`
+   altında SKCanvasView olarak yaz; `BubblePainter`, `ShapePainter`,
+   `ParticleField`, `PloofyPalette` hazır. Sürükleme için MAUI'nin
+   sürükle-bırak tanıyıcıları değil doğrudan dokunma olayları kullanılıyor:
+   platformun sürükleme eşiği küçük çocuğun yavaş hareketinde aşılmıyor ve
+   parça hiç kıpırdamıyor
 
 Kilit, bant filtresi, yıldız kaydı ve ebeveyn ekranı kendiliğinden çalışır.

@@ -20,7 +20,6 @@ public partial class AppShell : Shell
     private static void RegisterRoutes()
     {
         Routing.RegisterRoute("profileeditor", typeof(ProfileEditorPage));
-        Routing.RegisterRoute("home", typeof(HomePage));
         Routing.RegisterRoute("playsetup", typeof(PlaySetupPage));
         Routing.RegisterRoute("result", typeof(RoundResultPage));
         Routing.RegisterRoute("settings", typeof(SettingsPage));
@@ -29,5 +28,6 @@ public partial class AppShell : Shell
         // Mini oyunlar
         Routing.RegisterRoute("memorymatch", typeof(MemoryMatchPage));
         Routing.RegisterRoute("bubblepop", typeof(BubblePopPage));
+        Routing.RegisterRoute("shapesort", typeof(ShapeSortPage));
     }
 }

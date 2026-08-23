@@ -77,6 +77,7 @@ public static class GamePresentation
     {
         GameCatalog.MemoryMatch => "memorymatch",
         GameCatalog.BubblePop => "bubblepop",
+        GameCatalog.ShapeSort => "shapesort",
         _ => null,
     };
 

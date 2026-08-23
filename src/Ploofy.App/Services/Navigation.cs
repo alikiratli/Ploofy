@@ -6,18 +6,20 @@ namespace Ploofy.App.Services;
 public static class Navigation
 {
     /// <summary>
-    /// Oyun akışından çıkıp ana ekrana (oyun listesine) döner.
+    /// Oyun akışından çıkıp oyun listesine döner.
     /// </summary>
     /// <remarks>
-    /// Yığın oyun akışında derinleşiyor (profil → ana ekran → kurulum → oyun →
-    /// sonuç); kaç adım geri gidileceğini saymak, araya bir ekran girdiği anda
-    /// bozulacak bir kural olurdu. Bunun yerine kök sıfırlanıp ana ekran
-    /// yeniden açılıyor: seçili profil <see cref="AppState"/> içinde durduğu
-    /// için çocuk kendini yine kendi oyun listesinde buluyor.
+    /// <para>
+    /// Tek bir mutlak çağrı: oyun listesi kabuğun kendi kökü
+    /// (bkz. AppShell.xaml), bu yüzden kaç ekran derinde olduğumuzun önemi
+    /// yok ve yığın kendiliğinden sıfırlanıyor.
+    /// </para>
+    /// <para>
+    /// Burası bir zamanlar önce <c>//profiles</c>'a gidip sonra oyun
+    /// listesini itiyordu. Ardışık iki gezinme çağrısı, ebeveyn kilidi
+    /// diyaloğu kapanırken tetiklendiğinde kabuğu kilitliyordu: uygulama
+    /// ayakta kalıyor ama hiçbir dokunuşa cevap vermiyordu.
+    /// </para>
     /// </remarks>
-    public static async Task GoHomeAsync()
-    {
-        await Shell.Current.GoToAsync("//profiles");
-        await Shell.Current.GoToAsync("home");
-    }
+    public static Task GoHomeAsync() => Shell.Current.GoToAsync("//home");
 }
