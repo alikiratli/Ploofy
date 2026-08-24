@@ -5,18 +5,17 @@ Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
 
-Faz 1 tamamlandı, Faz 2 başladı. Uygulama Android tablette uçtan uca çalışıyor:
-çocuk profili oluşturuluyor, oyun seçiliyor, oynanıyor, yıldız kazanılıyor ve
-kayıt cihazda tutuluyor. Üç mini oyun oynanabilir durumda, kalan yedisi
-katalogda "yakında" olarak görünüyor.
+Faz 1 tamamlandı, Faz 2 yarılandı. Uygulama Android tablette uçtan uca
+çalışıyor: çocuk profili oluşturuluyor, oyun seçiliyor, oynanıyor, yıldız
+kazanılıyor ve kayıt cihazda tutuluyor. Beş mini oyun oynanabilir durumda,
+kalan beşi katalogda "yakında" olarak görünüyor.
 
-**Son oturumda yapılan:** Şekil Ayırma eklendi — sürükle-bırak yolunu ve şekil
-çizim katmanını açtı. Abonelik akışı (paywall → ebeveyn kilidi → kilitlerin
-açılması) ilk kez uçtan uca doğrulandı. Kabuk gezinmesi tek mutlak çağrıya
-indirildi.
+**Son oturumda yapılan:** Harf Avı ve Sayı Avı eklendi. İkisi aynı mekaniği
+paylaşıyor, tek sayfa ve tek görünüm modeli kullanıyor; hangisi olduğu
+oturumdaki oyun kimliğinden çözülüyor.
 
-**Sayılar:** 105 test geçiyor · 10 oyun tanımlı, 3'ü oynanabilir
-(Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma).
+**Sayılar:** 130 test geçiyor · 10 oyun tanımlı, 5'i oynanabilir
+(Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma, Harf Avı, Sayı Avı).
 
 ## 2. Depo düzeni
 
@@ -37,6 +36,7 @@ indirildi.
 - Eşleştirme Kartları: kart çevirme animasyonu, eşleşme zıplaması, sıralı oyun
 - Balon Patlatma: SkiaSharp yüzeyi, parlayan balonlar, patlama parçacıkları, hedef renk, süre
 - Şekil Ayırma: parmağı kare kare takip eden sürükleme, hayalet kutular, yanlış kutuda silkelenme
+- Harf/Sayı Avı: dile göre alfabe (tr/en/de), Meşe bandında küçük harfler ve benzer çeldiriciler
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
 - Yıldız ve rozet kaydı; bant değişince eski yıldızlar korunuyor
@@ -55,17 +55,15 @@ boyutu) ve gerçek kare hızı ancak cihazda ölçülebilir. Tableti USB'den
 tak, hata ayıklamayı aç, `dotnet build src/Ploofy.App/Ploofy.App.csproj
 -f net9.0-android -t:Run`.
 
-**Öncelik 3 — Faz 2, kalan yedi oyun.** Önerilen sıra, her adımda yeni bir
-teknik parça açtığı için (Harf Avı ve Sayı Avı aynı mekaniği paylaştığı için
-birlikte yazılıyor):
+**Öncelik 3 — Faz 2, kalan beş oyun.** Önerilen sıra, her adımda yeni bir
+teknik parça açtığı için:
 
-1. Harf Avı ve Sayı Avı (öğretici içerik + sesli yönerge ihtiyacı)
-2. Sırayı Tekrarla (ritim/zamanlama)
-3. Say ve Eşleştir (sürükle-bırak + öğretici; ShapeSortSurface'in sürükleme
-   kalıbı doğrudan kullanılabilir)
-4. Sepeti Tut (canvas + sürekli hareket)
-5. Yolu Bul (canvas + serbest çizgi takibi)
-6. Yapboz (canvas + parça kesme)
+1. Say ve Eşleştir (öğretici; `GlyphTileView` ve ShapeSortSurface'in sürükleme
+   kalıbı hazır, en hızlı eklenecek olan bu)
+2. Sırayı Tekrarla (ritim/zamanlama — yeni bir zamanlayıcı kalıbı gerekiyor)
+3. Sepeti Tut (canvas + sürekli hareket)
+4. Yolu Bul (canvas + serbest çizgi takibi)
+5. Yapboz (canvas + parça kesme; en zoru, sona bırakıldı)
 
 **Öncelik 4 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
 başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
@@ -85,6 +83,9 @@ kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
 - iOS derlenmedi
 - Uygulama ikonu ve açılış ekranı hâlâ şablon varsayılanı
 - Profil düzenleme yok (yalnızca oluştur ve sil)
+- Av oyunlarında sesli yönerge yok; şu an yönerge tamamen görsel (aranan
+  işaret büyük gösteriliyor). Ses varlıkları gelince "bunu bul" seslendirmesi
+  eklenebilir ama oyun sessiz de tam çalışıyor
 
 ## 6. Yeni makinede kurulum
 

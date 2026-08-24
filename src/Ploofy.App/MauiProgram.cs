@@ -93,6 +93,9 @@ public static class MauiProgram
         services.AddTransient<ShapeSortPage>();
         services.AddTransient<ShapeSortViewModel>();
 
+        services.AddTransient<HuntPage>();
+        services.AddTransient<HuntViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 

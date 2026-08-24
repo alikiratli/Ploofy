@@ -29,5 +29,9 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("memorymatch", typeof(MemoryMatchPage));
         Routing.RegisterRoute("bubblepop", typeof(BubblePopPage));
         Routing.RegisterRoute("shapesort", typeof(ShapeSortPage));
+
+        // Harf Avı ve Sayı Avı aynı mekaniği paylaşıyor; hangisi
+        // olduğu oturumdaki oyun kimliğinden çözülüyor.
+        Routing.RegisterRoute("hunt", typeof(HuntPage));
     }
 }

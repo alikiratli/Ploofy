@@ -268,6 +268,9 @@
   <data name="GameBasketCatch" xml:space="preserve">
     <value>Sepeti Tut</value>
   </data>
+  <data name="HuntPrompt" xml:space="preserve">
+    <value>Bunu bul</value>
+  </data>
   <data name="GameLetterHunt" xml:space="preserve">
     <value>Harf Avı</value>
   </data>

@@ -78,6 +78,8 @@ public static class GamePresentation
         GameCatalog.MemoryMatch => "memorymatch",
         GameCatalog.BubblePop => "bubblepop",
         GameCatalog.ShapeSort => "shapesort",
+        GameCatalog.LetterHunt => "hunt",
+        GameCatalog.NumberHunt => "hunt",
         _ => null,
     };
 
