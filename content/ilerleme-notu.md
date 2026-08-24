@@ -17,6 +17,11 @@ oturumdaki oyun kimliğinden çözülüyor.
 **Sayılar:** 130 test geçiyor · 10 oyun tanımlı, 5'i oynanabilir
 (Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma, Harf Avı, Sayı Avı).
 
+**Buradan başla:** Say ve Eşleştir. Parçaları hazır — `GlyphTileView` sayı
+kutucuğunu, `ShapeSortSurface` sürükleme kalıbını veriyor. Yeni olan tek şey
+"miktar" tarafı: ekranda n tane nesne gösterilip doğru rakama sürüklenecek.
+Adımlar için 8. bölüme bak.
+
 ## 2. Depo düzeni
 
 - **src/Ploofy.Engine** — oyun mantığı, UI'ya sıfır bağımlılık (net9.0)
