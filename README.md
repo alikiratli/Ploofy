@@ -58,12 +58,12 @@ Kilit, bant filtresi, yıldız kaydı ve ebeveyn ekranı otomatik çalışır.
 
 ## Oyun kütüphanesi
 
-**Eğlendirici (7):** Eşleştirme Kartları ✅ · Balon Patlatma ✅ · Şekil Ayırma ✅ ·
-Sırayı Tekrarla ✅ · Sepeti Tut ✅ · Yolu Bul ✅ · Yapboz
+**Eğlendirici (7):** Eşleştirme Kartları · Balon Patlatma · Şekil Ayırma ·
+Sırayı Tekrarla · Sepeti Tut · Yolu Bul · Yapboz
 
-**Öğretici (3):** Harf Avı ✅ · Sayı Avı ✅ · Say ve Eşleştir ✅
+**Öğretici (3):** Harf Avı · Sayı Avı · Say ve Eşleştir
 
-✅ oynanabilir; kalanlar katalogda "yakında" olarak görünüyor.
+Onunun onu da oynanabilir durumda.
 
 Beş farklı etkileşim türünü kapsıyor (dokunma, sürükleme, çizgi takibi, hafıza,
 sıra) — "hepsi aynı hissettiriyor" sorununu baştan çözen ölçüt bu.

@@ -108,6 +108,9 @@ public static class MauiProgram
         services.AddTransient<MazeTracePage>();
         services.AddTransient<MazeTraceViewModel>();
 
+        services.AddTransient<JigsawPage>();
+        services.AddTransient<JigsawViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 

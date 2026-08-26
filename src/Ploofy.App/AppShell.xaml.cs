@@ -34,6 +34,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("simon", typeof(SimonPage));
         Routing.RegisterRoute("basketcatch", typeof(BasketCatchPage));
         Routing.RegisterRoute("mazetrace", typeof(MazeTracePage));
+        Routing.RegisterRoute("jigsaw", typeof(JigsawPage));
 
         // Harf Avı ve Sayı Avı aynı mekaniği paylaşıyor; hangisi
         // olduğu oturumdaki oyun kimliğinden çözülüyor.

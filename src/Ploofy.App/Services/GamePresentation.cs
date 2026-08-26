@@ -84,6 +84,7 @@ public static class GamePresentation
         GameCatalog.SimonSequence => "simon",
         GameCatalog.BasketCatch => "basketcatch",
         GameCatalog.MazeTrace => "mazetrace",
+        GameCatalog.Jigsaw => "jigsaw",
         _ => null,
     };
 

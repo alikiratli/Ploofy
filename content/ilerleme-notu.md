@@ -5,60 +5,62 @@ Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
 
-Faz 1 tamamlandı, Faz 2'den yalnızca Yapboz kaldı. Uygulama Android tablette
-uçtan uca çalışıyor: çocuk profili oluşturuluyor, oyun seçiliyor, oynanıyor,
-yıldız kazanılıyor ve kayıt cihazda tutuluyor. Dokuz mini oyun oynanabilir
-durumda. Kütüphane beş etkileşim türünün beşini de kapsıyor.
+**Faz 2 bitti: on oyunun onu da oynanabilir.** Uygulama Android tablette
+uçtan uca çalışıyor — çocuk profili oluşturuluyor, oyun seçiliyor,
+oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Katalogda artık
+"yakında" olarak duran hiçbir oyun yok ve kütüphane beş etkileşim türünün
+beşini de kapsıyor.
 
-**Son oturumda yapılan — Yolu Bul:**
+**Bundan sonrası oyun eklemek değil, olanı yayına hazırlamak.** Kalan üç
+şey — ses varlıkları, gerçek satın alma ve mağaza hazırlığı — 4. bölümde.
 
-Ekranda bir yol duruyor; çocuk parmağını başlangıca koyup yolu takip ederek
-sona götürüyor. Kütüphanenin tek **Trace** oyunu ve yazı öncesi becerinin
-doğrudan karşılığı: çizgi, eğri ve köşe takip etmek kalem tutmanın
-hazırlığı.
+**Son oturumda yapılan — Yapboz:**
 
-Üç karar oyunun tamamını belirliyor:
+Tahtada boş yuvalar duruyor, altta sıradaki parça bekliyor; çocuk parçayı
+yuvasına sürüklüyor. Parçalar Şekil Ayırma'daki gibi **sırayla** geliyor:
+on altı parçayı aynı anda ekrana dökmek bu yaş grubunda dağıtıyor.
 
-- **İlerleme geri gitmiyor.** Parmak geriye kayarsa ilerleme olduğu yerde
-  kalıyor. Geri saymak, titreyen bir parmağın oyunu bitirememesi demekti.
-- **Parmak kalkarsa ilerleme korunuyor** ve kaldığı yere yeniden dokunup
-  devam ediliyor — küçük çocuk parmağını uzun süre ekranda tutamıyor.
-  Bu yüzden arayüz ilerlemenin ucunu nabız gibi atan bir işaretle
-  gösteriyor; motor da yalnızca oraya konan parmağı kabul ediyor.
-- **Bir çıkış bir hata.** Yoldan uzakta gezinen parmak saniyede altmış hata
-  üretmiyor; yola dönünce kaldığı yerden devam ediyor.
+Bandın asıl farkı **hayalet**: küçük bantlarda boş yuvaların altında resmin
+soluk bir kopyası duruyor ve oyun "resmi eşleştir" oluyor. Meşe'de hayalet
+yok, oyun "resmi kur"a dönüşüyor — parçanın yeri ancak yerleşmiş komşulara
+bakarak çıkarılıyor. Bu yüzden o bantta parçaların geliş sırası rastgele
+**olamıyor**: sıra bir köşeden başlıyor ve her parça yerleşmişlerden en az
+birine komşu geliyor. Olmasaydı ortadan gelen yalnız bir parçanın yerini
+çıkarmanın yolu olmazdı.
 
-Yol **birim kare** içinde yaşıyor, arayüz o kareyi ekranın ortasına
-oturtuyor. Sebebi: "yoldan çıkmak" her yönde aynı mesafe olmalı, oysa ekran
-kare değil. Çizilen şerit kalınlığı da motorun toleransının tam iki katı —
-gördüğün yolun üstündeysen kabul, değilsen ret.
+Resim bir varlık dosyası değil, tohumdan üretiliyor: uygulama hiç görsel
+varlık taşımıyor. Şekiller sarsılmış bir ızgaraya dağıtılıyor, rastgele
+serpilmiyor — serpme boş bölgeler bırakıyor ve düz zeminden ibaret kalan
+bir parçanın yeri hayaletsiz bantta bulunamıyor.
 
-Yollar tek bir iskeletten türüyor: iki uç arasında bir eksen ve o eksene dik
-bir sapma (düz, kambur, dalga, zikzak). Bu yüzden yol kendi üstünden
-geçmiyor — geçseydi hem ilerlemenin hangi kolda olduğu belirsizleşirdi hem
-de çocuk "hangi yoldan gideceğim" diye takılırdı. Banda göre: yol sayısı
-(3/4/5), şerit kalınlığı (0.11 → 0.055), biçim havuzu (Meşe'de düz çizgi
-yok) ve kıvrım sayısı.
+Kesim: her iç kenara bir tırnak, komşu kenar onun tersi. Tırnak, kenarın
+ortasına oturan bir dairenin **büyük** yayı; daire kenarı iki noktada
+kestiği için yay tam o boyunlardan başlayıp bitiyor ve ek birleştirme
+çizgisi gerekmiyor. Geometri ekranda gözle doğrulanamadığı için ayrıca
+sayısal olarak sınandı: tırnaklar doğru yöne taşıyor, komşu kenarlar
+birebir örtüşüyor ve küçük yay değil büyük yay seçiliyor.
 
-**Sayılar:** 207 test geçiyor · 10 oyun tanımlı, 9'u oynanabilir
-(Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma, Harf Avı, Sayı Avı,
-Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut, Yolu Bul).
+Yapboz, son üç oyunun aksine **hedef süre taşıyor** (Meşe, 150 sn): tahtanın
+tamamı en baştan görünüyor, bekleyecek bir gösterim ya da düşecek bir nesne
+yok, yani hızlı bitirmek gerçekten "daha çabuk çözdüm" demek.
 
-**Buradan başla:** Yapboz — Faz 2'nin son oyunu ve en zoru. Yeni parçası
-görüntüyü parçalara kesmek ve her parçanın kendi yuvasını tanıması.
-`ShapeSortSurface`'ın sürükleme kalıbı ve `CountMatchSurface`'ın "yerine
-oturma" animasyonu hazır; asıl iş parça sınırlarının üretilmesi
-(dikdörtgen ızgara mı, geçmeli tırnak mı) ve parçanın doğru yuvaya yakın
-bırakıldığında kendiliğinden oturması. Adımlar için 8. bölüme bak.
+**Sayılar:** 228 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir.
 
-**Önce yapılması iyi olur:** Son dört oturumun oyunlarının hiçbiri gerçek
-ekranda oynanmadı, yalnızca derlendi (Windows + Android). Bakılacaklar:
-Say ve Eşleştir'de kart boyutu ve rakam tepsilerinin parmak isabeti;
-Sırayı Tekrarla'da 750 ms gösterim hızının Filiz bandında takip edilebilir
-olup olmadığı; Sepeti Tut'ta düşme hızının Fidan bandında adil olup
-olmadığı; Yolu Bul'da Meşe toleransının (0.055) parmak ucuyla gerçekten
-tutturulabilir olup olmadığı — bu dördü içinde en riskli olan bu, çünkü
-parmak ucu tablette zaten epey yer kaplıyor.
+**Buradan başla:** Artık kod değil, cihaz. Son beş oturumun oyunlarının
+hiçbiri gerçek ekranda oynanmadı; tabletti bir kez kurup onunu da baştan
+sona oynamak, bu noktada yapılabilecek en değerli iş. Sonra 4. bölümdeki
+öncelik sırası.
+
+**Cihazda özellikle bakılacaklar:**
+
+- Say ve Eşleştir: kart boyutu ve rakam tepsilerinin parmak isabeti
+- Sırayı Tekrarla: 750 ms gösterim hızı Filiz bandında takip edilebiliyor mu
+- Sepeti Tut: düşme hızı Fidan bandında adil mi, sepet parmağı gecikmeden
+  takip ediyor mu
+- Yolu Bul: Meşe toleransı (0.055) parmak ucuyla tutturulabiliyor mu —
+  parmak ucu tablette zaten epey yer kaplıyor, bunların en riskli olanı bu
+- Yapboz: Meşe'nin on altı parçası bir turu fazla uzatıyor mu, ve tepsideki
+  küçültülmüş parça hangi parça olduğu anlaşılacak kadar okunuyor mu
 
 ## 2. Depo düzeni
 
@@ -88,6 +90,8 @@ parmak ucu tablette zaten epey yer kaplıyor.
   darlığı, düşme hızı ve Meşe'de savrulma banda göre değişiyor
 - Yolu Bul: parmakla yol takibi; şerit kalınlığı, biçim havuzu ve kıvrım
   sayısı banda göre değişiyor
+- Yapboz: tohumdan üretilen resim, geçmeli tırnaklı kesim; hayalet ve parça
+  sırası banda göre değişiyor
 - Avatarlar: 32 emoji, üç tematik grup, her yerde renkli rozet olarak
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
@@ -96,27 +100,27 @@ parmak ucu tablette zaten epey yer kaplıyor.
 
 ## 4. Sıradaki işler
 
-**Öncelik 1 — Ses varlıkları.** Tek eksik olan somut parça.
+Oyun kütüphanesi bitti; buradan sonrası yayın işi.
+
+**Öncelik 1 — Fiziksel cihaz testi.** Artık en acil olan bu. Şimdiye kadar
+yalnızca tablet emülatöründe koştu ve son beş oturumun oyunları hiç
+oynanmadı. Parmak isabeti ve gerçek kare hızı ancak cihazda ölçülebilir.
+Tableti USB'den tak, hata ayıklamayı aç,
+`dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-android -t:Run`.
+Bakılacaklar 1. bölümün sonunda.
+
+**Öncelik 2 — Ses varlıkları.** Tek eksik olan somut parça.
 `src/Ploofy.App/Resources/Raw/sounds/` altına yedi dosya: tap.mp3,
 correct.mp3, retry.mp3, round_complete.mp3, star.mp3, handoff.mp3,
 locked.mp3. Kod hazır; dosya yoksa sessizce atlıyor, koyulduğu anda çalışır.
 
-**Öncelik 2 — Fiziksel cihaz testi.** Şimdiye kadar yalnızca tablet
-emülatöründe koştu. Parmak isabeti (özellikle Filiz bandındaki balon
-boyutu) ve gerçek kare hızı ancak cihazda ölçülebilir. Tableti USB'den
-tak, hata ayıklamayı aç, `dotnet build src/Ploofy.App/Ploofy.App.csproj
--f net9.0-android -t:Run`.
-
-**Öncelik 3 — Faz 2, kalan tek oyun.** Yapboz (canvas + parça kesme); en
-zoru olduğu için sona bırakıldı.
-
-**Öncelik 4 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
+**Öncelik 3 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
 başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
 `ISubscriptionService` arayüzünün arkasına takılacak; ekranlar değişmeyecek.
 
-**Öncelik 5 — iOS.** Hiç denenmedi. Mac gerektiriyor.
+**Öncelik 4 — iOS.** Hiç denenmedi. Mac gerektiriyor.
 
-**Öncelik 6 — Yayın hazırlığı.** Play Console yaş beyanı, App Store Kids
+**Öncelik 5 — Yayın hazırlığı.** Play Console yaş beyanı, App Store Kids
 kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
 (şu an MAUI şablonunun varsayılanı duruyor).
 
@@ -131,8 +135,9 @@ kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
   aranan işaret büyük gösteriliyor, Say ve Eşleştir'de küme ve rakamlar aynı
   ekranda duruyor). Ses varlıkları gelince seslendirme eklenebilir ama üçü de
   sessiz hâliyle tam çalışıyor
-- Son dört oturumun oyunları (Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut,
-  Yolu Bul) gerçek ekranda oynanmadı; yalnızca Windows ve Android'de derlendi
+- Son beş oturumun oyunları (Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut,
+  Yolu Bul, Yapboz) gerçek ekranda oynanmadı; yalnızca Windows ve Android'de
+  derlendi. Listenin en uzun maddesi bu ve artık en önemlisi
 - Profil düzenleme hâlâ yok: avatar ancak profil oluştururken seçiliyor,
   sonradan değiştirilemiyor. Otuz iki seçenek varken bu daha çok göze
   batacak
@@ -180,6 +185,13 @@ okunmuyor:
   ayrı bir `SKFont` nesnesi (atılması gerekiyor). Dikey ortalama da elde
   yapılıyor: taban çizgisine göre çizmek 1 ile 8'i farklı yüksekliklere
   düşürüyor, `font.Metrics` ile ortalanmalı. Örnek: `CountMatchSurface`.
+- **Gözle doğrulanamayan geometri sayıyla doğrulanır.** Yapbozun tırnak
+  kesimi doğru mu, ancak ekrana bakarak anlaşılırdı — ve ekran yoktu.
+  Yerine matematiğin kopyası küçük bir konsol programına alınıp üç şey
+  sınandı: tırnak doğru yöne taşıyor mu, komşu iki kenar birebir örtüşüyor
+  mu, ve dairenin büyük yayı mı seçiliyor. Üçü de tek satırlık bir işaret
+  hatasıyla bozulabilecek şeylerdi. Aynı yol, çizim koduna dokunan her
+  değişiklikte işe yarar.
 - **Emülatörün SystemUI'ı bu makinede takılıyor.** Takıldığında bütün ekran
   donuyor: ekran görüntüsü hep aynı kareyi gösteriyor, dokunuşlar işlemiyor ve
   uygulama kilitlenmiş gibi duruyor. Teşhis için
