@@ -80,6 +80,7 @@ public static class GamePresentation
         GameCatalog.ShapeSort => "shapesort",
         GameCatalog.LetterHunt => "hunt",
         GameCatalog.NumberHunt => "hunt",
+        GameCatalog.CountMatch => "countmatch",
         _ => null,
     };
 

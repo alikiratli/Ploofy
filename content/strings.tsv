@@ -72,6 +72,7 @@ HuntPrompt	Find this one	Bunu bul	Finde das hier
 GameLetterHunt	Letter Hunt	Harf Avı	Buchstabenjagd
 GameNumberHunt	Number Hunt	Sayı Avı	Zahlenjagd
 GameCountMatch	Count and Match	Say ve Eşleştir	Zählen und Zuordnen
+CountMatchPrompt	How many? Drag them onto the number.	Kaç tane? Sayının üstüne sürükle.	Wie viele? Zieh sie auf die Zahl.
 CommonCancel	Cancel	Vazgeç	Abbrechen
 CommonOk	OK	Tamam	OK
 CommonClose	Close	Kapat	Schließen

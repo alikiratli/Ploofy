@@ -1,26 +1,41 @@
 # Ploofy — İlerleme Notu
 
-Son güncelleme: 24.08.2026
+Son güncelleme: 26.08.2026
 Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
 
-Faz 1 tamamlandı, Faz 2 yarılandı. Uygulama Android tablette uçtan uca
-çalışıyor: çocuk profili oluşturuluyor, oyun seçiliyor, oynanıyor, yıldız
-kazanılıyor ve kayıt cihazda tutuluyor. Beş mini oyun oynanabilir durumda,
-kalan beşi katalogda "yakında" olarak görünüyor.
+Faz 1 tamamlandı, Faz 2'nin öğretici tarafı bitti. Uygulama Android tablette
+uçtan uca çalışıyor: çocuk profili oluşturuluyor, oyun seçiliyor, oynanıyor,
+yıldız kazanılıyor ve kayıt cihazda tutuluyor. Altı mini oyun oynanabilir
+durumda, kalan dördü katalogda "yakında" olarak görünüyor.
 
-**Son oturumda yapılan:** Harf Avı ve Sayı Avı eklendi. İkisi aynı mekaniği
-paylaşıyor, tek sayfa ve tek görünüm modeli kullanıyor; hangisi olduğu
-oturumdaki oyun kimliğinden çözülüyor.
+**Son oturumda yapılan:** Say ve Eşleştir eklendi — üç öğretici oyunun
+sonuncusu, yani öğretici bölüm artık tam. Ekranda bir nesne kümesi duruyor,
+çocuk kümeyi doğru rakamın üstüne sürüklüyor. Sayı Avı "rakamı tanıma"yı
+öğretiyordu; bu oyun rakamı bir **miktara** bağlıyor, yani bir sonraki adım.
 
-**Sayılar:** 130 test geçiyor · 10 oyun tanımlı, 5'i oynanabilir
-(Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma, Harf Avı, Sayı Avı).
+Oyunun banda göre üç ayrı zorluk knob'u var: miktar aralığı (Filiz 1-3,
+Fidan 1-5, Meşe 1-10), çeldirici rakamların uzaklığı (Meşe'de komşu sayılar
+— 6 ile 7 arasından seçmek gerçekten saymayı gerektiriyor) ve nesnelerin
+dizilişi (Meşe'de dağınık, altındaki bantlarda beşerli sıra). Beşerli
+diziliş bilinçli: 7 nesne "bir tam sıra ve iki tane" olarak görünüyor.
 
-**Buradan başla:** Say ve Eşleştir. Parçaları hazır — `GlyphTileView` sayı
-kutucuğunu, `ShapeSortSurface` sürükleme kalıbını veriyor. Yeni olan tek şey
-"miktar" tarafı: ekranda n tane nesne gösterilip doğru rakama sürüklenecek.
+**Sayılar:** 150 test geçiyor · 10 oyun tanımlı, 6'sı oynanabilir
+(Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma, Harf Avı, Sayı Avı,
+Say ve Eşleştir).
+
+**Buradan başla:** Sırayı Tekrarla. Kalan dört oyunun en az riskli olanı ve
+tek yeni parçası bir zamanlayıcı kalıbı: ekran bir diziyi kendi oynatacak
+(ışık yanar, ses çalar, sırayla), sonra çocuğun tekrarlamasını bekleyecek.
+Şu ana kadarki bütün oyunlar "çocuk dokunur, ekran cevap verir" kalıbındaydı;
+bu ilk kez tersi. Yerleşim MAUI kontrolleriyle yapılabilir (canvas gerekmiyor),
+`GlyphTileView`'un doğru/yanlış geri bildirimi olduğu gibi kullanılabilir.
 Adımlar için 8. bölüme bak.
+
+**Önce yapılması iyi olur:** Say ve Eşleştir henüz yalnızca derlendi
+(Windows + Android), gerçek ekranda oynanmadı. Kart boyutu ve rakam
+tepsilerinin parmak isabeti tablette bir kez görülmeli.
 
 ## 2. Depo düzeni
 
@@ -42,6 +57,8 @@ Adımlar için 8. bölüme bak.
 - Balon Patlatma: SkiaSharp yüzeyi, parlayan balonlar, patlama parçacıkları, hedef renk, süre
 - Şekil Ayırma: parmağı kare kare takip eden sürükleme, hayalet kutular, yanlış kutuda silkelenme
 - Harf/Sayı Avı: dile göre alfabe (tr/en/de), Meşe bandında küçük harfler ve benzer çeldiriciler
+- Say ve Eşleştir: nesne kümesi sürüklenip rakama bırakılıyor; miktar aralığı,
+  çeldirici uzaklığı ve nesne dizilişi banda göre değişiyor
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
 - Yıldız ve rozet kaydı; bant değişince eski yıldızlar korunuyor
@@ -60,15 +77,14 @@ boyutu) ve gerçek kare hızı ancak cihazda ölçülebilir. Tableti USB'den
 tak, hata ayıklamayı aç, `dotnet build src/Ploofy.App/Ploofy.App.csproj
 -f net9.0-android -t:Run`.
 
-**Öncelik 3 — Faz 2, kalan beş oyun.** Önerilen sıra, her adımda yeni bir
+**Öncelik 3 — Faz 2, kalan dört oyun.** Önerilen sıra, her adımda yeni bir
 teknik parça açtığı için:
 
-1. Say ve Eşleştir (öğretici; `GlyphTileView` ve ShapeSortSurface'in sürükleme
-   kalıbı hazır, en hızlı eklenecek olan bu)
-2. Sırayı Tekrarla (ritim/zamanlama — yeni bir zamanlayıcı kalıbı gerekiyor)
-3. Sepeti Tut (canvas + sürekli hareket)
-4. Yolu Bul (canvas + serbest çizgi takibi)
-5. Yapboz (canvas + parça kesme; en zoru, sona bırakıldı)
+1. Sırayı Tekrarla (ritim/zamanlama — yeni bir zamanlayıcı kalıbı gerekiyor;
+   ekranın kendi kendine bir şey oynattığı ilk oyun)
+2. Sepeti Tut (canvas + sürekli hareket)
+3. Yolu Bul (canvas + serbest çizgi takibi)
+4. Yapboz (canvas + parça kesme; en zoru, sona bırakıldı)
 
 **Öncelik 4 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
 başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
@@ -88,9 +104,12 @@ kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
 - iOS derlenmedi
 - Uygulama ikonu ve açılış ekranı hâlâ şablon varsayılanı
 - Profil düzenleme yok (yalnızca oluştur ve sil)
-- Av oyunlarında sesli yönerge yok; şu an yönerge tamamen görsel (aranan
-  işaret büyük gösteriliyor). Ses varlıkları gelince "bunu bul" seslendirmesi
-  eklenebilir ama oyun sessiz de tam çalışıyor
+- Öğretici oyunlarda sesli yönerge yok; şu an yönerge tamamen görsel (avda
+  aranan işaret büyük gösteriliyor, Say ve Eşleştir'de küme ve rakamlar aynı
+  ekranda duruyor). Ses varlıkları gelince seslendirme eklenebilir ama üçü de
+  sessiz hâliyle tam çalışıyor
+- Say ve Eşleştir gerçek ekranda oynanmadı; yalnızca Windows ve Android'de
+  derlendi. Kart boyutu ve rakam tepsilerinin parmak isabeti görülmeli
 
 ## 6. Yeni makinede kurulum
 
@@ -121,6 +140,12 @@ okunmuyor:
   haptik çağrısında PermissionException fırlatıp uygulamayı kapatıyordu.
 - **Windows hedefi yeterli kanıt değil.** Yukarıdaki son iki madde Windows'ta
   sessizce geçiyordu. Değişiklik sonrası Android'de de çalıştır.
+- **Canvas'a yazı SKFont ile çiziliyor.** SkiaSharp 3'te `SKPaint.TextSize`
+  ve paint üzerinden yazı çizme kalktı; doğru çağrı
+  `canvas.DrawText(metin, x, y, SKTextAlign.Center, font, paint)` ve font
+  ayrı bir `SKFont` nesnesi (atılması gerekiyor). Dikey ortalama da elde
+  yapılıyor: taban çizgisine göre çizmek 1 ile 8'i farklı yüksekliklere
+  düşürüyor, `font.Metrics` ile ortalanmalı. Örnek: `CountMatchSurface`.
 - **Emülatörün SystemUI'ı bu makinede takılıyor.** Takıldığında bütün ekran
   donuyor: ekran görüntüsü hep aynı kareyi gösteriyor, dokunuşlar işlemiyor ve
   uygulama kilitlenmiş gibi duruyor. Teşhis için

@@ -280,6 +280,9 @@
   <data name="GameCountMatch" xml:space="preserve">
     <value>Say ve Eşleştir</value>
   </data>
+  <data name="CountMatchPrompt" xml:space="preserve">
+    <value>Kaç tane? Sayının üstüne sürükle.</value>
+  </data>
   <data name="CommonCancel" xml:space="preserve">
     <value>Vazgeç</value>
   </data>

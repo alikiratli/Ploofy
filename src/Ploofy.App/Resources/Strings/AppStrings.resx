@@ -280,6 +280,9 @@
   <data name="GameCountMatch" xml:space="preserve">
     <value>Count and Match</value>
   </data>
+  <data name="CountMatchPrompt" xml:space="preserve">
+    <value>How many? Drag them onto the number.</value>
+  </data>
   <data name="CommonCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>

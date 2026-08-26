@@ -96,6 +96,9 @@ public static class MauiProgram
         services.AddTransient<HuntPage>();
         services.AddTransient<HuntViewModel>();
 
+        services.AddTransient<CountMatchPage>();
+        services.AddTransient<CountMatchViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 
