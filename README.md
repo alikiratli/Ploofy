@@ -59,7 +59,7 @@ Kilit, bant filtresi, yıldız kaydı ve ebeveyn ekranı otomatik çalışır.
 ## Oyun kütüphanesi
 
 **Eğlendirici (7):** Eşleştirme Kartları ✅ · Balon Patlatma ✅ · Şekil Ayırma ✅ ·
-Sırayı Tekrarla ✅ · Sepeti Tut ✅ · Yolu Bul · Yapboz
+Sırayı Tekrarla ✅ · Sepeti Tut ✅ · Yolu Bul ✅ · Yapboz
 
 **Öğretici (3):** Harf Avı ✅ · Sayı Avı ✅ · Say ve Eşleştir ✅
 

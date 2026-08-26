@@ -5,59 +5,60 @@ Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
 
-Faz 1 tamamlandı, Faz 2'den yalnızca iki oyun kaldı. Uygulama Android
-tablette uçtan uca çalışıyor: çocuk profili oluşturuluyor, oyun seçiliyor,
-oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Sekiz mini oyun
-oynanabilir durumda, kalan ikisi katalogda "yakında" olarak görünüyor.
-Kütüphane beş etkileşim türünün beşini de kapsıyor.
+Faz 1 tamamlandı, Faz 2'den yalnızca Yapboz kaldı. Uygulama Android tablette
+uçtan uca çalışıyor: çocuk profili oluşturuluyor, oyun seçiliyor, oynanıyor,
+yıldız kazanılıyor ve kayıt cihazda tutuluyor. Dokuz mini oyun oynanabilir
+durumda. Kütüphane beş etkileşim türünün beşini de kapsıyor.
 
-**Son oturumda yapılan — Sepeti Tut ve avatarlar:**
+**Son oturumda yapılan — Yolu Bul:**
 
-*Sepeti Tut* — kütüphanenin tek **sürekli takip** oyunu. Yukarıdan nesneler
-düşüyor, çocuk aşağıdaki sepeti sağa sola kaydırıp yakalıyor; Balon
-Patlatma'da hedef bekliyordu, burada geliyor ve nereye ineceğini önceden
-kestirmek gerekiyor. Yakalanmayacak nesne **yok** — düşenlerin bir kısmını
-"alma" yapmak oyuna ikinci bir kural katar ve asıl beceriyi bulanıklaştırırdı.
-Zorluk sepetin darlığından (0.34 → 0.20 ekran genişliği), düşme hızından ve
-Meşe'de nesnelerin yana savrulmasından geliyor. Savrulma önemli: düz düşen
-bir nesnenin nereye ineceği ilk karede belli, savrulanınki değil.
-Kaçırmak yalnızca Meşe'de hata sayılıyor.
+Ekranda bir yol duruyor; çocuk parmağını başlangıca koyup yolu takip ederek
+sona götürüyor. Kütüphanenin tek **Trace** oyunu ve yazı öncesi becerinin
+doğrudan karşılığı: çizgi, eğri ve köşe takip etmek kalem tutmanın
+hazırlığı.
 
-Sepet, ekranın **herhangi bir yerine** dokunulunca parmağı takip ediyor;
-sepetin kendisini tutmak gerekmiyor. Küçük çocuk hareket eden küçük bir
-hedefi güvenilir yakalayamıyor, üstelik sepeti tutmaya çalışırken düşen
-nesneye bakamıyor — oysa oyunun tamamı ona bakmakla ilgili.
+Üç karar oyunun tamamını belirliyor:
 
-*Avatarlar* — 12 emojiden 32'ye çıktı ve üç gruba ayrıldı: Hayvanlar,
-Deniz ve gökyüzü, Masal kahramanları. Eski 12'sinin hepsi listede duruyor;
-kayıtlı profillerin avatarı metin olarak saklandığı için listeden bir emoji
-çıkarmak o çocuğun profilinde boş kutu demek. Lisanslı çizgi film karakteri
-yok ve olamaz (mağazaya çıkacak bir çocuk uygulamasında doğrudan hak
-ihlali); masal grubundaki karakterler — tek boynuzlu at, peri, ejderha,
-robot — kimseye ait değil ve "kahraman" hissini karşılıyor.
+- **İlerleme geri gitmiyor.** Parmak geriye kayarsa ilerleme olduğu yerde
+  kalıyor. Geri saymak, titreyen bir parmağın oyunu bitirememesi demekti.
+- **Parmak kalkarsa ilerleme korunuyor** ve kaldığı yere yeniden dokunup
+  devam ediliyor — küçük çocuk parmağını uzun süre ekranda tutamıyor.
+  Bu yüzden arayüz ilerlemenin ucunu nabız gibi atan bir işaretle
+  gösteriyor; motor da yalnızca oraya konan parmağı kabul ediyor.
+- **Bir çıkış bir hata.** Yoldan uzakta gezinen parmak saniyede altmış hata
+  üretmiyor; yola dönünce kaldığı yerden devam ediyor.
 
-Yeni bir `AvatarBadgeView` kontrolü avatarı renkli bir daire içinde
-gösteriyor; ana ekran, profil seçme, oyun kurulumu, ayarlar ve sonuç ekranı
-artık bunu kullanıyor. Rozetin rengi emojinin kod noktalarından türetiliyor,
-yani aynı avatar her yerde aynı renkte ve renk profille birlikte
-kaydedilmiyor.
+Yol **birim kare** içinde yaşıyor, arayüz o kareyi ekranın ortasına
+oturtuyor. Sebebi: "yoldan çıkmak" her yönde aynı mesafe olmalı, oysa ekran
+kare değil. Çizilen şerit kalınlığı da motorun toleransının tam iki katı —
+gördüğün yolun üstündeysen kabul, değilsen ret.
 
-**Sayılar:** 184 test geçiyor · 10 oyun tanımlı, 8'i oynanabilir
+Yollar tek bir iskeletten türüyor: iki uç arasında bir eksen ve o eksene dik
+bir sapma (düz, kambur, dalga, zikzak). Bu yüzden yol kendi üstünden
+geçmiyor — geçseydi hem ilerlemenin hangi kolda olduğu belirsizleşirdi hem
+de çocuk "hangi yoldan gideceğim" diye takılırdı. Banda göre: yol sayısı
+(3/4/5), şerit kalınlığı (0.11 → 0.055), biçim havuzu (Meşe'de düz çizgi
+yok) ve kıvrım sayısı.
+
+**Sayılar:** 207 test geçiyor · 10 oyun tanımlı, 9'u oynanabilir
 (Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma, Harf Avı, Sayı Avı,
-Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut).
+Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut, Yolu Bul).
 
-**Buradan başla:** Yolu Bul. Kalan iki oyunun kolayı; yeni parçası parmağın
-çizdiği yolun kayıtlı yoldan ne kadar saptığını ölçmek. `BasketCatchSurface`
-sürekli dokunma takibini (Pressed/Moved) zaten gösteriyor, oradan
-başlanabilir. En son Yapboz (parça kesme). Adımlar için 8. bölüme bak.
+**Buradan başla:** Yapboz — Faz 2'nin son oyunu ve en zoru. Yeni parçası
+görüntüyü parçalara kesmek ve her parçanın kendi yuvasını tanıması.
+`ShapeSortSurface`'ın sürükleme kalıbı ve `CountMatchSurface`'ın "yerine
+oturma" animasyonu hazır; asıl iş parça sınırlarının üretilmesi
+(dikdörtgen ızgara mı, geçmeli tırnak mı) ve parçanın doğru yuvaya yakın
+bırakıldığında kendiliğinden oturması. Adımlar için 8. bölüme bak.
 
-**Önce yapılması iyi olur:** Son üç oturumun oyunlarının hiçbiri gerçek
+**Önce yapılması iyi olur:** Son dört oturumun oyunlarının hiçbiri gerçek
 ekranda oynanmadı, yalnızca derlendi (Windows + Android). Bakılacaklar:
 Say ve Eşleştir'de kart boyutu ve rakam tepsilerinin parmak isabeti;
 Sırayı Tekrarla'da 750 ms gösterim hızının Filiz bandında takip edilebilir
 olup olmadığı; Sepeti Tut'ta düşme hızının Fidan bandında adil olup
-olmadığı ve sepetin parmağı gecikmeden takip edip etmediği. Üçü de
-masabaşında doğru göründü ama bunu ancak çocuk söyler.
+olmadığı; Yolu Bul'da Meşe toleransının (0.055) parmak ucuyla gerçekten
+tutturulabilir olup olmadığı — bu dördü içinde en riskli olan bu, çünkü
+parmak ucu tablette zaten epey yer kaplıyor.
 
 ## 2. Depo düzeni
 
@@ -85,6 +86,8 @@ masabaşında doğru göründü ama bunu ancak çocuk söyler.
   şekil taşıyor, dizi her seviyede bir uzuyor
 - Sepeti Tut: düşen nesneler, ekranın her yerinden sürüklenen sepet; sepet
   darlığı, düşme hızı ve Meşe'de savrulma banda göre değişiyor
+- Yolu Bul: parmakla yol takibi; şerit kalınlığı, biçim havuzu ve kıvrım
+  sayısı banda göre değişiyor
 - Avatarlar: 32 emoji, üç tematik grup, her yerde renkli rozet olarak
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
@@ -104,10 +107,8 @@ boyutu) ve gerçek kare hızı ancak cihazda ölçülebilir. Tableti USB'den
 tak, hata ayıklamayı aç, `dotnet build src/Ploofy.App/Ploofy.App.csproj
 -f net9.0-android -t:Run`.
 
-**Öncelik 3 — Faz 2, kalan iki oyun.** İkisi de canvas:
-
-1. Yolu Bul (serbest çizgi takibi — parmağın yoldan ne kadar saptığı)
-2. Yapboz (parça kesme; en zoru, sona bırakıldı)
+**Öncelik 3 — Faz 2, kalan tek oyun.** Yapboz (canvas + parça kesme); en
+zoru olduğu için sona bırakıldı.
 
 **Öncelik 4 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
 başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
@@ -130,8 +131,8 @@ kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
   aranan işaret büyük gösteriliyor, Say ve Eşleştir'de küme ve rakamlar aynı
   ekranda duruyor). Ses varlıkları gelince seslendirme eklenebilir ama üçü de
   sessiz hâliyle tam çalışıyor
-- Son üç oturumun oyunları (Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut)
-  gerçek ekranda oynanmadı; yalnızca Windows ve Android'de derlendi
+- Son dört oturumun oyunları (Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut,
+  Yolu Bul) gerçek ekranda oynanmadı; yalnızca Windows ve Android'de derlendi
 - Profil düzenleme hâlâ yok: avatar ancak profil oluştururken seçiliyor,
   sonradan değiştirilemiyor. Otuz iki seçenek varken bu daha çok göze
   batacak

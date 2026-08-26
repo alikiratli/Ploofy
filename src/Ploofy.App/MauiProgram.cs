@@ -105,6 +105,9 @@ public static class MauiProgram
         services.AddTransient<BasketCatchPage>();
         services.AddTransient<BasketCatchViewModel>();
 
+        services.AddTransient<MazeTracePage>();
+        services.AddTransient<MazeTraceViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 

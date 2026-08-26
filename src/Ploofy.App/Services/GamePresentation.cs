@@ -83,6 +83,7 @@ public static class GamePresentation
         GameCatalog.CountMatch => "countmatch",
         GameCatalog.SimonSequence => "simon",
         GameCatalog.BasketCatch => "basketcatch",
+        GameCatalog.MazeTrace => "mazetrace",
         _ => null,
     };
 
