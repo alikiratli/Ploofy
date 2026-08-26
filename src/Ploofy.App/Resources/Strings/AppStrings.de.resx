@@ -283,6 +283,12 @@
   <data name="CountMatchPrompt" xml:space="preserve">
     <value>Wie viele? Zieh sie auf die Zahl.</value>
   </data>
+  <data name="SimonWatch" xml:space="preserve">
+    <value>Schau zu</value>
+  </data>
+  <data name="SimonRepeat" xml:space="preserve">
+    <value>Du bist dran</value>
+  </data>
   <data name="CommonCancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>

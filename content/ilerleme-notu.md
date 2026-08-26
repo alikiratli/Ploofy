@@ -5,37 +5,47 @@ Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
 
-Faz 1 tamamlandı, Faz 2'nin öğretici tarafı bitti. Uygulama Android tablette
-uçtan uca çalışıyor: çocuk profili oluşturuluyor, oyun seçiliyor, oynanıyor,
-yıldız kazanılıyor ve kayıt cihazda tutuluyor. Altı mini oyun oynanabilir
-durumda, kalan dördü katalogda "yakında" olarak görünüyor.
+Faz 1 tamamlandı, Faz 2'nin yalnızca canvas gerektiren üç oyunu kaldı.
+Uygulama Android tablette uçtan uca çalışıyor: çocuk profili oluşturuluyor,
+oyun seçiliyor, oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor.
+Yedi mini oyun oynanabilir durumda, kalan üçü katalogda "yakında" olarak
+görünüyor. Kütüphane artık beş etkileşim türünün beşini de kapsıyor.
 
-**Son oturumda yapılan:** Say ve Eşleştir eklendi — üç öğretici oyunun
-sonuncusu, yani öğretici bölüm artık tam. Ekranda bir nesne kümesi duruyor,
-çocuk kümeyi doğru rakamın üstüne sürüklüyor. Sayı Avı "rakamı tanıma"yı
-öğretiyordu; bu oyun rakamı bir **miktara** bağlıyor, yani bir sonraki adım.
+**Son oturumda yapılan — iki oyun:**
 
-Oyunun banda göre üç ayrı zorluk knob'u var: miktar aralığı (Filiz 1-3,
-Fidan 1-5, Meşe 1-10), çeldirici rakamların uzaklığı (Meşe'de komşu sayılar
-— 6 ile 7 arasından seçmek gerçekten saymayı gerektiriyor) ve nesnelerin
-dizilişi (Meşe'de dağınık, altındaki bantlarda beşerli sıra). Beşerli
-diziliş bilinçli: 7 nesne "bir tam sıra ve iki tane" olarak görünüyor.
+*Say ve Eşleştir* — üç öğretici oyunun sonuncusu, yani öğretici bölüm tam.
+Ekranda bir nesne kümesi duruyor, çocuk kümeyi doğru rakamın üstüne
+sürüklüyor. Sayı Avı "rakamı tanıma"yı öğretiyordu; bu oyun rakamı bir
+**miktara** bağlıyor. Banda göre üç knob: miktar aralığı (Filiz 1-3, Fidan
+1-5, Meşe 1-10), çeldirici rakamların uzaklığı (Meşe'de komşu sayılar — 6 ile
+7 arasından seçmek gerçekten saymayı gerektiriyor) ve nesnelerin dizilişi
+(Meşe'de dağınık, altında beşerli sıra). Beşerli diziliş bilinçli: 7 nesne
+"bir tam sıra ve iki tane" olarak görünüyor.
 
-**Sayılar:** 150 test geçiyor · 10 oyun tanımlı, 6'sı oynanabilir
+*Sırayı Tekrarla* — kütüphanenin ilk **Sequence** oyunu ve kalıbı ters
+çeviren ilk oyun: ekran diziyi kendi oynatıyor, o sırada dokunuş kapalı,
+sonra sıra çocuğa geçiyor. Dizi her seviyede uzuyor, yeniden üretilmiyor —
+eski dizi yeninin başlangıcı olarak kalıyor. Tuşlar renk **ve** şekil
+taşıyor (Şekil Ayırma'nın sözlüğü): renk körü çocuk için dizi yalnızca
+renkle anlatılamaz, ve iki kanal diziyi daha akılda kalıcı yapıyor.
+Banda göre: tuş sayısı (3/4/6), son dizi uzunluğu (4/6/8), gösterim hızı
+(750/600/450 ms) ve aynı tuşun peş peşe gelip gelemeyeceği (yalnızca Meşe).
+
+**Sayılar:** 167 test geçiyor · 10 oyun tanımlı, 7'si oynanabilir
 (Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma, Harf Avı, Sayı Avı,
-Say ve Eşleştir).
+Say ve Eşleştir, Sırayı Tekrarla).
 
-**Buradan başla:** Sırayı Tekrarla. Kalan dört oyunun en az riskli olanı ve
-tek yeni parçası bir zamanlayıcı kalıbı: ekran bir diziyi kendi oynatacak
-(ışık yanar, ses çalar, sırayla), sonra çocuğun tekrarlamasını bekleyecek.
-Şu ana kadarki bütün oyunlar "çocuk dokunur, ekran cevap verir" kalıbındaydı;
-bu ilk kez tersi. Yerleşim MAUI kontrolleriyle yapılabilir (canvas gerekmiyor),
-`GlyphTileView`'un doğru/yanlış geri bildirimi olduğu gibi kullanılabilir.
-Adımlar için 8. bölüme bak.
+**Buradan başla:** Sepeti Tut. Kalan üç oyunun hepsi canvas; bu en
+kolayları, çünkü sürekli hareket zaten `BubbleSurface`'da çözülmüş durumda
+(ticker, delta zaman, parçacıklar). Yeni olan tek şey düşen nesne ile sepet
+arasındaki çarpışma kontrolü. Sonra Yolu Bul (serbest çizgi takibi), en son
+Yapboz (parça kesme). Adımlar için 8. bölüme bak.
 
-**Önce yapılması iyi olur:** Say ve Eşleştir henüz yalnızca derlendi
-(Windows + Android), gerçek ekranda oynanmadı. Kart boyutu ve rakam
-tepsilerinin parmak isabeti tablette bir kez görülmeli.
+**Önce yapılması iyi olur:** İki yeni oyun da yalnızca derlendi (Windows +
+Android), gerçek ekranda oynanmadı. Bakılacaklar: Say ve Eşleştir'de kart
+boyutu ve rakam tepsilerinin parmak isabeti; Sırayı Tekrarla'da gösterim
+hızının Filiz bandında gerçekten takip edilebilir olup olmadığı — 750 ms
+masabaşında doğru göründü ama bunu ancak çocuk söyler.
 
 ## 2. Depo düzeni
 
@@ -59,6 +69,8 @@ tepsilerinin parmak isabeti tablette bir kez görülmeli.
 - Harf/Sayı Avı: dile göre alfabe (tr/en/de), Meşe bandında küçük harfler ve benzer çeldiriciler
 - Say ve Eşleştir: nesne kümesi sürüklenip rakama bırakılıyor; miktar aralığı,
   çeldirici uzaklığı ve nesne dizilişi banda göre değişiyor
+- Sırayı Tekrarla: ekran diziyi oynatıyor, çocuk tekrarlıyor; tuşlar renk ve
+  şekil taşıyor, dizi her seviyede bir uzuyor
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
 - Yıldız ve rozet kaydı; bant değişince eski yıldızlar korunuyor
@@ -77,14 +89,13 @@ boyutu) ve gerçek kare hızı ancak cihazda ölçülebilir. Tableti USB'den
 tak, hata ayıklamayı aç, `dotnet build src/Ploofy.App/Ploofy.App.csproj
 -f net9.0-android -t:Run`.
 
-**Öncelik 3 — Faz 2, kalan dört oyun.** Önerilen sıra, her adımda yeni bir
-teknik parça açtığı için:
+**Öncelik 3 — Faz 2, kalan üç oyun.** Hepsi canvas. Önerilen sıra, her adımda
+yeni bir teknik parça açtığı için:
 
-1. Sırayı Tekrarla (ritim/zamanlama — yeni bir zamanlayıcı kalıbı gerekiyor;
-   ekranın kendi kendine bir şey oynattığı ilk oyun)
-2. Sepeti Tut (canvas + sürekli hareket)
-3. Yolu Bul (canvas + serbest çizgi takibi)
-4. Yapboz (canvas + parça kesme; en zoru, sona bırakıldı)
+1. Sepeti Tut (sürekli hareket + çarpışma; `BubbleSurface`'ın ticker ve delta
+   zaman kalıbı hazır, yeni olan tek şey çarpışma kontrolü)
+2. Yolu Bul (serbest çizgi takibi — parmağın yoldan çıkıp çıkmadığı)
+3. Yapboz (parça kesme; en zoru, sona bırakıldı)
 
 **Öncelik 4 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
 başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
@@ -108,8 +119,14 @@ kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
   aranan işaret büyük gösteriliyor, Say ve Eşleştir'de küme ve rakamlar aynı
   ekranda duruyor). Ses varlıkları gelince seslendirme eklenebilir ama üçü de
   sessiz hâliyle tam çalışıyor
-- Say ve Eşleştir gerçek ekranda oynanmadı; yalnızca Windows ve Android'de
-  derlendi. Kart boyutu ve rakam tepsilerinin parmak isabeti görülmeli
+- Say ve Eşleştir ile Sırayı Tekrarla gerçek ekranda oynanmadı; yalnızca
+  Windows ve Android'de derlendi. Bakılacaklar: kart boyutu ve rakam
+  tepsilerinin parmak isabeti; gösterim hızının Filiz bandında takip
+  edilebilir olup olmadığı
+- Sırayı Tekrarla'da gösterim sessiz. Klasik oyunda her tuşun kendi notası
+  var ve dizi kulakla da hatırlanıyor; şu an yalnızca görsel. Ses varlıkları
+  gelince tuş başına ayrı ses eklemek `FeedbackCue` sözlüğünü genişletmeyi
+  gerektiriyor (şu an tek `Tap` var)
 
 ## 6. Yeni makinede kurulum
 
@@ -169,5 +186,13 @@ okunmuyor:
    sürükle-bırak tanıyıcıları değil doğrudan dokunma olayları kullanılıyor:
    platformun sürükleme eşiği küçük çocuğun yavaş hareketinde aşılmıyor ve
    parça hiç kıpırdamıyor
+7. Oyun kendi başına bir şey oynatıyorsa (Sırayı Tekrarla gibi) zamanlama
+   görünüm modelinde durur, motorda değil — motor "nerede kalındı"yı bilir,
+   "ne zaman"ı bilmez. Bu durumda **her bekleme iptal edilebilir olmalı**:
+   görünüm modelinde bir ömür `CancellationTokenSource` tut, `Dispose` ve
+   sıra devrinde iptal et, bütün `Task.Delay` çağrılarına token'ı geçir.
+   Yalnızca gösterimi iptal etmek yetmiyor — aradaki beklemeler sayfa
+   kapandıktan sonra da doluyor ve kapanmış ekranda yeni bir gösterim
+   başlatıyor. Örnek: `SimonViewModel`
 
 Kilit, bant filtresi, yıldız kaydı ve ebeveyn ekranı kendiliğinden çalışır.

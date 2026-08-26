@@ -31,6 +31,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("shapesort", typeof(ShapeSortPage));
 
         Routing.RegisterRoute("countmatch", typeof(CountMatchPage));
+        Routing.RegisterRoute("simon", typeof(SimonPage));
 
         // Harf Avı ve Sayı Avı aynı mekaniği paylaşıyor; hangisi
         // olduğu oturumdaki oyun kimliğinden çözülüyor.
