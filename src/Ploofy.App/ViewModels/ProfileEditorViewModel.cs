@@ -37,6 +37,23 @@ public sealed class BandOption(AgeBand band)
     }];
 }
 
+/// <summary>Seçilebilir tek avatar.</summary>
+public sealed partial class AvatarChoice(string emoji) : ObservableObject
+{
+    public string Emoji { get; } = emoji;
+
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
+}
+
+/// <summary>Ekrandaki tek avatar grubu — başlığı ve seçenekleriyle.</summary>
+public sealed class AvatarGroupVm(string nameKey, IReadOnlyList<AvatarChoice> choices)
+{
+    public string Name => LocalizationService.Instance[nameKey];
+
+    public IReadOnlyList<AvatarChoice> Choices { get; } = choices;
+}
+
 /// <summary>
 /// Yeni çocuk profili oluşturma.
 /// </summary>
@@ -61,15 +78,18 @@ public sealed partial class ProfileEditorViewModel : ObservableObject
 
         DisplayName = string.Empty;
         SelectedBand = new BandOption(AgeBand.Fidan);
-        SelectedAvatar = Avatars[0];
-    }
+        SelectedAvatar = AvatarCatalog.Default;
 
-    /// <summary>
-    /// Avatar seçenekleri. Görsel dosya değil emoji: üç dilde de aynı, ek
-    /// varlık gerektirmiyor ve her platformda renkli görünüyor.
-    /// </summary>
-    public static readonly IReadOnlyList<string> Avatars =
-        ["🦊", "🐻", "🐼", "🐸", "🦁", "🐧", "🐢", "🐙", "🦉", "🐝", "🦕", "🐰"];
+        AvatarGroups =
+        [
+            .. AvatarCatalog.Groups.Select(group => new AvatarGroupVm(
+                group.NameKey,
+                [.. group.Avatars.Select(emoji => new AvatarChoice(emoji)
+                {
+                    IsSelected = emoji == AvatarCatalog.Default,
+                })])),
+        ];
+    }
 
     [ObservableProperty]
     public partial string DisplayName { get; set; }
@@ -86,10 +106,40 @@ public sealed partial class ProfileEditorViewModel : ObservableObject
     public ObservableCollection<BandOption> Bands { get; } =
         [.. Enum.GetValues<AgeBand>().Select(b => new BandOption(b))];
 
-    public ObservableCollection<string> AvatarChoices { get; } = [.. Avatars];
+    /// <summary>Avatarlar temalarına göre gruplu duruyor.</summary>
+    /// <remarks>
+    /// Otuz iki simgeyi tek bir ızgaraya dökmek, ebeveyni de çocuğu da
+    /// aradığını bulamaz hâle getiriyor. Başlıklar aramayı "hangi grupta
+    /// olurdu" sorusuna indirgiyor.
+    /// </remarks>
+    public IReadOnlyList<AvatarGroupVm> AvatarGroups { get; }
 
     partial void OnDisplayNameChanged(string value) =>
         CanSave = !string.IsNullOrWhiteSpace(value);
+
+    /// <summary>
+    /// Avatarı seçer.
+    /// </summary>
+    /// <remarks>
+    /// Seçim <c>CollectionView.SelectedItem</c> ile değil elle yürütülüyor:
+    /// seçenekler artık gruplara bölündü ve her grubun kendi seçimi olsaydı
+    /// ekranda aynı anda üç seçili avatar görünürdü.
+    /// </remarks>
+    [RelayCommand]
+    private void SelectAvatar(AvatarChoice? choice)
+    {
+        if (choice is null)
+        {
+            return;
+        }
+
+        SelectedAvatar = choice.Emoji;
+
+        foreach (var option in AvatarGroups.SelectMany(g => g.Choices))
+        {
+            option.IsSelected = ReferenceEquals(option, choice);
+        }
+    }
 
     [RelayCommand]
     private async Task SaveAsync()

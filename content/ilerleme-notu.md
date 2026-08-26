@@ -5,46 +5,58 @@ Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
 
-Faz 1 tamamlandı, Faz 2'nin yalnızca canvas gerektiren üç oyunu kaldı.
-Uygulama Android tablette uçtan uca çalışıyor: çocuk profili oluşturuluyor,
-oyun seçiliyor, oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor.
-Yedi mini oyun oynanabilir durumda, kalan üçü katalogda "yakında" olarak
-görünüyor. Kütüphane artık beş etkileşim türünün beşini de kapsıyor.
+Faz 1 tamamlandı, Faz 2'den yalnızca iki oyun kaldı. Uygulama Android
+tablette uçtan uca çalışıyor: çocuk profili oluşturuluyor, oyun seçiliyor,
+oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Sekiz mini oyun
+oynanabilir durumda, kalan ikisi katalogda "yakında" olarak görünüyor.
+Kütüphane beş etkileşim türünün beşini de kapsıyor.
 
-**Son oturumda yapılan — iki oyun:**
+**Son oturumda yapılan — Sepeti Tut ve avatarlar:**
 
-*Say ve Eşleştir* — üç öğretici oyunun sonuncusu, yani öğretici bölüm tam.
-Ekranda bir nesne kümesi duruyor, çocuk kümeyi doğru rakamın üstüne
-sürüklüyor. Sayı Avı "rakamı tanıma"yı öğretiyordu; bu oyun rakamı bir
-**miktara** bağlıyor. Banda göre üç knob: miktar aralığı (Filiz 1-3, Fidan
-1-5, Meşe 1-10), çeldirici rakamların uzaklığı (Meşe'de komşu sayılar — 6 ile
-7 arasından seçmek gerçekten saymayı gerektiriyor) ve nesnelerin dizilişi
-(Meşe'de dağınık, altında beşerli sıra). Beşerli diziliş bilinçli: 7 nesne
-"bir tam sıra ve iki tane" olarak görünüyor.
+*Sepeti Tut* — kütüphanenin tek **sürekli takip** oyunu. Yukarıdan nesneler
+düşüyor, çocuk aşağıdaki sepeti sağa sola kaydırıp yakalıyor; Balon
+Patlatma'da hedef bekliyordu, burada geliyor ve nereye ineceğini önceden
+kestirmek gerekiyor. Yakalanmayacak nesne **yok** — düşenlerin bir kısmını
+"alma" yapmak oyuna ikinci bir kural katar ve asıl beceriyi bulanıklaştırırdı.
+Zorluk sepetin darlığından (0.34 → 0.20 ekran genişliği), düşme hızından ve
+Meşe'de nesnelerin yana savrulmasından geliyor. Savrulma önemli: düz düşen
+bir nesnenin nereye ineceği ilk karede belli, savrulanınki değil.
+Kaçırmak yalnızca Meşe'de hata sayılıyor.
 
-*Sırayı Tekrarla* — kütüphanenin ilk **Sequence** oyunu ve kalıbı ters
-çeviren ilk oyun: ekran diziyi kendi oynatıyor, o sırada dokunuş kapalı,
-sonra sıra çocuğa geçiyor. Dizi her seviyede uzuyor, yeniden üretilmiyor —
-eski dizi yeninin başlangıcı olarak kalıyor. Tuşlar renk **ve** şekil
-taşıyor (Şekil Ayırma'nın sözlüğü): renk körü çocuk için dizi yalnızca
-renkle anlatılamaz, ve iki kanal diziyi daha akılda kalıcı yapıyor.
-Banda göre: tuş sayısı (3/4/6), son dizi uzunluğu (4/6/8), gösterim hızı
-(750/600/450 ms) ve aynı tuşun peş peşe gelip gelemeyeceği (yalnızca Meşe).
+Sepet, ekranın **herhangi bir yerine** dokunulunca parmağı takip ediyor;
+sepetin kendisini tutmak gerekmiyor. Küçük çocuk hareket eden küçük bir
+hedefi güvenilir yakalayamıyor, üstelik sepeti tutmaya çalışırken düşen
+nesneye bakamıyor — oysa oyunun tamamı ona bakmakla ilgili.
 
-**Sayılar:** 167 test geçiyor · 10 oyun tanımlı, 7'si oynanabilir
+*Avatarlar* — 12 emojiden 32'ye çıktı ve üç gruba ayrıldı: Hayvanlar,
+Deniz ve gökyüzü, Masal kahramanları. Eski 12'sinin hepsi listede duruyor;
+kayıtlı profillerin avatarı metin olarak saklandığı için listeden bir emoji
+çıkarmak o çocuğun profilinde boş kutu demek. Lisanslı çizgi film karakteri
+yok ve olamaz (mağazaya çıkacak bir çocuk uygulamasında doğrudan hak
+ihlali); masal grubundaki karakterler — tek boynuzlu at, peri, ejderha,
+robot — kimseye ait değil ve "kahraman" hissini karşılıyor.
+
+Yeni bir `AvatarBadgeView` kontrolü avatarı renkli bir daire içinde
+gösteriyor; ana ekran, profil seçme, oyun kurulumu, ayarlar ve sonuç ekranı
+artık bunu kullanıyor. Rozetin rengi emojinin kod noktalarından türetiliyor,
+yani aynı avatar her yerde aynı renkte ve renk profille birlikte
+kaydedilmiyor.
+
+**Sayılar:** 184 test geçiyor · 10 oyun tanımlı, 8'i oynanabilir
 (Eşleştirme Kartları, Balon Patlatma, Şekil Ayırma, Harf Avı, Sayı Avı,
-Say ve Eşleştir, Sırayı Tekrarla).
+Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut).
 
-**Buradan başla:** Sepeti Tut. Kalan üç oyunun hepsi canvas; bu en
-kolayları, çünkü sürekli hareket zaten `BubbleSurface`'da çözülmüş durumda
-(ticker, delta zaman, parçacıklar). Yeni olan tek şey düşen nesne ile sepet
-arasındaki çarpışma kontrolü. Sonra Yolu Bul (serbest çizgi takibi), en son
-Yapboz (parça kesme). Adımlar için 8. bölüme bak.
+**Buradan başla:** Yolu Bul. Kalan iki oyunun kolayı; yeni parçası parmağın
+çizdiği yolun kayıtlı yoldan ne kadar saptığını ölçmek. `BasketCatchSurface`
+sürekli dokunma takibini (Pressed/Moved) zaten gösteriyor, oradan
+başlanabilir. En son Yapboz (parça kesme). Adımlar için 8. bölüme bak.
 
-**Önce yapılması iyi olur:** İki yeni oyun da yalnızca derlendi (Windows +
-Android), gerçek ekranda oynanmadı. Bakılacaklar: Say ve Eşleştir'de kart
-boyutu ve rakam tepsilerinin parmak isabeti; Sırayı Tekrarla'da gösterim
-hızının Filiz bandında gerçekten takip edilebilir olup olmadığı — 750 ms
+**Önce yapılması iyi olur:** Son üç oturumun oyunlarının hiçbiri gerçek
+ekranda oynanmadı, yalnızca derlendi (Windows + Android). Bakılacaklar:
+Say ve Eşleştir'de kart boyutu ve rakam tepsilerinin parmak isabeti;
+Sırayı Tekrarla'da 750 ms gösterim hızının Filiz bandında takip edilebilir
+olup olmadığı; Sepeti Tut'ta düşme hızının Fidan bandında adil olup
+olmadığı ve sepetin parmağı gecikmeden takip edip etmediği. Üçü de
 masabaşında doğru göründü ama bunu ancak çocuk söyler.
 
 ## 2. Depo düzeni
@@ -71,6 +83,9 @@ masabaşında doğru göründü ama bunu ancak çocuk söyler.
   çeldirici uzaklığı ve nesne dizilişi banda göre değişiyor
 - Sırayı Tekrarla: ekran diziyi oynatıyor, çocuk tekrarlıyor; tuşlar renk ve
   şekil taşıyor, dizi her seviyede bir uzuyor
+- Sepeti Tut: düşen nesneler, ekranın her yerinden sürüklenen sepet; sepet
+  darlığı, düşme hızı ve Meşe'de savrulma banda göre değişiyor
+- Avatarlar: 32 emoji, üç tematik grup, her yerde renkli rozet olarak
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
 - Yıldız ve rozet kaydı; bant değişince eski yıldızlar korunuyor
@@ -89,13 +104,10 @@ boyutu) ve gerçek kare hızı ancak cihazda ölçülebilir. Tableti USB'den
 tak, hata ayıklamayı aç, `dotnet build src/Ploofy.App/Ploofy.App.csproj
 -f net9.0-android -t:Run`.
 
-**Öncelik 3 — Faz 2, kalan üç oyun.** Hepsi canvas. Önerilen sıra, her adımda
-yeni bir teknik parça açtığı için:
+**Öncelik 3 — Faz 2, kalan iki oyun.** İkisi de canvas:
 
-1. Sepeti Tut (sürekli hareket + çarpışma; `BubbleSurface`'ın ticker ve delta
-   zaman kalıbı hazır, yeni olan tek şey çarpışma kontrolü)
-2. Yolu Bul (serbest çizgi takibi — parmağın yoldan çıkıp çıkmadığı)
-3. Yapboz (parça kesme; en zoru, sona bırakıldı)
+1. Yolu Bul (serbest çizgi takibi — parmağın yoldan ne kadar saptığı)
+2. Yapboz (parça kesme; en zoru, sona bırakıldı)
 
 **Öncelik 4 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
 başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
@@ -114,15 +126,19 @@ kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
 - Yerel ağ eşleşmesi ve aile bağlantısı yok (arayüzde "yakında" olarak duruyor)
 - iOS derlenmedi
 - Uygulama ikonu ve açılış ekranı hâlâ şablon varsayılanı
-- Profil düzenleme yok (yalnızca oluştur ve sil)
 - Öğretici oyunlarda sesli yönerge yok; şu an yönerge tamamen görsel (avda
   aranan işaret büyük gösteriliyor, Say ve Eşleştir'de küme ve rakamlar aynı
   ekranda duruyor). Ses varlıkları gelince seslendirme eklenebilir ama üçü de
   sessiz hâliyle tam çalışıyor
-- Say ve Eşleştir ile Sırayı Tekrarla gerçek ekranda oynanmadı; yalnızca
-  Windows ve Android'de derlendi. Bakılacaklar: kart boyutu ve rakam
-  tepsilerinin parmak isabeti; gösterim hızının Filiz bandında takip
-  edilebilir olup olmadığı
+- Son üç oturumun oyunları (Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut)
+  gerçek ekranda oynanmadı; yalnızca Windows ve Android'de derlendi
+- Profil düzenleme hâlâ yok: avatar ancak profil oluştururken seçiliyor,
+  sonradan değiştirilemiyor. Otuz iki seçenek varken bu daha çok göze
+  batacak
+- Masal grubundaki bazı emojiler (peri, büyücü, deniz kızı, süper kahraman)
+  Unicode 11 ile geldi; çok eski Android sürümlerinde boş kutu görünebilir.
+  Uygulamanın alt sınırı API 21 ama depoda zaten 🦕 vardı ve tablette
+  sorunsuz çıkıyordu. Gerçek cihaz testinde bakılacak
 - Sırayı Tekrarla'da gösterim sessiz. Klasik oyunda her tuşun kendi notası
   var ve dizi kulakla da hatırlanıyor; şu an yalnızca görsel. Ses varlıkları
   gelince tuş başına ayrı ses eklemek `FeedbackCue` sözlüğünü genişletmeyi

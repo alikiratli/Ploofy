@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:ui="clr-namespace:Ploofy.Ui.Controls;assembly=Ploofy.Ui"
              xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
              x:Class="Ploofy.App.Views.ProfileEditorPage"
              x:Name="Page"
@@ -52,30 +53,43 @@
                 </CollectionView>
             </VerticalStackLayout>
 
-            <VerticalStackLayout Spacing="8">
+            <VerticalStackLayout Spacing="12">
                 <Label Text="{loc:Translate ProfileAvatarLabel}" Style="{StaticResource SectionLabel}" />
 
-                <CollectionView ItemsSource="{Binding AvatarChoices}"
-                                SelectedItem="{Binding SelectedAvatar}"
-                                SelectionMode="Single"
-                                HeightRequest="180">
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout Orientation="Vertical"
-                                         Span="4"
-                                         HorizontalItemSpacing="8"
-                                         VerticalItemSpacing="8" />
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="x:String">
-                            <Border Style="{StaticResource CardBorder}" Padding="4">
-                                <Label Text="{Binding .}"
-                                       FontSize="34"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center" />
-                            </Border>
+                <!-- Gruplar iç içe BindableLayout ile çiziliyor, CollectionView
+                     ile değil: ScrollView içinde kendi kaydırması olan bir
+                     liste hem parmağı çalıyor hem de sabit yükseklik
+                     istiyor. Buradaki seçenek sayısı belli ve az. -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AvatarGroups}"
+                                     Spacing="14">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:AvatarGroupVm">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="{Binding Name}" Style="{StaticResource HintLabel}" />
+
+                                <FlexLayout BindableLayout.ItemsSource="{Binding Choices}"
+                                            Wrap="Wrap"
+                                            JustifyContent="Start"
+                                            AlignItems="Center">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:AvatarChoice">
+                                            <ui:AvatarBadgeView Avatar="{Binding Emoji}"
+                                                                IsSelected="{Binding IsSelected}"
+                                                                Size="68"
+                                                                Margin="4">
+                                                <ui:AvatarBadgeView.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectAvatarCommand, x:DataType=ContentPage}"
+                                                        CommandParameter="{Binding .}" />
+                                                </ui:AvatarBadgeView.GestureRecognizers>
+                                            </ui:AvatarBadgeView>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
                         </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
             </VerticalStackLayout>
 
             <Button Text="{loc:Translate ProfileSave}"

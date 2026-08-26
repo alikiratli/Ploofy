@@ -289,6 +289,15 @@
   <data name="SimonRepeat" xml:space="preserve">
     <value>Your turn</value>
   </data>
+  <data name="AvatarGroupAnimals" xml:space="preserve">
+    <value>Animals</value>
+  </data>
+  <data name="AvatarGroupSea" xml:space="preserve">
+    <value>Sea and sky</value>
+  </data>
+  <data name="AvatarGroupHeroes" xml:space="preserve">
+    <value>Fairy tales</value>
+  </data>
   <data name="CommonCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>

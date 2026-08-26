@@ -82,6 +82,7 @@ public static class GamePresentation
         GameCatalog.NumberHunt => "hunt",
         GameCatalog.CountMatch => "countmatch",
         GameCatalog.SimonSequence => "simon",
+        GameCatalog.BasketCatch => "basketcatch",
         _ => null,
     };
 

@@ -42,18 +42,9 @@
                         <DataTemplate x:DataType="services:PlayerResult">
                             <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
                                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                    <Border Grid.Column="0"
-                                            WidthRequest="50"
-                                            HeightRequest="50"
-                                            Padding="0"
-                                            StrokeThickness="0"
-                                            Background="{StaticResource Card4Brush}"
-                                            StrokeShape="RoundRectangle 25">
-                                        <Label Text="{Binding AvatarId}"
-                                               FontSize="26"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </Border>
+                                    <ui:AvatarBadgeView Grid.Column="0"
+                                                        Avatar="{Binding AvatarId}"
+                                                        Size="52" />
 
                                     <Label Grid.Column="1"
                                            Text="{Binding DisplayName}"

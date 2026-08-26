@@ -106,18 +106,9 @@
                 <TapGestureRecognizer Command="{Binding SwitchProfileCommand}" />
             </Border.GestureRecognizers>
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                <Border Grid.Column="0"
-                        WidthRequest="52"
-                        HeightRequest="52"
-                        Padding="0"
-                        StrokeThickness="0"
-                        Background="{StaticResource Card3Brush}"
-                        StrokeShape="RoundRectangle 26">
-                    <Label Text="{Binding ChildAvatar}"
-                           FontSize="28"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                </Border>
+                <ui:AvatarBadgeView Grid.Column="0"
+                                    Avatar="{Binding ChildAvatar}"
+                                    Size="54" />
 
                 <Label Grid.Column="1"
                        Text="{Binding ChildName}"

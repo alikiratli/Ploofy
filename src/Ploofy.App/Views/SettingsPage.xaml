@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:ui="clr-namespace:Ploofy.Ui.Controls;assembly=Ploofy.Ui"
              xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
              x:Class="Ploofy.App.Views.SettingsPage"
              x:Name="Page"
@@ -66,7 +67,10 @@
                                 <Grid ColumnDefinitions="Auto,*,Auto"
                                       ColumnSpacing="12"
                                       HeightRequest="{StaticResource TouchTarget}">
-                                    <Label Grid.Column="0" Text="{Binding AvatarId}" FontSize="28" VerticalOptions="Center" />
+                                    <ui:AvatarBadgeView Grid.Column="0"
+                                                        Avatar="{Binding AvatarId}"
+                                                        Size="46"
+                                                        VerticalOptions="Center" />
                                     <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                                         <Label Text="{Binding DisplayName}" FontAttributes="Bold" />
                                         <Label Text="{Binding BandName}" Style="{StaticResource HintLabel}" />

@@ -102,6 +102,9 @@ public static class MauiProgram
         services.AddTransient<SimonPage>();
         services.AddTransient<SimonViewModel>();
 
+        services.AddTransient<BasketCatchPage>();
+        services.AddTransient<BasketCatchViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 

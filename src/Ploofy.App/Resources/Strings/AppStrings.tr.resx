@@ -289,6 +289,15 @@
   <data name="SimonRepeat" xml:space="preserve">
     <value>Sıra sende</value>
   </data>
+  <data name="AvatarGroupAnimals" xml:space="preserve">
+    <value>Hayvanlar</value>
+  </data>
+  <data name="AvatarGroupSea" xml:space="preserve">
+    <value>Deniz ve gökyüzü</value>
+  </data>
+  <data name="AvatarGroupHeroes" xml:space="preserve">
+    <value>Masal kahramanları</value>
+  </data>
   <data name="CommonCancel" xml:space="preserve">
     <value>Vazgeç</value>
   </data>
