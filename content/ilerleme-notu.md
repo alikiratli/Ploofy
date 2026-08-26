@@ -11,10 +11,15 @@ oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Katalogda artık
 "yakında" olarak duran hiçbir oyun yok ve kütüphane beş etkileşim türünün
 beşini de kapsıyor.
 
-**Bundan sonrası oyun eklemek değil, olanı yayına hazırlamak.** Kalan üç
-şey — ses varlıkları, gerçek satın alma ve mağaza hazırlığı — 4. bölümde.
+**Bundan sonrası oyun eklemek değil, olanı yayına hazırlamak.** Kalan işler
+— gerçek cihaz testi, ses varlıkları, gerçek satın alma ve mağaza hazırlığı
+— 4. bölümde.
 
-**Son oturumda yapılan — Yapboz:**
+**Son oturumda yapılan:** Yapboz eklendi, uygulama Android'de çalıştırıldı,
+cihazda çıkan dört kusur düzeltildi ve ekran yönü yatayda kilitlendi.
+Sırayla:
+
+### Yapboz
 
 Tahtada boş yuvalar duruyor, altta sıradaki parça bekliyor; çocuk parçayı
 yuvasına sürüklüyor. Parçalar Şekil Ayırma'daki gibi **sırayla** geliyor:
@@ -44,12 +49,12 @@ Yapboz, son üç oyunun aksine **hedef süre taşıyor** (Meşe, 150 sn): tahtan
 tamamı en baştan görünüyor, bekleyecek bir gösterim ya da düşecek bir nesne
 yok, yani hızlı bitirmek gerçekten "daha çabuk çözdüm" demek.
 
-**Sayılar:** 228 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir.
+### Android'de çalıştırma
 
-**Android'de çalıştırıldı (26.08.2026).** Beş yeni oyunun beşi de tablet
-emülatöründe açıldı, çizildi ve dokunuşa cevap verdi; Yolu Bul'da bir tur,
-Sepeti Tut'ta bir tur ve Yapboz'da bir parça uçtan uca oynandı, yıldız
-kaydı ve sonuç ekranı çalıştı. Üç kusur bulundu ve üçü de düzeltildi:
+Beş yeni oyunun beşi de tablet emülatöründe açıldı, çizildi ve dokunuşa
+cevap verdi; Yolu Bul'da bir tur, Sepeti Tut'ta bir tur ve Yapboz'da bir
+parça uçtan uca oynandı, yıldız kaydı ve sonuç ekranı çalıştı. Dört kusur
+bulundu ve dördü de düzeltildi:
 
 1. **Yolu Bul'da geri kayma yoldan çıkmak sayılıyordu.** Parmağın yola
    oturduğu yer yalnızca `[şu an - 2, şu an + 10]` penceresinde aranıyordu;
@@ -70,7 +75,9 @@ kaydı ve sonuç ekranı çalıştı. Üç kusur bulundu ve üçü de düzeltild
    boşluk bırakıyordu. Kart artık sıra sayısına göre yükseliyor ve altı
    sabit bir yerde duruyor.
 
-**Ekran yönü yatayda kilitlendi.** Emülatörde dikey çalıştığında oyunların
+### Ekran yönü
+
+Emülatörde dikey çalıştığında oyunların
 ortasında yarım ekranlık boşluklar kaldığı görüldü; bütün yerleşimler yatay
 tablet düşünülerek ölçülmüştü. Android'de `SensorLandscape` (kilitli ama
 iki yön de serbest, çocuk tableti ters çevirince görüntü dönüyor), iOS'ta
@@ -81,9 +88,21 @@ Kilitledikten sonra ana ekranda kartların ekran boyu şeritlere dönüştüğü
 görüldü: sütun sayısı sabit ikiydi. Artık genişliğe göre — 900 birimin
 altında iki, üstünde üç sütun.
 
-Kalan sorular hâlâ **gerçek tablet** gerektiriyor; emülatörde ölçülemeyen
-tek şey parmak: Meşe'de Yolu Bul'un 0,055 toleransı ve Sepeti Tut'un
-düşme hızı gerçek elle denenmedi.
+**Sayılar:** 229 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir.
+
+**Buradan başla: gerçek tablet.** Emülatör her şeyi gösterdi ama tek bir
+şeyi ölçemiyor — parmağı. Tableti USB'den tak, hata ayıklamayı aç,
+`dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-android -t:Run`.
+Bakılacaklar:
+
+- Yolu Bul'da Meşe toleransı (0,055) parmak ucuyla tutturulabiliyor mu —
+  bunların en riskli olanı bu
+- Sepeti Tut'ta düşme hızı Fidan bandında adil mi, sepet parmağı
+  gecikmeden takip ediyor mu
+- Sırayı Tekrarla'da 750 ms gösterim hızı Filiz bandında takip edilebiliyor mu
+- Yapboz'da Meşe'nin on altı parçası bir turu fazla uzatıyor mu
+
+Sonrası 4. bölümdeki öncelik sırası.
 
 ## 2. Depo düzeni
 
@@ -126,11 +145,9 @@ düşme hızı gerçek elle denenmedi.
 
 Oyun kütüphanesi bitti; buradan sonrası yayın işi.
 
-**Öncelik 1 — Fiziksel cihaz testi.** Artık en acil olan bu. Şimdiye kadar
-yalnızca tablet emülatöründe koştu ve son beş oturumun oyunları hiç
-oynanmadı. Parmak isabeti ve gerçek kare hızı ancak cihazda ölçülebilir.
-Tableti USB'den tak, hata ayıklamayı aç,
-`dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-android -t:Run`.
+**Öncelik 1 — Fiziksel cihaz testi.** Artık en acil olan bu. Emülatörde
+onunun onu da çalıştı ama parmak isabeti ve gerçek kare hızı ancak cihazda
+ölçülebilir. Bakılacaklar 1. bölümün sonunda.
 Bakılacaklar 1. bölümün sonunda.
 
 **Öncelik 2 — Ses varlıkları.** Tek eksik olan somut parça.
