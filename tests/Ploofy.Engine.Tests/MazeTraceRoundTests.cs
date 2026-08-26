@@ -204,6 +204,33 @@ public class MazeTraceRoundTests
     }
 
     [Fact]
+    public void Sliding_back_along_the_path_is_not_a_slip()
+    {
+        // Cihazda görüldü: dar bir geri pay bırakıldığında köşede geriye
+        // kayan parmak yoldan çıkmış sayılıyor ve Meşe'de bu bir hata puanı.
+        var round = Round(AgeBand.Mese);
+        var points = round.Points.ToList();
+
+        round.Begin(points[0].X, points[0].Y);
+        for (var i = 0; i <= 40; i++)
+        {
+            round.MoveTo(points[i].X, points[i].Y);
+        }
+
+        var reached = round.Progress;
+
+        // Yolun ta başına kadar geri git — hepsi yolun üstünde.
+        for (var i = 40; i >= 0; i--)
+        {
+            Assert.Equal(TraceOutcome.Advanced, round.MoveTo(points[i].X, points[i].Y));
+        }
+
+        Assert.Equal(0, round.Slips);
+        Assert.False(round.IsOffPath);
+        Assert.Equal(reached, round.Progress, 5);
+    }
+
+    [Fact]
     public void Progress_never_goes_backwards()
     {
         // Titreyen parmak kazanılanı geri almıyor.

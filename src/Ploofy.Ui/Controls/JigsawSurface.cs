@@ -360,9 +360,11 @@ public sealed class JigsawSurface : SKCanvasView
 
         _trayCenter = new SKPoint(width * 0.5f, height - (trayHeight * 0.5f));
 
-        // Büyük hücreler tepsiye sığmıyor; parça küçültülerek gösteriliyor
-        // ama tutulunca tam boyuna dönüyor: "elime aldım" hissi.
-        _trayScale = MathF.Min(1f, trayHeight * 0.66f / _cell);
+        // Tepsideki parça küçültülerek gösteriliyor, tutulunca tam boyuna
+        // dönüyor: "elime aldım" hissi. Ölçek hücreye değil parçanın
+        // <b>tırnaklarıyla birlikte</b> kapladığı yere göre hesaplanıyor —
+        // hücreye göre hesaplandığında parça tepsiden taşıyordu.
+        _trayScale = MathF.Min(1f, trayHeight * 0.62f / (_cell * 1.3f));
     }
 
     private void DrawBackground(SKCanvas canvas, float width, float height)
@@ -474,17 +476,10 @@ public sealed class JigsawSurface : SKCanvasView
             return;
         }
 
-        // Sıradaki parça arkada soluk duruyor: oyun akışı duraksamıyor.
-        if (round.Next is { } next)
-        {
-            DrawPiece(
-                canvas,
-                next,
-                new SKPoint(_trayCenter.X, _trayCenter.Y + (_cell * _trayScale * 0.14f)),
-                _trayScale * 0.78f,
-                alpha: 90);
-        }
-
+        // Şekil Ayırma'daki gibi bir "sıradaki parça" önizlemesi yok. Orada
+        // parçalar küçük ve arkada soluk duran ikincisi okunuyor; burada
+        // parça tepsinin tamamını kaplıyor ve arkadaki yalnızca tırnağıyla
+        // dışarı taşıyor — cihazda çizim hatası gibi görünüyordu.
         if (round.Current is not { } current)
         {
             return;

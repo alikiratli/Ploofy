@@ -302,16 +302,23 @@ public sealed class MazeTraceRound
     }
 
     /// <summary>
-    /// Parmağın yola en yakın olduğu yer — yalnızca ileri penceresi içinde.
+    /// Parmağın yola en yakın olduğu yer — ileriye doğru pencere içinde.
     /// </summary>
+    /// <remarks>
+    /// Pencere yalnızca <b>ileriyi</b> sınırlıyor; geriye doğru yolun tamamı
+    /// açık. Sebebi cihazda görüldü: dar bir geri pay (iki parça, yaklaşık
+    /// yolun %1,7'si) bırakıldığında köşede geriye kayan parmak yoldan
+    /// çıkmış sayılıyordu — Meşe'de bu bir hata puanı, ve o kadar geri
+    /// kayma beş yaşındaki bir çocuğun titremesi kadar bir mesafe.
+    /// Geriye gitmek zaten hiçbir şey kazandırmıyor, çünkü ilerleme geri
+    /// gitmiyor; sınırlanması gereken tek yön ileri.
+    /// </remarks>
     /// <returns>Kesirli parça indisi ve o noktaya olan uzaklık.</returns>
     private (float Index, float Distance) NearestAhead(float x, float y)
     {
         var current = (int)_progressIndex;
 
-        // Geriye doğru iki parçalık pay: köşede parmak biraz geri kayıyor ve
-        // bunu yoldan çıkmak saymak haksız.
-        var first = Math.Max(0, current - 2);
+        var first = 0;
         var last = Math.Min(_points.Count - 2, current + Lookahead);
 
         var bestIndex = _progressIndex;

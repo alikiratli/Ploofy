@@ -324,8 +324,19 @@ public sealed class CountMatchSurface : SKCanvasView
             _binCenters[i] = new SKPoint(margin + (slot * i) + (slot / 2f), binY);
         }
 
-        _cardSize = new SKSize(width * 0.72f, height * 0.30f);
-        _cardHome = new SKPoint(width * 0.5f, height * 0.74f);
+        // Kart, kümenin kaç sıra tuttuğuna göre yükseliyor. Sabit yükseklikte
+        // tek sıralık bir küme kartın ortasında asılı kalıyor ve altında
+        // yarım ekranlık boş bir alan duruyordu — cihazda görüldü.
+        var items = round.Current?.Group.Count ?? Columns;
+        var rows = (int)MathF.Ceiling(items / (float)Columns);
+        var cardWidth = width * 0.72f;
+        var cell = cardWidth / Columns;
+
+        _cardSize = new SKSize(cardWidth, MathF.Min(height * 0.34f, cell * rows * 1.3f));
+
+        // Kartın altı her zaman aynı yerde: sıra sayısı değiştikçe kart
+        // yukarı doğru büyüyor, aşağı doğru kaymıyor.
+        _cardHome = new SKPoint(width * 0.5f, (height * 0.88f) - (_cardSize.Height / 2f));
     }
 
     private void DrawBackground(SKCanvas canvas, float width, float height)

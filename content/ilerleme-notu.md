@@ -46,21 +46,33 @@ yok, yani hızlı bitirmek gerçekten "daha çabuk çözdüm" demek.
 
 **Sayılar:** 228 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir.
 
-**Buradan başla:** Artık kod değil, cihaz. Son beş oturumun oyunlarının
-hiçbiri gerçek ekranda oynanmadı; tabletti bir kez kurup onunu da baştan
-sona oynamak, bu noktada yapılabilecek en değerli iş. Sonra 4. bölümdeki
-öncelik sırası.
+**Android'de çalıştırıldı (26.08.2026).** Beş yeni oyunun beşi de tablet
+emülatöründe açıldı, çizildi ve dokunuşa cevap verdi; Yolu Bul'da bir tur,
+Sepeti Tut'ta bir tur ve Yapboz'da bir parça uçtan uca oynandı, yıldız
+kaydı ve sonuç ekranı çalıştı. Üç kusur bulundu ve üçü de düzeltildi:
 
-**Cihazda özellikle bakılacaklar:**
+1. **Yolu Bul'da geri kayma yoldan çıkmak sayılıyordu.** Parmağın yola
+   oturduğu yer yalnızca `[şu an - 2, şu an + 10]` penceresinde aranıyordu;
+   iki parçadan (yolun ~%1,7'si) fazla geri kayan parmak "çıktın" alıyor ve
+   Meşe'de bu bir hata puanına dönüyordu — o kadar geri kayma beş yaşındaki
+   bir çocuğun titremesi kadar bir mesafe. Üstelik ilerleme o noktada
+   kilitlenip kalabiliyordu. Pencere artık yalnızca ileriyi sınırlıyor;
+   geriye doğru yolun tamamı açık. İleri atlamayı engelleyen kural aynen
+   duruyor.
+2. **Yapbozda "sıradaki parça" önizlemesi çizim hatası gibi görünüyordu.**
+   Şekil Ayırma'da parçalar küçük olduğu için arkadaki soluk parça
+   okunuyor; yapbozda parça tepsinin tamamını kaplıyor ve arkadaki
+   yalnızca tırnağıyla farklı renkte dışarı taşıyordu. Kaldırıldı.
+3. **Tepsideki parça hücreye göre ölçekleniyordu**, oysa parça
+   tırnaklarıyla birlikte hücreden %30 büyük — tepsiden taşıyordu.
+4. **Say ve Eşleştir'de kart sabit yükseklikteydi.** Tek sıralık bir küme
+   (5 ve altı nesne) kartın ortasında asılı kalıp altında yarım ekranlık
+   boşluk bırakıyordu. Kart artık sıra sayısına göre yükseliyor ve altı
+   sabit bir yerde duruyor.
 
-- Say ve Eşleştir: kart boyutu ve rakam tepsilerinin parmak isabeti
-- Sırayı Tekrarla: 750 ms gösterim hızı Filiz bandında takip edilebiliyor mu
-- Sepeti Tut: düşme hızı Fidan bandında adil mi, sepet parmağı gecikmeden
-  takip ediyor mu
-- Yolu Bul: Meşe toleransı (0.055) parmak ucuyla tutturulabiliyor mu —
-  parmak ucu tablette zaten epey yer kaplıyor, bunların en riskli olanı bu
-- Yapboz: Meşe'nin on altı parçası bir turu fazla uzatıyor mu, ve tepsideki
-  küçültülmüş parça hangi parça olduğu anlaşılacak kadar okunuyor mu
+Kalan sorular hâlâ **gerçek tablet** gerektiriyor; emülatörde ölçülemeyen
+tek şey parmak: Meşe'de Yolu Bul'un 0,055 toleransı ve Sepeti Tut'un
+düşme hızı gerçek elle denenmedi.
 
 ## 2. Depo düzeni
 
@@ -135,9 +147,15 @@ kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
   aranan işaret büyük gösteriliyor, Say ve Eşleştir'de küme ve rakamlar aynı
   ekranda duruyor). Ses varlıkları gelince seslendirme eklenebilir ama üçü de
   sessiz hâliyle tam çalışıyor
-- Son beş oturumun oyunları (Say ve Eşleştir, Sırayı Tekrarla, Sepeti Tut,
-  Yolu Bul, Yapboz) gerçek ekranda oynanmadı; yalnızca Windows ve Android'de
-  derlendi. Listenin en uzun maddesi bu ve artık en önemlisi
+- Gerçek tablette hiç denenmedi; şimdiye kadar yalnızca emülatör. Parmak
+  isabeti emülatörde ölçülemiyor (özellikle Yolu Bul'un Meşe toleransı)
+- **Ekran yönü kilitli değil.** Emülatörde dikey çalıştı ve oyunların
+  çoğunda ortada büyük boşluklar kaldı; yerleşim değerleri yatay tablet
+  düşünülerek seçilmişti. Ya yön kilitlenmeli ya da dikey için ayrı
+  yerleşim gerekiyor. Kararı ertelendi çünkü ürün kararı: uygulama yalnızca
+  yatay mı çalışacak?
+- İngilizcede "1 stars in total" yazıyor; `TotalStars` metni tekil/çoğul
+  ayrımı yapmıyor. Türkçe ve Almanca'da sorun yok
 - Profil düzenleme hâlâ yok: avatar ancak profil oluştururken seçiliyor,
   sonradan değiştirilemiyor. Otuz iki seçenek varken bu daha çok göze
   batacak
@@ -192,6 +210,15 @@ okunmuyor:
   mu, ve dairenin büyük yayı mı seçiliyor. Üçü de tek satırlık bir işaret
   hatasıyla bozulabilecek şeylerdi. Aynı yol, çizim koduna dokunan her
   değişiklikte işe yarar.
+- **Git Bash adb'nin cihaz yollarını bozuyor.** `adb push x /data/local/tmp/x`
+  çağrısında Git Bash `/data/...` yolunu Windows yoluna çeviriyor ve
+  "remote secure_mkdirs() failed" hatası geliyor. Başına
+  `MSYS_NO_PATHCONV=1` koymak yetiyor. `adb shell input tap` gibi yol
+  içermeyen çağrılar etkilenmiyor.
+- **Emülatörde `adb shell input motionevent` ile eğri çizilebiliyor.**
+  `input swipe` yalnızca düz çizgi; eğri bir yolu takip etmek için
+  DOWN/MOVE/UP dizisini bir betiğe yazıp cihaza gönderip `sh` ile çalıştırmak
+  gerekiyor. Yolu Bul'un tur tamamlaması böyle doğrulandı.
 - **Emülatörün SystemUI'ı bu makinede takılıyor.** Takıldığında bütün ekran
   donuyor: ekran görüntüsü hep aynı kareyi gösteriyor, dokunuşlar işlemiyor ve
   uygulama kilitlenmiş gibi duruyor. Teşhis için
