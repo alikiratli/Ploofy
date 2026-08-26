@@ -78,6 +78,15 @@ public sealed partial class HomeViewModel(
     [ObservableProperty]
     public partial bool HasEducationalGames { get; set; }
 
+    /// <summary>Oyun kutucukları kaç sütuna diziliyor.</summary>
+    /// <remarks>
+    /// Sayfa genişliğinden hesaplanıyor. Sabit iki sütun, yatay tablette
+    /// kutucukları ekran boyu uzayan şeritlere çeviriyordu — ekran yatayda
+    /// kilitlendikten sonra ortaya çıktı.
+    /// </remarks>
+    [ObservableProperty]
+    public partial int GameColumns { get; set; } = 2;
+
     public ObservableCollection<GameTile> FunGames { get; } = [];
 
     public ObservableCollection<GameTile> EducationalGames { get; } = [];

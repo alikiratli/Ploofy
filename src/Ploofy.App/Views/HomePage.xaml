@@ -141,7 +141,7 @@
                                 SelectionMode="None">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical"
-                                         Span="2"
+                                         Span="{Binding GameColumns}"
                                          HorizontalItemSpacing="14"
                                          VerticalItemSpacing="14" />
                     </CollectionView.ItemsLayout>
@@ -155,7 +155,7 @@
                                 SelectionMode="None">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical"
-                                         Span="2"
+                                         Span="{Binding GameColumns}"
                                          HorizontalItemSpacing="14"
                                          VerticalItemSpacing="14" />
                     </CollectionView.ItemsLayout>

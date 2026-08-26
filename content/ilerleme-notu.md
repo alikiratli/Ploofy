@@ -70,6 +70,17 @@ kaydı ve sonuç ekranı çalıştı. Üç kusur bulundu ve üçü de düzeltild
    boşluk bırakıyordu. Kart artık sıra sayısına göre yükseliyor ve altı
    sabit bir yerde duruyor.
 
+**Ekran yönü yatayda kilitlendi.** Emülatörde dikey çalıştığında oyunların
+ortasında yarım ekranlık boşluklar kaldığı görüldü; bütün yerleşimler yatay
+tablet düşünülerek ölçülmüştü. Android'de `SensorLandscape` (kilitli ama
+iki yön de serbest, çocuk tableti ters çevirince görüntü dönüyor), iOS'ta
+`Info.plist` yalnızca yatay. İki yönü birden desteklemek her oyun için
+ikinci bir yerleşim yazmak demekti.
+
+Kilitledikten sonra ana ekranda kartların ekran boyu şeritlere dönüştüğü
+görüldü: sütun sayısı sabit ikiydi. Artık genişliğe göre — 900 birimin
+altında iki, üstünde üç sütun.
+
 Kalan sorular hâlâ **gerçek tablet** gerektiriyor; emülatörde ölçülemeyen
 tek şey parmak: Meşe'de Yolu Bul'un 0,055 toleransı ve Sepeti Tut'un
 düşme hızı gerçek elle denenmedi.
@@ -89,6 +100,7 @@ düşme hızı gerçek elle denenmedi.
 - Profil akışı: oluşturma, seçme, silme; ücretsiz katmanda tek profil sınırı
 - Ebeveyn kilidi: iki basamaklı aritmetik, yanlış cevapta soru değişiyor, beş dakika açık kalıyor
 - Üç dil (tr/en/de), ayarlardan çalışırken değiştirilebiliyor
+- Ekran yatayda kilitli; ana ekran sütun sayısını genişliğe göre seçiyor
 - Üç yaş bandı (Filiz/Fidan/Meşe) her oyunun parametrelerini gerçekten ölçekliyor
 - Eşleştirme Kartları: kart çevirme animasyonu, eşleşme zıplaması, sıralı oyun
 - Balon Patlatma: SkiaSharp yüzeyi, parlayan balonlar, patlama parçacıkları, hedef renk, süre
@@ -149,11 +161,8 @@ kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
   sessiz hâliyle tam çalışıyor
 - Gerçek tablette hiç denenmedi; şimdiye kadar yalnızca emülatör. Parmak
   isabeti emülatörde ölçülemiyor (özellikle Yolu Bul'un Meşe toleransı)
-- **Ekran yönü kilitli değil.** Emülatörde dikey çalıştı ve oyunların
-  çoğunda ortada büyük boşluklar kaldı; yerleşim değerleri yatay tablet
-  düşünülerek seçilmişti. Ya yön kilitlenmeli ya da dikey için ayrı
-  yerleşim gerekiyor. Kararı ertelendi çünkü ürün kararı: uygulama yalnızca
-  yatay mı çalışacak?
+- Uygulama yalnızca **yatay** çalışıyor. Dikey desteklenmiyor ve
+  desteklenecekse her oyun için ikinci bir yerleşim gerekiyor
 - İngilizcede "1 stars in total" yazıyor; `TotalStars` metni tekil/çoğul
   ayrımı yapmıyor. Türkçe ve Almanca'da sorun yok
 - Profil düzenleme hâlâ yok: avatar ancak profil oluştururken seçiliyor,

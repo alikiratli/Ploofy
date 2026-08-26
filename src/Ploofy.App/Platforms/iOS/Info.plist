@@ -13,16 +13,19 @@
 	<array>
 		<string>arm64</string>
 	</array>
+	<!--
+		Yalnızca yatay. Bütün oyun yerleşimleri yatay tablet düşünülerek
+		ölçüldü; dikeyde ekranın ortasında yarım ekranlık boşluklar kalıyor.
+		Android tarafındaki karşılığı MainActivity'deki SensorLandscape.
+		İki yön de listede: çocuk cihazı ters çevirince görüntü dönüyor.
+	-->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
