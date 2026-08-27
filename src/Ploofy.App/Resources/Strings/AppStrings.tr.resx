@@ -103,6 +103,9 @@
   <data name="AddProfile" xml:space="preserve">
     <value>Çocuk ekle</value>
   </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>Çocuğu düzenle</value>
+  </data>
   <data name="ProfileNameLabel" xml:space="preserve">
     <value>Takma ad</value>
   </data>
@@ -234,6 +237,9 @@
   </data>
   <data name="TotalStars" xml:space="preserve">
     <value>Toplam {0} yıldız</value>
+  </data>
+  <data name="TotalStars.One" xml:space="preserve">
+    <value>Toplam 1 yıldız</value>
   </data>
   <data name="PlayAgain" xml:space="preserve">
     <value>Tekrar oyna</value>

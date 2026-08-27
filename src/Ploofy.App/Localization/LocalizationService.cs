@@ -79,6 +79,26 @@ public sealed class LocalizationService : INotifyPropertyChanged
     }
 
     /// <summary>Biçimlendirilmiş metin — <c>{0}</c> yer tutucuları için.</summary>
-    public string Format(string key, params object[] args) =>
-        string.Format(_culture, this[key], args);
+    /// <remarks>
+    /// <para>
+    /// Tek argüman bir sayıysa ve değeri 1 ise önce anahtarın <c>.One</c>
+    /// ekli tekil satırı aranıyor. İngilizce ve Almanca aksi hâlde
+    /// "1 stars in total" / "Insgesamt 1 Sterne" yazıyordu.
+    /// </para>
+    /// <para>
+    /// Tam bir çoğul kuralı motoru değil — bilerek. Desteklenen üç dilin
+    /// üçünde de yalnızca "bir" ayrı davranıyor; Lehçe ya da Arapça gibi
+    /// birden çok çoğul biçimi olan bir dil eklenirse burası
+    /// <c>PluralRules</c>'a bakan bir seçime dönüşür.
+    /// </para>
+    /// </remarks>
+    public string Format(string key, params object[] args)
+    {
+        if (args is [int and 1] && Resources.GetString($"{key}.One", _culture) is { } singular)
+        {
+            return string.Format(_culture, singular, args);
+        }
+
+        return string.Format(_culture, this[key], args);
+    }
 }

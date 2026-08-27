@@ -64,7 +64,7 @@
                     <CollectionView ItemsSource="{Binding Profiles}" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="vm:ProfileRow">
-                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto"
                                       ColumnSpacing="12"
                                       HeightRequest="{StaticResource TouchTarget}">
                                     <ui:AvatarBadgeView Grid.Column="0"
@@ -75,7 +75,25 @@
                                         <Label Text="{Binding DisplayName}" FontAttributes="Bold" />
                                         <Label Text="{Binding BandName}" Style="{StaticResource HintLabel}" />
                                     </VerticalStackLayout>
+                                    <!-- Düzenleme: avatar, ad ve yaş bandı profil
+                                         kurulduktan sonra da değişebilir. Çocuk
+                                         büyüyor ve profili silip yeniden kurmak
+                                         bütün yıldızlarını götürüyordu.
+                                         Kalem, çöp kutusunun yanında renkli
+                                         durabilmek için VS16 ile yazılıyor;
+                                         çıplak U+270F cihazda soluk bir çizgi
+                                         olarak çıkıyor ve düğme boş görünüyor. -->
                                     <Button Grid.Column="2"
+                                            Text="&#x270F;&#xFE0F;"
+                                            FontSize="18"
+                                            WidthRequest="52"
+                                            HeightRequest="52"
+                                            CornerRadius="26"
+                                            Padding="0"
+                                            BackgroundColor="{StaticResource SurfaceMuted}"
+                                            Command="{Binding Source={x:Reference Page}, Path=BindingContext.EditProfileCommand, x:DataType=ContentPage}"
+                                            CommandParameter="{Binding .}" />
+                                    <Button Grid.Column="3"
                                             Text="🗑"
                                             FontSize="18"
                                             WidthRequest="52"

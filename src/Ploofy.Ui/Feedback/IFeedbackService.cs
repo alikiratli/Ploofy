@@ -52,4 +52,42 @@ public enum FeedbackCue
 
     /// <summary>Kilitli bir şeye dokunuldu.</summary>
     Locked,
+
+    /// <summary>
+    /// Sırayı Tekrarla'nın birinci tuşu. Altı tuşun altısı ayrı nota taşıyor:
+    /// klasik oyunda dizi kulakla da hatırlanıyor ve gösterim bir ezgiye
+    /// dönüşüyor — özellikle Filiz bandında, henüz "üçüncü sıradaki" diye
+    /// düşünemeyen çocuk için görsel sıradan daha güçlü bir tutamak.
+    /// Notalar pentatonik seçildi; dizi hangi sırayla çıkarsa çıksın
+    /// uyumsuz bir aralık duyulmuyor.
+    /// </summary>
+    Pad1,
+
+    /// <summary>Sırayı Tekrarla'nın ikinci tuşu. Bkz. <see cref="Pad1"/>.</summary>
+    Pad2,
+
+    /// <summary>Sırayı Tekrarla'nın üçüncü tuşu. Bkz. <see cref="Pad1"/>.</summary>
+    Pad3,
+
+    /// <summary>Sırayı Tekrarla'nın dördüncü tuşu. Bkz. <see cref="Pad1"/>.</summary>
+    Pad4,
+
+    /// <summary>Sırayı Tekrarla'nın beşinci tuşu. Bkz. <see cref="Pad1"/>.</summary>
+    Pad5,
+
+    /// <summary>Sırayı Tekrarla'nın altıncı tuşu. Bkz. <see cref="Pad1"/>.</summary>
+    Pad6,
+}
+
+/// <summary>Sözlüğün sıra ile adres arasındaki köprüsü.</summary>
+public static class FeedbackCues
+{
+    private static readonly FeedbackCue[] Pads =
+    [
+        FeedbackCue.Pad1, FeedbackCue.Pad2, FeedbackCue.Pad3,
+        FeedbackCue.Pad4, FeedbackCue.Pad5, FeedbackCue.Pad6,
+    ];
+
+    /// <summary>Tuş sırasının sesi. Sıra havuzdan taşarsa başa dönüyor.</summary>
+    public static FeedbackCue Pad(int index) => Pads[((index % Pads.Length) + Pads.Length) % Pads.Length];
 }

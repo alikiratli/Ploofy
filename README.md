@@ -19,6 +19,7 @@ src/Ploofy.App/                MAUI uygulaması (Android + iOS; Windows yalnızc
                                geliştirme sırasında denemek için)
 content/strings.tsv            Üç dilin metinleri — tek kaynak
 tools/build_strings.py         strings.tsv -> Resources/Strings/*.resx
+tools/build_sounds.py          geri bildirim seslerini sentezler -> Resources/Raw/sounds/
 tests/Ploofy.Engine.Tests/     xUnit — motor + depo testleri
 ```
 
@@ -176,6 +177,13 @@ Metinler değişince resx dosyalarını yeniden üret (elle düzenlenmiyorlar):
 python tools/build_strings.py content/strings.tsv src/Ploofy.App/Resources/Strings
 ```
 
+Sesler de üretiliyor — depoda hazır duruyorlar, yalnızca tını değişirse
+yeniden çalıştır:
+
+```bash
+python tools/build_sounds.py
+```
+
 ## İlerleme notu
 
 Nerede kalındığı ve sıradaki işler `ilerleme notu.docx` içinde; **her oturum
@@ -192,10 +200,11 @@ python tools/build_progress_note.py
   profil akışı, ana ekran, Eşleştirme Kartları uçtan uca (sıralı oyun ve yıldız
   kaydı dahil), ebeveyn kilidi, ayarlar, abonelik ekranı ✅ · Balon Patlatma ve
   ortak görsel dil ✅ · Android tablette uçtan uca doğrulandı ✅ ·
-  ses varlıkları ⏳
+  ses varlıkları ✅
 - **Faz 2 — Çeşitlilik.** Kalan 9 mini oyun, hepsi aynı bant API'siyle. Sonunda
   "10 oyun, 3 bant, 1 yıldız koleksiyonu" tamam.
 - **Faz 3 — Ebeveyn ve uyum.** Ayarlar, abonelik akışı, veri toplama denetimi,
   yerel ağ eşleşmesi.
-- **Faz 4 — Cila ve yayın.** Ses/animasyon cilası, tema paketleri, mağaza
-  görselleri, yaş beyanı, yayın.
+- **Faz 4 — Cila ve yayın.** Uygulama ikonu ve açılış ekranı ✅ · gerçek
+  cihaz testi, gerçek satın alma (Plugin.InAppBilling), iOS, tema paketleri,
+  mağaza görselleri, yaş beyanı, yayın ⏳

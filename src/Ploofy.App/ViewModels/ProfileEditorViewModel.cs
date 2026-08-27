@@ -55,17 +55,40 @@ public sealed class AvatarGroupVm(string nameKey, IReadOnlyList<AvatarChoice> ch
 }
 
 /// <summary>
-/// Yeni çocuk profili oluşturma.
+/// Çocuk profili oluşturma ve düzenleme.
 /// </summary>
 /// <remarks>
+/// <para>
 /// Ebeveyn kilidinin arkasından açılıyor. İstenen tek şey takma ad, yaş bandı
 /// ve avatar; gerçek ad, doğum tarihi ya da başka bir kişisel veri sorulmuyor —
 /// toplanmayan veri korunması gereken veri değil.
+/// </para>
+/// <para>
+/// Aynı ekran iki iş görüyor: <c>profileeditor</c> yolu boş gelirse yeni
+/// profil, <c>profileeditor?profileId=3</c> gelirse o profilin düzenlenmesi.
+/// İkisi için ayrı ekran yazmanın anlamı yok — sorulan üç şey aynı ve
+/// düzenleme ekranı ayrı yazılsaydı avatar ızgarası iki yerde durup birinde
+/// güncellenirdi.
+/// </para>
+/// <para>
+/// Yaş bandı da düzenlenebiliyor: çocuk büyüyor ve profili silip yeniden
+/// kurmak bütün yıldızlarını siler. Bant değiştiğinde eski yıldızlar
+/// duruyor; ilerleme oyun <b>ve</b> bant başına tutuluyor.
+/// </para>
 /// </remarks>
-public sealed partial class ProfileEditorViewModel : ObservableObject
+public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAttributable
 {
+    /// <summary>Düzenlemeye açan gezinme parametresi.</summary>
+    public const string ProfileIdParameter = "profileId";
+
     private readonly ProgressRepository _repository;
     private readonly AppState _state;
+
+    /// <summary>Düzenlenen profil; yeni profil oluşturuluyorsa boş.</summary>
+    private ChildProfileRow? _editing;
+
+    private int? _requestedId;
+    private bool _loaded;
 
     /// <summary>
     /// Varsayılanlar kurucuda: ekran açılır açılmaz orta bant ve ilk avatar
@@ -77,8 +100,13 @@ public sealed partial class ProfileEditorViewModel : ObservableObject
         _state = state;
 
         DisplayName = string.Empty;
-        SelectedBand = new BandOption(AgeBand.Fidan);
+
+        // Listedeki örneğin kendisi seçiliyor, eşdeğeri değil: CollectionView
+        // seçili öğeyi referansla buluyor, yeni bir BandOption vermek
+        // varsayılan bandı ekranda seçili göstermiyordu.
+        SelectedBand = Bands.First(b => b.Band == AgeBand.Fidan);
         SelectedAvatar = AvatarCatalog.Default;
+        HeaderText = LocalizationService.Instance["AddProfile"];
 
         AvatarGroups =
         [
@@ -103,6 +131,10 @@ public sealed partial class ProfileEditorViewModel : ObservableObject
     [ObservableProperty]
     public partial bool CanSave { get; set; }
 
+    /// <summary>Ekranın başlığı — "Çocuk ekle" ya da "Çocuğu düzenle".</summary>
+    [ObservableProperty]
+    public partial string HeaderText { get; set; }
+
     public ObservableCollection<BandOption> Bands { get; } =
         [.. Enum.GetValues<AgeBand>().Select(b => new BandOption(b))];
 
@@ -116,6 +148,63 @@ public sealed partial class ProfileEditorViewModel : ObservableObject
 
     partial void OnDisplayNameChanged(string value) =>
         CanSave = !string.IsNullOrWhiteSpace(value);
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        _requestedId = query.TryGetValue(ProfileIdParameter, out var value)
+            && int.TryParse(value?.ToString(), out var id)
+                ? id
+                : null;
+    }
+
+    /// <summary>
+    /// Düzenleme açıldıysa profili okur ve alanları doldurur.
+    /// </summary>
+    /// <remarks>
+    /// Bir kez çalışıyor: sayfa uygulama arka plandan döndüğünde de
+    /// görünüyor ve ikinci bir yükleme ebeveynin yazdığı adı geri alırdı.
+    /// </remarks>
+    public async Task LoadAsync()
+    {
+        if (_loaded)
+        {
+            return;
+        }
+
+        _loaded = true;
+
+        if (_requestedId is not { } id)
+        {
+            return;
+        }
+
+        var existing = await _repository.ProfileByIdAsync(id);
+        _editing = existing;
+        if (existing is null)
+        {
+            // Profil arada silinmiş; boş bir düzenleme ekranı göstermek yerine
+            // geri dönülüyor.
+            await Shell.Current.GoToAsync("..");
+            return;
+        }
+
+        HeaderText = LocalizationService.Instance["EditProfile"];
+        DisplayName = existing.DisplayName;
+
+        var band = AgeBandExtensions.FromId(existing.AgeBandId);
+        SelectedBand = Bands.First(b => b.Band == band);
+
+        // Avatar katalogdan çıkarılmışsa (eski bir profil) seçim varsayılanda
+        // kalıyor; ekranın boş bir seçimle açılması daha kötü.
+        var avatar = AvatarGroups
+            .SelectMany(g => g.Choices)
+            .FirstOrDefault(c => c.Emoji == existing.AvatarId);
+
+        if (avatar is not null)
+        {
+            SelectAvatar(avatar);
+        }
+    }
 
     /// <summary>
     /// Avatarı seçer.
@@ -146,6 +235,25 @@ public sealed partial class ProfileEditorViewModel : ObservableObject
     {
         if (!CanSave)
         {
+            return;
+        }
+
+        if (_editing is { } row)
+        {
+            row.DisplayName = DisplayName.Trim();
+            row.AgeBandId = SelectedBand.Band.ToId();
+            row.AvatarId = SelectedAvatar;
+            await _repository.UpdateProfileAsync(row);
+
+            // Düzenlenen çocuk o an oynayan çocuksa ana ekrandaki ad, avatar
+            // ve bant hemen tazelenmeli: bant zorluğu belirliyor ve eski
+            // değerle açılan bir oyun yanlış bantta oynanırdı.
+            if (_state.ActiveProfile?.Id == row.Id)
+            {
+                await _state.RefreshActiveProfileAsync();
+            }
+
+            await Shell.Current.GoToAsync("..");
             return;
         }
 

@@ -251,7 +251,11 @@ public sealed partial class SimonViewModel : ObservableObject, IDisposable
             foreach (var pad in sequence)
             {
                 Pads[pad].State = SimonPadState.Lit;
-                _ = _feedback.PlayAsync(FeedbackCue.Tap);
+
+                // Her tuşun kendi notası var, dolayısıyla gösterim bir ezgi.
+                // Filiz bandındaki çocuk "üçüncü, sonra birinci" diye
+                // düşünemiyor ama üç notalık bir ezgiyi tekrarlayabiliyor.
+                _ = _feedback.PlayAsync(FeedbackCues.Pad(pad));
                 await Task.Delay(round.StepDuration, token);
 
                 Pads[pad].State = SimonPadState.Idle;
@@ -293,7 +297,9 @@ public sealed partial class SimonViewModel : ObservableObject, IDisposable
             switch (outcome)
             {
                 case SimonOutcome.Correct:
-                    await BlinkAsync(pad, FeedbackCue.Tap);
+                    // Gösterimde duyduğu notanın aynısı: çocuk çaldığı ezgiyi
+                    // duyduğuyla karşılaştırabilsin.
+                    await BlinkAsync(pad, FeedbackCues.Pad(pad.Index));
                     break;
 
                 case SimonOutcome.Wrong:

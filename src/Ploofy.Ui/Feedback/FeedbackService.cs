@@ -120,15 +120,28 @@ public sealed class FeedbackService(IAudioManager audioManager) : IFeedbackServi
         }
     }
 
+    /// <remarks>
+    /// Sesler WAV, MP3 değil: <c>tools/build_sounds.py</c> onları sentezleyerek
+    /// üretiyor ve saf PCM yazmak için kodlayıcı gerekmiyor. Hepsi bir
+    /// saniyenin altında, toplamı bir megabaytın altında kalıyor — bu boy için
+    /// sıkıştırmanın kazandıracağı yer, çözücünün ilk çalmada getirdiği
+    /// gecikmeye değmiyor.
+    /// </remarks>
     private static string FileNameFor(FeedbackCue cue) => cue switch
     {
-        FeedbackCue.Tap => "sounds/tap.mp3",
-        FeedbackCue.Correct => "sounds/correct.mp3",
-        FeedbackCue.Retry => "sounds/retry.mp3",
-        FeedbackCue.RoundComplete => "sounds/round_complete.mp3",
-        FeedbackCue.StarEarned => "sounds/star.mp3",
-        FeedbackCue.Handoff => "sounds/handoff.mp3",
-        FeedbackCue.Locked => "sounds/locked.mp3",
+        FeedbackCue.Tap => "sounds/tap.wav",
+        FeedbackCue.Correct => "sounds/correct.wav",
+        FeedbackCue.Retry => "sounds/retry.wav",
+        FeedbackCue.RoundComplete => "sounds/round_complete.wav",
+        FeedbackCue.StarEarned => "sounds/star.wav",
+        FeedbackCue.Handoff => "sounds/handoff.wav",
+        FeedbackCue.Locked => "sounds/locked.wav",
+        FeedbackCue.Pad1 => "sounds/pad1.wav",
+        FeedbackCue.Pad2 => "sounds/pad2.wav",
+        FeedbackCue.Pad3 => "sounds/pad3.wav",
+        FeedbackCue.Pad4 => "sounds/pad4.wav",
+        FeedbackCue.Pad5 => "sounds/pad5.wav",
+        FeedbackCue.Pad6 => "sounds/pad6.wav",
         _ => throw new ArgumentOutOfRangeException(nameof(cue), cue, null),
     };
 

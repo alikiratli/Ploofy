@@ -11,7 +11,8 @@
     <ScrollView>
         <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="20">
 
-            <Label Text="{loc:Translate AddProfile}" Style="{StaticResource TitleLabel}" />
+            <!-- Başlık görünüm modelinden geliyor: aynı ekran hem ekleme hem düzenleme. -->
+            <Label Text="{Binding HeaderText}" Style="{StaticResource TitleLabel}" />
 
             <VerticalStackLayout Spacing="6">
                 <Label Text="{loc:Translate ProfileNameLabel}" Style="{StaticResource SectionLabel}" />

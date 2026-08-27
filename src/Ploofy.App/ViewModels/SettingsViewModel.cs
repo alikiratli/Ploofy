@@ -129,6 +129,25 @@ public sealed partial class SettingsViewModel(
         OnPropertyChanged(nameof(Profiles));
     }
 
+    /// <summary>
+    /// Profili düzenleme ekranına götürür.
+    /// </summary>
+    /// <remarks>
+    /// Ayrı bir ebeveyn kilidi istemiyor: bu ekran zaten kilidin arkasında ve
+    /// çocuğu kilit sorusuyla ikinci kez karşılamanın koruduğu bir şey yok.
+    /// </remarks>
+    [RelayCommand]
+    private static async Task EditProfileAsync(ProfileRow? row)
+    {
+        if (row is null)
+        {
+            return;
+        }
+
+        await Shell.Current.GoToAsync(
+            $"profileeditor?{ProfileEditorViewModel.ProfileIdParameter}={row.Row.Id}");
+    }
+
     [RelayCommand]
     private async Task DeleteProfileAsync(ProfileRow? row)
     {

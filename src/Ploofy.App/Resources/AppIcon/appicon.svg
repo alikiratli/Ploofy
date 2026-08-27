@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Ploofy ikonunun zemini. Yalnızca düz dolgular ve daireler var: degrade,
+     süzgeç ve yazı yok. Resizetizer bu dosyayı Android'de uyarlanabilir
+     ikonun arka katmanına, iOS'ta ikonun tabanına dönüştürüyor; iki yolda
+     da en sade SVG en güvenilir sonucu veriyor. Baloncuklar köşelerde
+     duruyor çünkü uyarlanabilir ikon maskesi köşeleri kırpabiliyor —
+     kırpılırsa kaybı olmayan tek şeyler onlar. -->
 <svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="456" height="456" fill="#512BD4" />
+    <rect x="0" y="0" width="456" height="456" fill="#FFD166" />
+
+    <circle cx="74" cy="82" r="56" fill="#FFFFFF" opacity="0.20" />
+    <circle cx="394" cy="112" r="38" fill="#FFFFFF" opacity="0.16" />
+    <circle cx="372" cy="392" r="72" fill="#FFFFFF" opacity="0.13" />
+    <circle cx="96" cy="386" r="30" fill="#FFFFFF" opacity="0.16" />
 </svg>

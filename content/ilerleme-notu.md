@@ -1,6 +1,6 @@
 # Ploofy — İlerleme Notu
 
-Son güncelleme: 26.08.2026
+Son güncelleme: 27.08.2026
 Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
@@ -11,96 +11,131 @@ oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Katalogda artık
 "yakında" olarak duran hiçbir oyun yok ve kütüphane beş etkileşim türünün
 beşini de kapsıyor.
 
-**Bundan sonrası oyun eklemek değil, olanı yayına hazırlamak.** Kalan işler
-— gerçek cihaz testi, ses varlıkları, gerçek satın alma ve mağaza hazırlığı
-— 4. bölümde.
+**Faz 4 başladı: uygulamanın sesi ve yüzü var.** Bu oturumda kalan somut
+varlıklar üretildi; geriye kalan işler artık bilgisayarda yapılamayanlar —
+gerçek cihaz, gerçek mağaza, Mac.
 
-**Son oturumda yapılan:** Yapboz eklendi, uygulama Android'de çalıştırıldı,
-cihazda çıkan dört kusur düzeltildi ve ekran yönü yatayda kilitlendi.
-Sırayla:
+**Son oturumda yapılan:** Sesler, Sırayı Tekrarla'nın nota tuşları, profil
+düzenleme, uygulama ikonu ve açılış ekranı, bir de İngilizce/Almanca'daki
+tekil-çoğul hatası. Sırayla:
 
-### Yapboz
+### Sesler
 
-Tahtada boş yuvalar duruyor, altta sıradaki parça bekliyor; çocuk parçayı
-yuvasına sürüklüyor. Parçalar Şekil Ayırma'daki gibi **sırayla** geliyor:
-on altı parçayı aynı anda ekrana dökmek bu yaş grubunda dağıtıyor.
+Yedi geri bildirim sesi ve Sırayı Tekrarla'nın altı tuş notası artık depoda.
+Hazır bir ses bankasından alınmadılar, **üretiliyorlar**:
+`tools/build_sounds.py` her sesi harmoniklerin toplamı olarak sentezliyor ve
+`Resources/Raw/sounds/` altına yazıyor. Sebebi lisans — hazır bankalar
+çocuk uygulamasında atıf ve ticari kullanım şartı getiriyor, üretilmiş bir
+dalga getirmiyor. Uygulama zaten hiçbir görsel varlık taşımıyordu; ses de
+aynı yolu izliyor.
 
-Bandın asıl farkı **hayalet**: küçük bantlarda boş yuvaların altında resmin
-soluk bir kopyası duruyor ve oyun "resmi eşleştir" oluyor. Meşe'de hayalet
-yok, oyun "resmi kur"a dönüşüyor — parçanın yeri ancak yerleşmiş komşulara
-bakarak çıkarılıyor. Bu yüzden o bantta parçaların geliş sırası rastgele
-**olamıyor**: sıra bir köşeden başlıyor ve her parça yerleşmişlerden en az
-birine komşu geliyor. Olmasaydı ortadan gelen yalnız bir parçanın yerini
-çıkarmanın yolu olmazdı.
+Biçim WAV, MP3 değil: kodlayıcı gerektirmiyor ve hepsi bir saniyenin altında,
+toplamı 764 KB. Bu boyda sıkıştırmanın kazandıracağı yer, çözücünün ilk
+çalmada getirdiği gecikmeye değmiyor.
 
-Resim bir varlık dosyası değil, tohumdan üretiliyor: uygulama hiç görsel
-varlık taşımıyor. Şekiller sarsılmış bir ızgaraya dağıtılıyor, rastgele
-serpilmiyor — serpme boş bölgeler bırakıyor ve düz zeminden ibaret kalan
-bir parçanın yeri hayaletsiz bantta bulunamıyor.
+İki karar tınıdan daha çok işe yaradı:
 
-Kesim: her iç kenara bir tırnak, komşu kenar onun tersi. Tırnak, kenarın
-ortasına oturan bir dairenin **büyük** yayı; daire kenarı iki noktada
-kestiği için yay tam o boyunlardan başlayıp bitiyor ve ek birleştirme
-çizgisi gerekmiyor. Geometri ekranda gözle doğrulanamadığı için ayrıca
-sayısal olarak sınandı: tırnaklar doğru yöne taşıyor, komşu kenarlar
-birebir örtüşüyor ve küçük yay değil büyük yay seçiliyor.
+- **Hepsi do majör pentatonik içinde.** Çocuk oyununda sesler sürekli
+  çakışıyor (yıldız + tur sonu, dokunuş + doğru) ve bu dizide hangi ikisi
+  üst üste binerse binsin uyumsuz bir aralık çıkmıyor.
+- **Kuyruklar kısa** (-28 dB'de kesiliyor). Uzun kuyruk bu oyunda zarar
+  veriyordu: art arda düşen iki yıldız sesinden ikincisi birincisini
+  kesiyor ve kesilen ses tıkırdıyor.
 
-Yapboz, son üç oyunun aksine **hedef süre taşıyor** (Meşe, 150 sn): tahtanın
-tamamı en baştan görünüyor, bekleyecek bir gösterim ya da düşecek bir nesne
-yok, yani hızlı bitirmek gerçekten "daha çabuk çözdüm" demek.
+Sesi kulakla doğrulamak mümkün değildi (kulak yok), o yüzden yapbozun
+tırnak geometrisinde izlenen yol tekrarlandı ve dosyalar **sayıyla**
+sınandı: kırpılma yok, ilk ve son örnek sıfırda (kenarda tık yok) ve altı
+tuşun altısında beklenen temel frekans komşu yarım tonlardan en az dört kat
+güçlü. Gerçek dinleme testi cihazda.
 
-### Android'de çalıştırma
+### Sırayı Tekrarla artık çalıyor
 
-Beş yeni oyunun beşi de tablet emülatöründe açıldı, çizildi ve dokunuşa
-cevap verdi; Yolu Bul'da bir tur, Sepeti Tut'ta bir tur ve Yapboz'da bir
-parça uçtan uca oynandı, yıldız kaydı ve sonuç ekranı çalıştı. Dört kusur
-bulundu ve dördü de düzeltildi:
+Bilinen eksikler listesindeki en eski madde kapandı: her tuşun kendi notası
+var. Klasik oyunun asıl işi burada — dizi kulakla da hatırlanıyor ve
+gösterim bir ezgiye dönüşüyor. Özellikle Filiz bandında değerli: henüz
+"üçüncü sıradaki" diye düşünemeyen çocuk üç notalık bir ezgiyi
+tekrarlayabiliyor. Çocuk bir tuşa dokunduğunda gösterimde duyduğu notanın
+aynısını duyuyor, dolayısıyla çaldığını duyduğuyla karşılaştırabiliyor.
 
-1. **Yolu Bul'da geri kayma yoldan çıkmak sayılıyordu.** Parmağın yola
-   oturduğu yer yalnızca `[şu an - 2, şu an + 10]` penceresinde aranıyordu;
-   iki parçadan (yolun ~%1,7'si) fazla geri kayan parmak "çıktın" alıyor ve
-   Meşe'de bu bir hata puanına dönüyordu — o kadar geri kayma beş yaşındaki
-   bir çocuğun titremesi kadar bir mesafe. Üstelik ilerleme o noktada
-   kilitlenip kalabiliyordu. Pencere artık yalnızca ileriyi sınırlıyor;
-   geriye doğru yolun tamamı açık. İleri atlamayı engelleyen kural aynen
-   duruyor.
-2. **Yapbozda "sıradaki parça" önizlemesi çizim hatası gibi görünüyordu.**
-   Şekil Ayırma'da parçalar küçük olduğu için arkadaki soluk parça
-   okunuyor; yapbozda parça tepsinin tamamını kaplıyor ve arkadaki
-   yalnızca tırnağıyla farklı renkte dışarı taşıyordu. Kaldırıldı.
-3. **Tepsideki parça hücreye göre ölçekleniyordu**, oysa parça
-   tırnaklarıyla birlikte hücreden %30 büyük — tepsiden taşıyordu.
-4. **Say ve Eşleştir'de kart sabit yükseklikteydi.** Tek sıralık bir küme
-   (5 ve altı nesne) kartın ortasında asılı kalıp altında yarım ekranlık
-   boşluk bırakıyordu. Kart artık sıra sayısına göre yükseliyor ve altı
-   sabit bir yerde duruyor.
+### Profil düzenleme
 
-### Ekran yönü
+Avatar, ad ve yaş bandı artık profil kurulduktan sonra da değiştirilebiliyor.
+Ayarlardaki profil satırına bir kalem düğmesi geldi; aynı ekran hem ekleme
+hem düzenleme yapıyor (`profileeditor?profileId=3`). Ayrı bir düzenleme
+ekranı yazmak otuz iki avatarlık ızgarayı iki yere kopyalamak olurdu.
 
-Emülatörde dikey çalıştığında oyunların
-ortasında yarım ekranlık boşluklar kaldığı görüldü; bütün yerleşimler yatay
-tablet düşünülerek ölçülmüştü. Android'de `SensorLandscape` (kilitli ama
-iki yön de serbest, çocuk tableti ters çevirince görüntü dönüyor), iOS'ta
-`Info.plist` yalnızca yatay. İki yönü birden desteklemek her oyun için
-ikinci bir yerleşim yazmak demekti.
+Yaş bandının da düzenlenebilir olması önemli: çocuk büyüyor ve tek yol
+profili silmek olsaydı bütün yıldızları giderdi. Bant değişince eski
+yıldızlar duruyor — ilerleme oyun **ve** bant başına tutuluyor.
 
-Kilitledikten sonra ana ekranda kartların ekran boyu şeritlere dönüştüğü
-görüldü: sütun sayısı sabit ikiydi. Artık genişliğe göre — 900 birimin
-altında iki, üstünde üç sütun.
+Bu iş sırasında küçük bir kusur da çıktı: yeni profil ekranında varsayılan
+yaş bandı seçili görünmüyordu. `SelectedBand` listedeki örneğe değil onun
+eşdeğerine kuruluyordu; CollectionView seçili öğeyi referansla arıyor.
 
-**Sayılar:** 229 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir.
+### İkon ve açılış ekranı
 
-**Buradan başla: gerçek tablet.** Emülatör her şeyi gösterdi ama tek bir
-şeyi ölçemiyor — parmağı. Tableti USB'den tak, hata ayıklamayı aç,
+MAUI şablonunun mor ".NET" logosu gitti. Yerine Balon Patlatma'nın mavi
+kabarcığından gelen gülen bir yüz: sarı zemin (paletteki Sunny), mavi gövde,
+pembe yanaklar. Açılış ekranı aynı yüzün büyüğü.
+
+SVG'lerde degrade, süzgeç ve yazı yok — yalnızca düz dolgu ve daireler.
+Hacim, üst üste iki daireyle veriliyor (koyu olan altta bir milim taşıyor);
+oyun yüzeylerindeki yol da bu. Yazı olmamasının ayrı bir sebebi var: üç
+dilde açılan bir uygulamanın açılış ekranında tek bir dilin sözcüğü yanlış
+duruyor. Ön katman merkezden 126 birim yarıçapın içinde kalıyor, çünkü
+Android'in uyarlanabilir ikonu dış üçte biri maskeyle kırpıyor.
+
+Üretilen PNG'ler gözle doğrulandı. İlk denemede yanaklar mor çıkmıştı:
+saydam pembe mavinin üstünde mora kayıyor.
+
+### Emülatörde doğrulama
+
+Beşi de tablet emülatöründe çalıştırıldı. Profil düzenleme uçtan uca
+denendi: ayarlardan kalem düğmesi, ekranın "Çocuğu düzenle" başlığıyla ve
+dolu alanlarla açılması, avatarın tilkiden pandaya değişmesi, kaydetme ve
+değişikliğin hem ayarlarda hem profil seçme ekranında görünmesi. Yaş bandı
+da doğru seçili geliyor.
+
+Ses gerçekten çalıyor: kart dokunuşunda sistem günlüğünde `audio/raw`
+çözücüsü açılıyor ve `AudioTrack` 10 054 kare teslim ediyor — tap.wav'ın
+uzunluğu (0,23 sn × 44 100) tam olarak bu. Duyulan sesin kendisi hâlâ
+denenmedi, yalnızca çalındığı.
+
+Bir kusur çıktı ve düzeltildi: kalem düğmesi boş görünüyordu. Çıplak
+U+270F cihazda soluk ince bir çizgi olarak çiziliyor; çöp kutusunun yanında
+düğme boşmuş gibi duruyordu. VS16 eklenince (`&#x270F;&#xFE0F;`) renkli
+emoji olarak çıkıyor.
+
+Uygulama ikonu başlatıcıda yuvarlak maskeyle doğru duruyor, yüz
+kırpılmıyor. Masal grubundaki emojiler (peri, büyücü, deniz kızı, süper
+kahraman) API 36 emülatöründe eksiksiz çıkıyor.
+
+### "1 stars in total"
+
+`LocalizationService.Format` artık tek argüman 1 olduğunda anahtarın
+`.One` ekli satırını arıyor. Üç dilin üçünde de yalnızca "bir" ayrı
+davranıyor, o yüzden tam bir çoğul kuralı motoru yazılmadı; Lehçe gibi
+birden çok çoğul biçimi olan bir dil eklenirse orası genişler.
+
+**Sayılar:** 229 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir ·
+13 ses dosyası.
+
+**Buradan başla: gerçek tablet.** Emülatör her şeyi gösterdi ama iki şeyi
+ölçemiyor — parmağı ve hoparlörü. Tableti USB'den tak, hata ayıklamayı aç,
 `dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-android -t:Run`.
 Bakılacaklar:
 
+- **Sesler.** Hiçbiri henüz kulakla duyulmadı. Ses seviyeleri birbirine
+  göre dengeli mi (dokunuş sesi tekrar tekrar çalıyor, en alçağı o olmalı),
+  tuş notaları ezgi gibi mi duyuluyor, tablet hoparlöründe tiz sesler
+  (yıldız) cırlıyor mu
 - Yolu Bul'da Meşe toleransı (0,055) parmak ucuyla tutturulabiliyor mu —
   bunların en riskli olanı bu
 - Sepeti Tut'ta düşme hızı Fidan bandında adil mi, sepet parmağı
   gecikmeden takip ediyor mu
 - Sırayı Tekrarla'da 750 ms gösterim hızı Filiz bandında takip edilebiliyor mu
 - Yapboz'da Meşe'nin on altı parçası bir turu fazla uzatıyor mu
+- İkon başlatıcıda nasıl duruyor (uyarlanabilir maske yüzü kırpıyor mu)
 
 Sonrası 4. bölümdeki öncelik sırası.
 
@@ -113,10 +148,12 @@ Sonrası 4. bölümdeki öncelik sırası.
 - **tests/Ploofy.Engine.Tests** — xUnit, motor + depo
 - **content/strings.tsv** — üç dilin metinleri, tek kaynak
 - **tools/build_strings.py** — strings.tsv'den resx üretir
+- **tools/build_sounds.py** — geri bildirim seslerini sentezler
 
 ## 3. Şu an çalışan
 
-- Profil akışı: oluşturma, seçme, silme; ücretsiz katmanda tek profil sınırı
+- Profil akışı: oluşturma, seçme, düzenleme, silme; ücretsiz katmanda tek
+  profil sınırı. Ad, avatar ve yaş bandı sonradan değiştirilebiliyor
 - Ebeveyn kilidi: iki basamaklı aritmetik, yanlış cevapta soru değişiyor, beş dakika açık kalıyor
 - Üç dil (tr/en/de), ayarlardan çalışırken değiştirilebiliyor
 - Ekran yatayda kilitli; ana ekran sütun sayısını genişliğe göre seçiyor
@@ -127,8 +164,8 @@ Sonrası 4. bölümdeki öncelik sırası.
 - Harf/Sayı Avı: dile göre alfabe (tr/en/de), Meşe bandında küçük harfler ve benzer çeldiriciler
 - Say ve Eşleştir: nesne kümesi sürüklenip rakama bırakılıyor; miktar aralığı,
   çeldirici uzaklığı ve nesne dizilişi banda göre değişiyor
-- Sırayı Tekrarla: ekran diziyi oynatıyor, çocuk tekrarlıyor; tuşlar renk ve
-  şekil taşıyor, dizi her seviyede bir uzuyor
+- Sırayı Tekrarla: ekran diziyi oynatıyor, çocuk tekrarlıyor; tuşlar renk,
+  şekil ve kendi notasını taşıyor, dizi her seviyede bir uzuyor
 - Sepeti Tut: düşen nesneler, ekranın her yerinden sürüklenen sepet; sepet
   darlığı, düşme hızı ve Meşe'de savrulma banda göre değişiyor
 - Yolu Bul: parmakla yol takibi; şerit kalınlığı, biçim havuzu ve kıvrım
@@ -139,60 +176,52 @@ Sonrası 4. bölümdeki öncelik sırası.
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
 - Yıldız ve rozet kaydı; bant değişince eski yıldızlar korunuyor
+- Ses ve titreşim: yedi geri bildirim sesi, altı tuş notası; ayarlardan
+  ikisi de kapatılabiliyor
+- Uygulama ikonu ve açılış ekranı: gülen mavi kabarcık, sarı zemin
 - Abonelik akışı: paywall → ebeveyn kilidi → kilitlerin açılması (mağaza bağlantısı hariç)
 
 ## 4. Sıradaki işler
 
-Oyun kütüphanesi bitti; buradan sonrası yayın işi.
+Oyun kütüphanesi ve varlıklar bitti; kalan her iş bu bilgisayarın dışında
+bir şey istiyor.
 
-**Öncelik 1 — Fiziksel cihaz testi.** Artık en acil olan bu. Emülatörde
-onunun onu da çalıştı ama parmak isabeti ve gerçek kare hızı ancak cihazda
-ölçülebilir. Bakılacaklar 1. bölümün sonunda.
+**Öncelik 1 — Fiziksel cihaz testi.** Artık en acil olan bu ve iki başlığı
+var: parmak (isabet, gerçek kare hızı) ve hoparlör (seslerin dengesi).
 Bakılacaklar 1. bölümün sonunda.
 
-**Öncelik 2 — Ses varlıkları.** Tek eksik olan somut parça.
-`src/Ploofy.App/Resources/Raw/sounds/` altına yedi dosya: tap.mp3,
-correct.mp3, retry.mp3, round_complete.mp3, star.mp3, handoff.mp3,
-locked.mp3. Kod hazır; dosya yoksa sessizce atlıyor, koyulduğu anda çalışır.
-
-**Öncelik 3 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
+**Öncelik 2 — Abonelik.** `LocalSubscriptionService` şu an satın almayı
 başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
-`ISubscriptionService` arayüzünün arkasına takılacak; ekranlar değişmeyecek.
+`ISubscriptionService` arayüzünün arkasına takılacak; ekranlar
+değişmeyecek. Play Console'da ürün tanımı ve test hesabı gerekiyor —
+onlar olmadan yazılacak kod denenemez, o yüzden mağaza hesabı ilk adım.
 
-**Öncelik 4 — iOS.** Hiç denenmedi. Mac gerektiriyor.
+**Öncelik 3 — iOS.** Hiç denenmedi. Mac gerektiriyor.
 
-**Öncelik 5 — Yayın hazırlığı.** Play Console yaş beyanı, App Store Kids
-kategorisi, gizlilik formu, mağaza görselleri, ikon ve açılış ekranı
-(şu an MAUI şablonunun varsayılanı duruyor).
+**Öncelik 4 — Yayın hazırlığı.** Play Console yaş beyanı, App Store Kids
+kategorisi, gizlilik formu, mağaza görselleri ve tanıtım metinleri.
+İkon ve açılış ekranı tamam.
 
 ## 5. Bilinen eksikler
 
-- Ses dosyaları yok
 - Gerçek satın alma yok; abonelik cihazda sahte olarak açılıyor
 - Yerel ağ eşleşmesi ve aile bağlantısı yok (arayüzde "yakında" olarak duruyor)
 - iOS derlenmedi
-- Uygulama ikonu ve açılış ekranı hâlâ şablon varsayılanı
 - Öğretici oyunlarda sesli yönerge yok; şu an yönerge tamamen görsel (avda
   aranan işaret büyük gösteriliyor, Say ve Eşleştir'de küme ve rakamlar aynı
-  ekranda duruyor). Ses varlıkları gelince seslendirme eklenebilir ama üçü de
-  sessiz hâliyle tam çalışıyor
+  ekranda duruyor). Bunun için sentez yetmiyor: üç dilde insan kaydı gerekiyor.
+  Üçü de sessiz hâliyle tam çalışıyor
 - Gerçek tablette hiç denenmedi; şimdiye kadar yalnızca emülatör. Parmak
   isabeti emülatörde ölçülemiyor (özellikle Yolu Bul'un Meşe toleransı)
 - Uygulama yalnızca **yatay** çalışıyor. Dikey desteklenmiyor ve
   desteklenecekse her oyun için ikinci bir yerleşim gerekiyor
-- İngilizcede "1 stars in total" yazıyor; `TotalStars` metni tekil/çoğul
-  ayrımı yapmıyor. Türkçe ve Almanca'da sorun yok
-- Profil düzenleme hâlâ yok: avatar ancak profil oluştururken seçiliyor,
-  sonradan değiştirilemiyor. Otuz iki seçenek varken bu daha çok göze
-  batacak
 - Masal grubundaki bazı emojiler (peri, büyücü, deniz kızı, süper kahraman)
   Unicode 11 ile geldi; çok eski Android sürümlerinde boş kutu görünebilir.
   Uygulamanın alt sınırı API 21 ama depoda zaten 🦕 vardı ve tablette
   sorunsuz çıkıyordu. Gerçek cihaz testinde bakılacak
-- Sırayı Tekrarla'da gösterim sessiz. Klasik oyunda her tuşun kendi notası
-  var ve dizi kulakla da hatırlanıyor; şu an yalnızca görsel. Ses varlıkları
-  gelince tuş başına ayrı ses eklemek `FeedbackCue` sözlüğünü genişletmeyi
-  gerektiriyor (şu an tek `Tap` var)
+- Sesler hiçbir hoparlörde duyulmadı. Sayısal olarak doğrulandılar ve
+  emülatörde çalındıkları günlükten görüldü, ama seviyelerinin birbirine
+  göre dengesi ancak kulakla anlaşılır
 
 ## 6. Yeni makinede kurulum
 
@@ -236,6 +265,19 @@ okunmuyor:
   mu, ve dairenin büyük yayı mı seçiliyor. Üçü de tek satırlık bir işaret
   hatasıyla bozulabilecek şeylerdi. Aynı yol, çizim koduna dokunan her
   değişiklikte işe yarar.
+- **Seçili öğe referansla bulunuyor.** `CollectionView.SelectedItem`'a
+  listedekinin eşdeğerini vermek seçimi ekranda göstermiyor; listedeki
+  örneğin kendisi verilmeli. Profil ekranında varsayılan yaş bandı bu
+  yüzden seçilmemiş görünüyordu.
+- **Düğmedeki emoji VS16 ister.** `✏` (U+270F) tek başına metin biçiminde
+  çiziliyor: soluk, ince, düğme boş görünüyor. `&#x270F;&#xFE0F;` renkli
+  emoji veriyor. Depodaki 🗑 gibi zaten emoji varsayılanı olan işaretler
+  etkilenmiyor; ayrım işaretin Unicode'daki varsayılan gösterimi.
+- **İkon SVG'lerinde degrade, süzgeç ve yazı kullanma.** Resizetizer bu
+  dosyaları kendi rasterleştiricisiyle çeviriyor ve sade olmayan her
+  özellik sürprize açık. Hacim için üst üste iki düz dolgu yeter. Ayrıca
+  saydam renk altındakiyle karışıyor: mavinin üstündeki saydam pembe mor
+  çıktı.
 - **Git Bash adb'nin cihaz yollarını bozuyor.** `adb push x /data/local/tmp/x`
   çağrısında Git Bash `/data/...` yolunu Windows yoluna çeviriyor ve
   "remote secure_mkdirs() failed" hatası geliyor. Başına

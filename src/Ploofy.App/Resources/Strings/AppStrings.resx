@@ -103,6 +103,9 @@
   <data name="AddProfile" xml:space="preserve">
     <value>Add a child</value>
   </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>Edit child</value>
+  </data>
   <data name="ProfileNameLabel" xml:space="preserve">
     <value>Nickname</value>
   </data>
@@ -234,6 +237,9 @@
   </data>
   <data name="TotalStars" xml:space="preserve">
     <value>{0} stars in total</value>
+  </data>
+  <data name="TotalStars.One" xml:space="preserve">
+    <value>1 star in total</value>
   </data>
   <data name="PlayAgain" xml:space="preserve">
     <value>Play again</value>

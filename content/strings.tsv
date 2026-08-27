@@ -13,6 +13,7 @@ GameLocked	Locked	Kilitli	Gesperrt
 GameFree	Free	Ücretsiz	Gratis
 ProfilesTitle	Who is playing?	Kim oynuyor?	Wer spielt?
 AddProfile	Add a child	Çocuk ekle	Kind hinzufügen
+EditProfile	Edit child	Çocuğu düzenle	Kind bearbeiten
 ProfileNameLabel	Nickname	Takma ad	Spitzname
 ProfileNameHint	No need to use a real name	Gerçek ad girmene gerek yok	Ein echter Name ist nicht nötig
 ProfileAgeLabel	Age group	Yaş grubu	Altersgruppe
@@ -57,6 +58,7 @@ HandoffTitle	{0}, it's your turn!	Sıra {0} sende!	{0}, du bist dran!
 HandoffHint	Tap when you're ready	Hazır olduğunda dokun	Tippe, wenn du bereit bist
 RoundCompleteTitle	Done!	Bitti!	Geschafft!
 TotalStars	{0} stars in total	Toplam {0} yıldız	Insgesamt {0} Sterne
+TotalStars.One	1 star in total	Toplam 1 yıldız	Insgesamt 1 Stern
 PlayAgain	Play again	Tekrar oyna	Nochmal spielen
 BackToGames	Back to games	Oyunlara dön	Zurück zu den Spielen
 EveryoneWins	You both win!	İkiniz de kazandınız!	Ihr habt beide gewonnen!
