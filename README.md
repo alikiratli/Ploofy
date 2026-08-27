@@ -1,154 +1,162 @@
 # Ploofy
 
-2-9 yaş çocuklar için reklamsız mini oyun koleksiyonu. .NET MAUI (Android + iOS).
+Werbefreie Minispielsammlung für Kinder von 2 bis 9 Jahren. .NET MAUI
+(Android + iOS).
 
-Yedi eğlendirici, üç öğretici mini oyun; tek bir zorluk ekseni (üç yaş bandı),
-tek bir yıldız koleksiyonu, aylık abonelik. Sunucu yok, hesap yok, reklam yok:
-çocuğa ait hiçbir veri cihazdan çıkmıyor.
+Sieben Spaß- und drei Lernspiele; eine einzige Schwierigkeitsachse (drei
+Altersstufen), eine einzige Sternesammlung, ein monatliches Abo. Kein Server,
+kein Konto, keine Werbung: Kein Datum des Kindes verlässt das Gerät.
 
-## Depo düzeni
+## Aufbau des Repos
 
 ```
 Ploofy.sln
-Directory.Build.props          Bütün projelerin ortak derleme ayarları
-src/Ploofy.Engine/             Oyun mantığı — UI'ya sıfır bağımlılık, net9.0
-src/Ploofy.Data/               SQLite ilerleme deposu (sqlite-net), net9.0
-src/Ploofy.Ui/                 Ortak MAUI arayüz katmanı (tema, ses/haptik,
-                               ebeveyn kilidi, yıldız kontrolü)
-src/Ploofy.App/                MAUI uygulaması (Android + iOS; Windows yalnızca
-                               geliştirme sırasında denemek için)
-content/strings.tsv            Üç dilin metinleri — tek kaynak
+Directory.Build.props          Gemeinsame Build-Einstellungen aller Projekte
+src/Ploofy.Engine/             Spiellogik — null Abhängigkeit zur UI, net9.0
+src/Ploofy.Data/               SQLite-Fortschrittsspeicher (sqlite-net), net9.0
+src/Ploofy.Ui/                 Gemeinsame MAUI-Oberflächenschicht (Theme, Ton/
+                               Haptik, Elternsperre, Sternesteuerung)
+src/Ploofy.App/                MAUI-Anwendung (Android + iOS; Windows nur zum
+                               schnellen Ausprobieren während der Entwicklung)
+content/strings.tsv            Texte aller drei Sprachen — die einzige Quelle
 tools/build_strings.py         strings.tsv -> Resources/Strings/*.resx
-tools/build_sounds.py          geri bildirim seslerini sentezler -> Resources/Raw/sounds/
-tests/Ploofy.Engine.Tests/     xUnit — motor + depo testleri
+tools/build_sounds.py          synthetisiert die Rückmeldungstöne -> Resources/Raw/sounds/
+tests/Ploofy.Engine.Tests/     xUnit — Tests für Engine + Speicher
 ```
 
-`Ploofy.Engine` bilerek MAUI'den bağımsız: kurallar masaüstünde saniyeler içinde
-test edilebiliyor ve ileride ikinci bir oyun ailesi (ör. okul öncesi matematik
-odaklı ayrı bir uygulama) aynı motoru bozmadan üzerine kurulabiliyor.
+`Ploofy.Engine` ist bewusst von MAUI unabhängig: Die Regeln lassen sich auf dem
+Desktop in Sekunden testen, und später kann eine zweite Spielefamilie (z. B. eine
+eigene App mit Vorschulmathematik) darauf aufbauen, ohne die Engine anzufassen.
 
-## Motorun temel kavramları
+## Die Grundbegriffe der Engine
 
-| Kavram | Dosya | Ne yapar |
+| Begriff | Datei | Was er tut |
 |---|---|---|
-| `AgeBand` | `Engine/AgeBand.cs` | Filiz (2-4), Fidan (4-6), Meşe (6-9). Uygulamanın **tek** zorluk ekseni. |
-| `BandValue<T>` | `Engine/Difficulty/` | Oyundaki her knob'un banda göre değeri. Zorluk tablosu tek satırda okunur. |
-| `DifficultyProfile` | `Engine/Difficulty/` | Her oyunun uyması gereken ortak sözleşme: kaybetme var mı, süre görünür mü, yazı kullanılır mı. |
-| `GameCatalog` | `Engine/Catalog/` | Bütün oyunların tek kaydı. Kilit, bant filtresi, ebeveyn ekranı buradan beslenir. |
-| `TurnController` | `Engine/Sessions/` | Sırayı, turları ve puanları yürüten tek yer. Tek kişilik oyunda da aynı sınıf çalışır. |
-| `ISessionTransport` | `Engine/Sessions/` | Oturum olaylarının kanalı. Bugün cihaz içi; yerel ağ ve aile bağlantısı buranın arkasına takılacak. |
-| `Entitlements` | `Engine/Access/` | Katman kurallarının tek karar noktası. Hiçbir ekran "abone mi?" diye kendi karar vermez. |
-| `ParentalGateChallenge` | `Engine/Access/` | Ebeveyn kilidi. Meşe bandının üstünde bir aritmetik engel. |
-| `StarRating` | `Engine/Progress/` | Turdan yıldıza çeviren tek yer. Kural bantla değişir. |
-| `BubblePopRound` | `Engine/Games/` | Balonların doğması, yükselmesi, patlaması. Konumlar normalleştirilmiş, yani ekran boyutundan bağımsız ve testte saat elle ilerletilerek doğrulanıyor. |
+| `AgeBand` | `Engine/AgeBand.cs` | Filiz/Spross (2-4), Fidan/Setzling (4-6), Meşe/Eiche (6-9). Die **einzige** Schwierigkeitsachse der App. |
+| `BandValue<T>` | `Engine/Difficulty/` | Der Wert jedes Reglers eines Spiels je Altersstufe. Die Schwierigkeitstabelle steht in einer Zeile. |
+| `DifficultyProfile` | `Engine/Difficulty/` | Der gemeinsame Vertrag, an den sich jedes Spiel hält: Kann man verlieren, ist die Zeit sichtbar, wird Text verwendet. |
+| `GameCatalog` | `Engine/Catalog/` | Das einzige Verzeichnis aller Spiele. Sperre, Altersfilter und Elternbereich speisen sich daraus. |
+| `TurnController` | `Engine/Sessions/` | Die einzige Stelle, die Reihenfolge, Runden und Punkte führt. Auch im Einzelspiel läuft dieselbe Klasse. |
+| `ISessionTransport` | `Engine/Sessions/` | Der Kanal der Sitzungsereignisse. Heute geräteintern; lokales Netz und Familienverbindung kommen dahinter. |
+| `Entitlements` | `Engine/Access/` | Die einzige Entscheidungsstelle für die Stufenregeln. Kein Bildschirm entscheidet selbst, ob jemand Abonnent ist. |
+| `ParentalGateChallenge` | `Engine/Access/` | Die Elternsperre. Eine Rechenaufgabe oberhalb der Stufe Eiche. |
+| `StarRating` | `Engine/Progress/` | Die einzige Stelle, die aus einer Runde Sterne macht. Die Regel ändert sich mit der Altersstufe. |
+| `BubblePopRound` | `Engine/Games/` | Entstehen, Aufsteigen und Platzen der Blasen. Die Positionen sind normalisiert, also unabhängig von der Bildschirmgröße, und im Test wird die Uhr von Hand weitergestellt. |
 
-### Yeni mini oyun eklemek
+### Ein neues Minispiel hinzufügen
 
-1. `Engine/Catalog/GameCatalog.cs` içine bir satır (id, etkileşim türü, katman,
-   en küçük bant, çizim tekniği).
-2. Kuralları `Engine/Games/` altında, arayüzden bağımsız bir sınıf olarak yaz;
-   zorluk knob'larını `BandValue<T>` ile tanımla.
-3. Uygulama tarafında id'ye karşılık bir sayfa, `GamePresentation` içinde bir
-   satır (ad, simge, rota) ve `content/strings.tsv` içinde üç dilde bir ad.
+1. Eine Zeile in `Engine/Catalog/GameCatalog.cs` (Id, Interaktionsart, Stufe,
+   kleinste Altersstufe, Zeichentechnik).
+2. Die Regeln unter `Engine/Games/` als oberflächenunabhängige Klasse schreiben;
+   die Schwierigkeitsregler mit `BandValue<T>` definieren.
+3. Auf App-Seite eine Seite zur Id, eine Zeile in `GamePresentation` (Name,
+   Symbol, Route) und in `content/strings.tsv` ein Name in drei Sprachen.
 
-Sürekli hareketli bir oyunsa çizimi `Ploofy.Ui/Controls` altında bir
-`SKCanvasView` olarak yaz ve `Painting/` içindeki hazır parçaları kullan
+Ist das Spiel dauernd in Bewegung, schreibe die Darstellung als `SKCanvasView`
+unter `Ploofy.Ui/Controls` und nutze die fertigen Bausteine aus `Painting/`
 (`BubblePainter`, `ParticleField`, `PloofyPalette`).
 
-Kilit, bant filtresi, yıldız kaydı ve ebeveyn ekranı otomatik çalışır.
+Sperre, Altersfilter, Sterneerfassung und Elternbereich funktionieren von selbst.
 
-## Oyun kütüphanesi
+## Die Spielesammlung
 
-**Eğlendirici (7):** Eşleştirme Kartları · Balon Patlatma · Şekil Ayırma ·
-Sırayı Tekrarla · Sepeti Tut · Yolu Bul · Yapboz
+**Spaßspiele (7):** Memory · Blasen platzen · Formen sortieren ·
+Wiederhole die Folge · Fang den Korb · Finde den Weg · Puzzle
 
-**Öğretici (3):** Harf Avı · Sayı Avı · Say ve Eşleştir
+**Lernspiele (3):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen
 
-Onunun onu da oynanabilir durumda.
+Alle zehn sind spielbar.
 
-Beş farklı etkileşim türünü kapsıyor (dokunma, sürükleme, çizgi takibi, hafıza,
-sıra) — "hepsi aynı hissettiriyor" sorununu baştan çözen ölçüt bu.
+Sie decken fünf verschiedene Interaktionsarten ab (Tippen, Ziehen, einer Linie
+folgen, Gedächtnis, Reihenfolge) — dieses Maß löst das Problem "alles fühlt sich
+gleich an" von Anfang an.
 
-**Çizim tekniği:** kart/kutucuk tabanlı oyunlar MAUI kontrolleriyle; sürekli
-hareket, parçacık ve serbest çizim gerektirenler (balon patlatma, yolu bul,
-yapboz, sepeti tut) SkiaSharp ile.
+**Zeichentechnik:** karten- und kachelbasierte Spiele mit MAUI-Steuerelementen;
+alles, was dauernde Bewegung, Partikel oder freies Zeichnen braucht (Blasen
+platzen, Finde den Weg, Puzzle, Fang den Korb), mit SkiaSharp.
 
-## Görsel dil
+## Die Bildsprache
 
-Kategorinin en iyileri (Sago Mini, Toca Boca, Khan Academy Kids) tek bir şeyde
-ayrışıyor: ekrandaki hiçbir şey durağan değil. Ploofy'nin görsel kuralları
-`Ploofy.Ui` içinde ve bütün oyunlar için ortak:
+Die Besten der Kategorie (Sago Mini, Toca Boca, Khan Academy Kids) unterscheiden
+sich in einem Punkt: Nichts auf dem Bildschirm steht still. Ploofys
+Gestaltungsregeln liegen in `Ploofy.Ui` und gelten für alle Spiele gemeinsam:
 
-| Kural | Nerede | Neden |
+| Regel | Wo | Warum |
 |---|---|---|
-| Hiçbir yüzey düz renk değil | `Theme/PloofyStyles.xaml` degradeleri | Degrade + gölge, kutucuğu "basılı resim" olmaktan çıkarıp dokunulacak nesneye çeviriyor |
-| Nesneler belirmez, yaylanarak gelir | `BubbleSurface.BirthScale`, `MemoryCardView` | Doğrusal büyüme "beliriyor" gibi duruyor; hafif taşma "pat diye çıkıyor" hissi veriyor |
-| Duran nesne bile nefes alır | `BubbleSurface` esneme fazı | Her balonun kendi faz kayması var; hepsi aynı anda esnerse mekanik görünüyor |
-| Her dokunuşun görünür bir sonucu var | `ParticleField` | Balon yok olmuyor, dağılıyor — tatmin hissinin tamamı burada |
-| Yanlış cezalandırmaz, uyarır | Yanlış renk patlamaz, silkelenir | Patlasaydı yanlış da bir ödül olurdu |
-| Dokunma hedefi ≥ 64 birim | `TouchTarget` | Küçük çocuğun parmağı büyük, isabeti düşük |
-| Karanlık tema yok | `PloofyColors.xaml` | Küçük ekranda karanlık zemin renk ayrımını ve okunurluğu düşürüyor |
+| Keine Fläche ist einfarbig | Verläufe in `Theme/PloofyStyles.xaml` | Verlauf + Schatten machen aus der Kachel statt eines "gedruckten Bildes" ein Ding zum Anfassen |
+| Dinge erscheinen nicht, sie federn herein | `BubbleSurface.BirthScale`, `MemoryCardView` | Lineares Wachsen wirkt wie ein Einblenden; ein leichtes Überschwingen fühlt sich an wie "plopp, da ist es" |
+| Auch was stillsteht, atmet | Dehnungsphase in `BubbleSurface` | Jede Blase hat ihre eigene Phasenverschiebung; dehnen sich alle gleichzeitig, wirkt es mechanisch |
+| Jede Berührung hat eine sichtbare Folge | `ParticleField` | Die Blase verschwindet nicht, sie zerstiebt — darin steckt das ganze Erfolgsgefühl |
+| Falsch wird nicht bestraft, sondern gezeigt | Die falsche Farbe platzt nicht, sie wackelt | Würde sie platzen, wäre auch das Falsche eine Belohnung |
+| Berührungsziel ≥ 64 Einheiten | `TouchTarget` | Der Finger eines kleinen Kindes ist groß, seine Treffsicherheit gering |
+| Kein dunkles Theme | `PloofyColors.xaml` | Auf kleinen Bildschirmen senkt ein dunkler Grund Farbunterscheidung und Lesbarkeit |
 
-Balonun kendisi dört katman: yumuşak gölge, ışığı sol üstten alan gövde
-degradesi, ince kenar halkası, iki parlama lekesi. "Cam" hissini veren tek şey
-son ikisi.
+Die Blase selbst besteht aus vier Schichten: weicher Schatten, Körperverlauf mit
+Licht von links oben, feiner Randring und zwei Glanzflecken. Das Glasgefühl
+kommt allein von den letzten beiden.
 
-## Katmanlar
+## Die Stufen
 
-| | Ücretsiz | Abonelik |
+| | Gratis | Abo |
 |---|---|---|
-| Oyun | 2 (Eşleştirme Kartları, Balon Patlatma) | 10 + sonra eklenenler |
-| Çocuk profili | 1 | 4 |
-| Reklam | **Yok** | **Yok** |
-| Çevrimdışı | Var | Var + içerik paketleri |
+| Spiele | 2 (Memory, Blasen platzen) | 10 + alles später Hinzukommende |
+| Kinderprofile | 1 | 4 |
+| Werbung | **Keine** | **Keine** |
+| Offline | Ja | Ja + Inhaltspakete |
 
-## Çok oyunculu
+## Mehrspielermodus
 
-Üç mod aynı `ISessionTransport` arayüzünün arkasında:
+Drei Modi hinter derselben Schnittstelle `ISessionTransport`:
 
-- **Aynı cihazda sırayla (pass-and-play)** — Faz 1'de çalışıyor. İnternet, hesap
-  ya da eşleşme gerektirmiyor. Her turdan önce bir devir ekranı var; bu ara adım
-  olmadan çocuk kardeşinin turunu yanlışlıkla oynuyor.
-- **Yerel ağ** — Faz 2. QR ya da yakındaki cihaz keşfiyle, yalnızca fiziksel
-  olarak aynı odadaki biriyle. İnternetten yabancı bulma yok.
-- **Ebeveyn onaylı aile bağlantısı** — Faz 3.
+- **Abwechselnd am selben Gerät (Pass-and-play)** — läuft seit Phase 1. Braucht
+  weder Internet noch Konto noch Partnersuche. Vor jeder Runde steht ein
+  Übergabebildschirm; ohne diesen Zwischenschritt spielt ein Kind versehentlich
+  die Runde seines Geschwisters.
+- **Lokales Netz** — Phase 2. Per QR-Code oder Gerätesuche in der Nähe, nur mit
+  jemandem, der physisch im selben Raum ist. Keine Fremden aus dem Internet.
+- **Von den Eltern bestätigte Familienverbindung** — Phase 3.
 
-Oturumdaki her çocuk **kendi bandında** oynar: küçük kardeş Filiz, büyük kardeş
-Meşe olarak aynı turu paylaşabilir.
+Jedes Kind einer Sitzung spielt **in seiner eigenen Altersstufe**: Das kleinere
+Geschwister als Spross und das größere als Eiche können sich dieselbe Runde
+teilen.
 
-## Platform ve yasal uyum
+## Plattform und rechtliche Vorgaben
 
-Bu maddeler mimariye baştan giriyor, sonradan eklenmiyor:
+Diese Punkte gehen von Anfang an in die Architektur ein, sie werden nicht
+nachträglich angeklebt:
 
-- **Reklam yok** — hiçbir katmanda. `Entitlements.ShowsAds` sabit `false`;
-  değişmesi ürün vaadinin değişmesi demek ve teste takılır.
-- **Veri toplama yok** — reklam kimliği (AAID/IDFA), cihaz seri no, MAC/IMEI ya
-  da konum toplanmıyor/iletilmiyor. Profiller yalnızca cihazda; takma ad
-  kullanılıyor, gerçek ad istenmiyor.
-- **Ebeveyn kilidi** — satın alma, ayarlar, profil yönetimi ve uygulamadan çıkan
-  her bağlantı `ParentalGateChallenge` arkasında.
-- **Abonelik** — mağaza hesabına bağlanır; uygulamanın kendi hesabı/sunucusu yok.
-- **Yaş beyanı** — Play Console'da hedef yaş grubu ve App Store Kids kategorisi
-  yayın öncesi doğru beyan edilecek.
+- **Keine Werbung** — auf keiner Stufe. `Entitlements.ShowsAds` ist fest
+  `false`; das zu ändern hieße, das Produktversprechen zu ändern, und fällt im
+  Test auf.
+- **Keine Datenerhebung** — weder Werbe-ID (AAID/IDFA) noch Seriennummer,
+  MAC/IMEI oder Standort werden erhoben oder übertragen. Die Profile bleiben nur
+  auf dem Gerät; verwendet wird ein Spitzname, nach dem echten Namen wird nicht
+  gefragt.
+- **Elternsperre** — Kauf, Einstellungen, Profilverwaltung und jeder Link, der
+  aus der App hinausführt, liegen hinter `ParentalGateChallenge`.
+- **Abo** — hängt am Konto des Stores; die App hat kein eigenes Konto und keinen
+  eigenen Server.
+- **Altersangabe** — Zielaltersgruppe in der Play Console und die Kids-Kategorie
+  im App Store werden vor der Veröffentlichung korrekt angegeben.
 
-## Kurulum
+## Einrichtung
 
 ```bash
-# MAUI workload — YÖNETİCİ olarak açılmış bir terminal gerektirir
+# MAUI-Workload — erfordert ein als ADMINISTRATOR geöffnetes Terminal
 dotnet workload install maui
 
 dotnet restore
 dotnet test
 
-# Windows'ta hızlı deneme (mağazaya çıkmayan geliştirme hedefi)
+# Schneller Versuch unter Windows (Entwicklungsziel, kommt nicht in den Store)
 dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-windows10.0.19041.0
 ```
 
 ### Android
 
-Android SDK ve **JDK 17** gerekiyor — sistemdeki daha yeni bir JDK kabul
-edilmiyor. Yollar makineye özel olduğu için depoya girmiyor; kök dizine
-`Ploofy.local.props` oluştur:
+Nötig sind das Android SDK und **JDK 17** — ein neueres JDK auf dem System wird
+nicht akzeptiert. Da die Pfade maschinenabhängig sind, liegen sie nicht im Repo;
+lege im Wurzelverzeichnis eine `Ploofy.local.props` an:
 
 ```xml
 <Project>
@@ -159,52 +167,55 @@ edilmiyor. Yollar makineye özel olduğu için depoya girmiyor; kök dizine
 </Project>
 ```
 
-Android SDK kurulu değilse:
+Falls das Android SDK nicht installiert ist:
 
 ```bash
 dotnet build src/Ploofy.App/Ploofy.App.csproj -t:InstallAndroidDependencies -f net9.0-android -p:AcceptAndroidSDKLicenses=True
 ```
 
-Cihaza ya da emülatöre kurup çalıştırmak:
+Auf Gerät oder Emulator installieren und starten:
 
 ```bash
 dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-android -t:Run
 ```
 
-Metinler değişince resx dosyalarını yeniden üret (elle düzenlenmiyorlar):
+Nach Textänderungen die resx-Dateien neu erzeugen (sie werden nicht von Hand
+bearbeitet):
 
 ```bash
 python tools/build_strings.py content/strings.tsv src/Ploofy.App/Resources/Strings
 ```
 
-Sesler de üretiliyor — depoda hazır duruyorlar, yalnızca tını değişirse
-yeniden çalıştır:
+Auch die Töne werden erzeugt — sie liegen fertig im Repo, nur bei einer Änderung
+der Klangfarbe neu ausführen:
 
 ```bash
 python tools/build_sounds.py
 ```
 
-## İlerleme notu
+## Fortschrittsnotiz
 
-Nerede kalındığı ve sıradaki işler `ilerleme notu.docx` içinde; **her oturum
-sonunda güncelleniyor.** Kaynağı `content/ilerleme-notu.md` — docx üretilen
-çıktı, elle düzenlenmiyor:
+Wo zuletzt aufgehört wurde und was als Nächstes ansteht, steht in
+`ilerleme notu.docx`; **sie wird am Ende jeder Sitzung aktualisiert.** Ihre
+Quelle ist `content/ilerleme-notu.md` — die docx ist erzeugte Ausgabe und wird
+nicht von Hand bearbeitet:
 
 ```bash
 python tools/build_progress_note.py
 ```
 
-## Yol haritası
+## Fahrplan
 
-- **Faz 1 — İskelet.** Motor + veri katmanı + testler ✅ · MAUI kabuğu, üç dil,
-  profil akışı, ana ekran, Eşleştirme Kartları uçtan uca (sıralı oyun ve yıldız
-  kaydı dahil), ebeveyn kilidi, ayarlar, abonelik ekranı ✅ · Balon Patlatma ve
-  ortak görsel dil ✅ · Android tablette uçtan uca doğrulandı ✅ ·
-  ses varlıkları ✅
-- **Faz 2 — Çeşitlilik.** Kalan 9 mini oyun, hepsi aynı bant API'siyle. Sonunda
-  "10 oyun, 3 bant, 1 yıldız koleksiyonu" tamam.
-- **Faz 3 — Ebeveyn ve uyum.** Ayarlar, abonelik akışı, veri toplama denetimi,
-  yerel ağ eşleşmesi.
-- **Faz 4 — Cila ve yayın.** Uygulama ikonu ve açılış ekranı ✅ · gerçek
-  cihaz testi, gerçek satın alma (Plugin.InAppBilling), iOS, tema paketleri,
-  mağaza görselleri, yaş beyanı, yayın ⏳
+- **Phase 1 — Gerüst.** Engine + Datenschicht + Tests ✅ · MAUI-Shell, drei
+  Sprachen, Profilablauf, Startbildschirm, Memory von Anfang bis Ende (samt
+  Spiel im Wechsel und Sterneerfassung), Elternsperre, Einstellungen,
+  Abo-Bildschirm ✅ · Blasen platzen und die gemeinsame Bildsprache ✅ · auf
+  einem Android-Tablet von Anfang bis Ende bestätigt ✅ · Tondateien ✅
+- **Phase 2 — Vielfalt.** Die restlichen 9 Minispiele, alle mit derselben
+  Altersstufen-API. Am Ende steht "10 Spiele, 3 Altersstufen, 1 Sternesammlung".
+- **Phase 3 — Eltern und Regelkonformität.** Einstellungen, Abo-Ablauf, Prüfung
+  der Datenerhebung, Kopplung im lokalen Netz.
+- **Phase 4 — Feinschliff und Veröffentlichung.** App-Symbol und
+  Startbildschirm ✅ · Test auf echtem Gerät, echter Kauf
+  (Plugin.InAppBilling), iOS, Theme-Pakete, Store-Grafiken, Altersangabe,
+  Veröffentlichung ⏳
