@@ -38,10 +38,10 @@ public partial class RoundResultPage : ContentPage
         try
         {
             await Task.WhenAll(
-                Trophy.FadeTo(1, 180),
-                Trophy.ScaleTo(1.0, 420, Easing.SpringOut));
+                Trophy.FadeToAsync(1, 180),
+                Trophy.ScaleToAsync(1.0, 420, Easing.SpringOut));
 
-            await SoloStars.ScaleTo(1.0, 320, Easing.SpringOut);
+            await SoloStars.ScaleToAsync(1.0, 320, Easing.SpringOut);
         }
         catch (TaskCanceledException)
         {

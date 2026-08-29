@@ -12,8 +12,8 @@ kein Konto, keine Werbung: Kein Datum des Kindes verlässt das Gerät.
 ```
 Ploofy.sln
 Directory.Build.props          Gemeinsame Build-Einstellungen aller Projekte
-src/Ploofy.Engine/             Spiellogik — null Abhängigkeit zur UI, net9.0
-src/Ploofy.Data/               SQLite-Fortschrittsspeicher (sqlite-net), net9.0
+src/Ploofy.Engine/             Spiellogik — null Abhängigkeit zur UI, net10.0
+src/Ploofy.Data/               SQLite-Fortschrittsspeicher (sqlite-net), net10.0
 src/Ploofy.Ui/                 Gemeinsame MAUI-Oberflächenschicht (Theme, Ton/
                                Haptik, Elternsperre, Sternesteuerung)
 src/Ploofy.App/                MAUI-Anwendung (Android + iOS; Windows nur zum
@@ -138,6 +138,11 @@ nachträglich angeklebt:
   eigenen Server.
 - **Altersangabe** — Zielaltersgruppe in der Play Console und die Kids-Kategorie
   im App Store werden vor der Veröffentlichung korrekt angegeben.
+- **Datenschutzerklärung** — liegt wie bei den übrigen Apps in einem **eigenen
+  Repository** und wird von dort über GitHub Pages ausgeliefert; Play verlangt
+  dafür eine öffentlich erreichbare URL. Der Text (tr/en/de auf einer Seite) ist
+  fertig, aber noch als Entwurf markiert: zwölf Stellen für Anbieter, Kontakt
+  und Datum sind auszufüllen. Adresse des Repositories: noch einzutragen.
 
 ## Einrichtung
 
@@ -149,7 +154,7 @@ dotnet restore
 dotnet test
 
 # Schneller Versuch unter Windows (Entwicklungsziel, kommt nicht in den Store)
-dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-windows10.0.19041.0
+dotnet build src/Ploofy.App/Ploofy.App.csproj -f net10.0-windows10.0.19041.0
 ```
 
 ### Android
@@ -170,14 +175,52 @@ lege im Wurzelverzeichnis eine `Ploofy.local.props` an:
 Falls das Android SDK nicht installiert ist:
 
 ```bash
-dotnet build src/Ploofy.App/Ploofy.App.csproj -t:InstallAndroidDependencies -f net9.0-android -p:AcceptAndroidSDKLicenses=True
+dotnet build src/Ploofy.App/Ploofy.App.csproj -t:InstallAndroidDependencies -f net10.0-android -p:AcceptAndroidSDKLicenses=True
 ```
 
 Auf Gerät oder Emulator installieren und starten:
 
 ```bash
-dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-android -t:Run
+dotnet build src/Ploofy.App/Ploofy.App.csproj -f net10.0-android -t:Run
 ```
+
+### Veröffentlichungssignatur
+
+Ohne konfigurierten Schlüssel wird auch ein Release-Paket mit dem
+**Debug-Zertifikat** signiert. Auf dem Gerät reicht das zum Ausprobieren, Play
+weist es ab. Der Build warnt in diesem Fall.
+
+Den Schlüssel einmalig erzeugen — er gehört **nicht** ins Repo (`.gitignore`
+schließt `*.keystore` und `*.jks` bereits aus) und ein Verlust bedeutet, dass
+keine Aktualisierung der App mehr veröffentlicht werden kann:
+
+```bash
+keytool -genkeypair -v -keystore ploofy-release.keystore -alias ploofy \
+  -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Die vier Werte kommen von außen, entweder über `Ploofy.local.props` oder über
+gleichnamige Umgebungsvariablen (für CI):
+
+```xml
+<Project>
+  <PropertyGroup>
+    <PloofyKeystore>C:\...\ploofy-release.keystore</PloofyKeystore>
+    <PloofyKeystoreAlias>ploofy</PloofyKeystoreAlias>
+    <PloofyKeystorePassword>...</PloofyKeystorePassword>
+    <PloofyKeyPassword>...</PloofyKeyPassword>
+  </PropertyGroup>
+</Project>
+```
+
+Das Bundle für Play erzeugen und die Signatur prüfen:
+
+```bash
+dotnet publish src/Ploofy.App/Ploofy.App.csproj -c Release -f net10.0-android -p:AndroidPackageFormat=aab
+apksigner verify --print-certs src/Ploofy.App/bin/Release/net10.0-android/io.ploofy.app-Signed.apk
+```
+
+Steht dort `CN=Android Debug`, hat der Build den Schlüssel nicht gesehen.
 
 Nach Textänderungen die resx-Dateien neu erzeugen (sie werden nicht von Hand
 bearbeitet):

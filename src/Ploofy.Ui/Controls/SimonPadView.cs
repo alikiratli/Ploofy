@@ -113,7 +113,7 @@ public sealed class SimonPadView : ContentView
                 case SimonPadState.Lit:
                     // Süre görünüm modelinden geliyor; buradaki hareket
                     // yalnızca yanmanın kendisi, uzunluğu değil.
-                    await _border.ScaleTo(1.08, 90, Easing.CubicOut);
+                    await _border.ScaleToAsync(1.08, 90, Easing.CubicOut);
                     break;
 
                 case SimonPadState.Wrong:
@@ -122,7 +122,7 @@ public sealed class SimonPadView : ContentView
 
                 default:
                     _border.TranslationX = 0;
-                    await _border.ScaleTo(1.0, 130, Easing.CubicOut);
+                    await _border.ScaleToAsync(1.0, 130, Easing.CubicOut);
                     break;
             }
         }
@@ -135,10 +135,10 @@ public sealed class SimonPadView : ContentView
     private async Task ShakeAsync()
     {
         const uint step = 55;
-        await _border.TranslateTo(-10, 0, step, Easing.CubicOut);
-        await _border.TranslateTo(10, 0, step, Easing.CubicInOut);
-        await _border.TranslateTo(-6, 0, step, Easing.CubicInOut);
-        await _border.TranslateTo(0, 0, step, Easing.CubicIn);
+        await _border.TranslateToAsync(-10, 0, step, Easing.CubicOut);
+        await _border.TranslateToAsync(10, 0, step, Easing.CubicInOut);
+        await _border.TranslateToAsync(-6, 0, step, Easing.CubicInOut);
+        await _border.TranslateToAsync(0, 0, step, Easing.CubicIn);
     }
 
     private void Refresh()

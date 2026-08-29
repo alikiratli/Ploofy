@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<!-- Yayın hedefleri Android ve iOS. Windows yalnızca geliştirme sırasında
 		     hızlı denemek için; mağazaya çıkmıyor. -->
-		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Ploofy.App</RootNamespace>
@@ -14,7 +14,11 @@
 		<ApplicationTitle>Ploofy</ApplicationTitle>
 		<ApplicationId>io.ploofy.app</ApplicationId>
 
-		<ApplicationDisplayVersion>0.1</ApplicationDisplayVersion>
+		<!-- Kullanıcının gördüğü sürüm ve mağazanın saydığı yapı numarası.
+		     ApplicationVersion (Android'de versionCode) Play'e yüklenen her
+		     paket için artmak zorunda; aynı numarayla ikinci bir yükleme
+		     kabul edilmiyor. -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<WindowsPackageType>None</WindowsPackageType>
@@ -32,6 +36,42 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
+	<!--
+		Android yayın imzası.
+
+		Anahtar ve parolalar depoya girmiyor; dört değer dışarıdan geliyor ve
+		iki yol da çalışıyor:
+
+		  - Kök dizindeki Ploofy.local.props (zaten .gitignore'da), ya da
+		  - aynı adlı ortam değişkenleri (CI için) — MSBuild ortam
+		    değişkenlerini özellik olarak görüyor.
+
+		PloofyKeystore, PloofyKeystoreAlias, PloofyKeystorePassword,
+		PloofyKeyPassword. Ayrıntı ve keytool komutu README'de.
+
+		Değerler yoksa derleme durmuyor: sürüm paketi hata ayıklama
+		anahtarıyla imzalanıp çıkıyor, bu da cihazda deneme için yeterli.
+		Aşağıdaki uyarı yanlışlıkla o paketi mağazaya yüklemeyi engellemek
+		için var — Play, hata ayıklama sertifikasını reddediyor.
+	-->
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'
+	                          and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'
+	                          and '$(PloofyKeystore)' != ''">
+		<AndroidKeyStore>true</AndroidKeyStore>
+		<AndroidSigningKeyStore>$(PloofyKeystore)</AndroidSigningKeyStore>
+		<AndroidSigningKeyAlias>$(PloofyKeystoreAlias)</AndroidSigningKeyAlias>
+		<AndroidSigningStorePass>$(PloofyKeystorePassword)</AndroidSigningStorePass>
+		<AndroidSigningKeyPass>$(PloofyKeyPassword)</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<Target Name="PloofyUyarSurumImzasiYok"
+	        BeforeTargets="Build"
+	        Condition="'$(Configuration)' == 'Release'
+	                   and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'
+	                   and '$(PloofyKeystore)' == ''">
+		<Warning Text="Yayın anahtarı tanımlı değil (PloofyKeystore); paket hata ayıklama sertifikasıyla imzalanacak ve Play bunu reddeder. Kurulum README'de, 'Yayın imzası' başlığı." />
+	</Target>
+
 	<ItemGroup>
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFD166" />
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#FFD166" BaseSize="128,128" />
@@ -43,10 +83,37 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.11" />
 		<!-- MVVM üretici: ObservableProperty / RelayCommand kaynak üretimiyle
 		     görünüm modellerinde standart kalıp kodu yazmıyoruz. -->
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+
+		<!--
+			Yerel SQLite'ın yamalı sürümü. Gerekçesi Ploofy.Data.csproj'da;
+			platforma özel değişkenler burada, çünkü Android/iOS varlıklarını
+			çözen proje bu.
+		-->
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.android" Version="2.1.13"
+		                  Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" />
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.ios" Version="2.1.13"
+		                  Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'" />
+
+		<!--
+			Genel (platformsuz) paketten yalnızca sürüm numarası lazım; taşıdığı
+			yerel kütüphaneleri almıyoruz. Sebebi ince: pakette Android yapısı
+			yok, ama RID grafiğinde android-x64 linux-x64'ün altında duruyor, bu
+			yüzden NuGet masaüstü Linux derlemesini Android için uygun sayıyor
+			ve yukarıdaki AAR'dan gelen gerçek Android kütüphanesinin önüne
+			geçiyor (XA4301 "zaten içeriyor" uyarısı bunu söylüyor). Sonuç: APK
+			glibc'ye bağlı bir .so taşıyor ve 16 KB sayfa hizalaması bozuluyor.
+			ExcludeAssets="native" ile yerel varlık yolu kapanıyor.
+
+			Windows hedefinde bu koşul çalışmıyor: orada paketin kendi
+			e_sqlite3.dll'i doğru olanı.
+		-->
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.13" ExcludeAssets="native"
+		                  Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'
+		                             or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'" />
 	</ItemGroup>
 
 	<ItemGroup>

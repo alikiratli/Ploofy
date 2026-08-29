@@ -158,7 +158,7 @@ public sealed partial class HomeViewModel(
         if (!tile.IsPlayable)
         {
             var l = LocalizationService.Instance;
-            await Shell.Current.DisplayAlert(tile.Name, l["CommonNotYet"], l["CommonOk"]);
+            await Shell.Current.DisplayAlertAsync(tile.Name, l["CommonNotYet"], l["CommonOk"]);
             return;
         }
 

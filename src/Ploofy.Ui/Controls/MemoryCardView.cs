@@ -114,10 +114,10 @@ public sealed class MemoryCardView : ContentView
         {
             // Kartın yarısına kadar dön, yüzü değiştir, kalan yarıyı dön.
             // Yüzü tam ortada değiştirmek, arkanın hiç görünmemesini sağlıyor.
-            await _border.RotateYTo(90, 110, Easing.CubicIn);
+            await _border.RotateYToAsync(90, 110, Easing.CubicIn);
             RefreshFace();
             _border.RotationY = -90;
-            await _border.RotateYTo(0, 130, Easing.CubicOut);
+            await _border.RotateYToAsync(0, 130, Easing.CubicOut);
         }
         catch (TaskCanceledException)
         {
@@ -142,8 +142,8 @@ public sealed class MemoryCardView : ContentView
         {
             // Eşleşen çift kısa bir "zıplama" yapıyor: doğru cevabın
             // görsel ödülü bu.
-            await _border.ScaleTo(1.14, 110, Easing.CubicOut);
-            await _border.ScaleTo(1.0, 160, Easing.SpringOut);
+            await _border.ScaleToAsync(1.14, 110, Easing.CubicOut);
+            await _border.ScaleToAsync(1.0, 160, Easing.SpringOut);
         }
         catch (TaskCanceledException)
         {

@@ -104,8 +104,8 @@ public sealed class GlyphTileView : ContentView
             {
                 case GlyphTileState.Correct:
                     // Doğru cevap büyüyüp yerine oturuyor.
-                    await _border.ScaleTo(1.16, 120, Easing.CubicOut);
-                    await _border.ScaleTo(1.0, 180, Easing.SpringOut);
+                    await _border.ScaleToAsync(1.16, 120, Easing.CubicOut);
+                    await _border.ScaleToAsync(1.0, 180, Easing.SpringOut);
                     break;
 
                 case GlyphTileState.Wrong:
@@ -128,10 +128,10 @@ public sealed class GlyphTileView : ContentView
     private async Task ShakeAsync()
     {
         const uint step = 55;
-        await _border.TranslateTo(-10, 0, step, Easing.CubicOut);
-        await _border.TranslateTo(10, 0, step, Easing.CubicInOut);
-        await _border.TranslateTo(-6, 0, step, Easing.CubicInOut);
-        await _border.TranslateTo(0, 0, step, Easing.CubicIn);
+        await _border.TranslateToAsync(-10, 0, step, Easing.CubicOut);
+        await _border.TranslateToAsync(10, 0, step, Easing.CubicInOut);
+        await _border.TranslateToAsync(-6, 0, step, Easing.CubicInOut);
+        await _border.TranslateToAsync(0, 0, step, Easing.CubicIn);
     }
 
     private void RefreshBackground()

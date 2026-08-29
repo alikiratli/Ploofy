@@ -89,8 +89,8 @@ public sealed class AvatarBadgeView : ContentView
         {
             // Seçilen rozet kısaca büyüyor: hangisine dokunulduğu, çerçeve
             // değişiminden daha hızlı okunuyor.
-            await _border.ScaleTo(1.14, 110, Easing.CubicOut);
-            await _border.ScaleTo(1.0, 160, Easing.SpringOut);
+            await _border.ScaleToAsync(1.14, 110, Easing.CubicOut);
+            await _border.ScaleToAsync(1.0, 160, Easing.SpringOut);
         }
         catch (TaskCanceledException)
         {

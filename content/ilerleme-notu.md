@@ -1,6 +1,6 @@
 # Ploofy — İlerleme Notu
 
-Son güncelleme: 27.08.2026
+Son güncelleme: 29.08.2026
 Depo: https://github.com/alikiratli/Ploofy (public)
 
 ## 1. Nerede kaldık
@@ -11,118 +11,139 @@ oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Katalogda artık
 "yakında" olarak duran hiçbir oyun yok ve kütüphane beş etkileşim türünün
 beşini de kapsıyor.
 
-**Faz 4 başladı: uygulamanın sesi ve yüzü var.** Bu oturumda kalan somut
-varlıklar üretildi; geriye kalan işler artık bilgisayarda yapılamayanlar —
-gerçek cihaz, gerçek mağaza, Mac.
+**Faz 4 sürüyor: uygulama Play'in 2026 kapılarına uyduruldu.** Bu oturumda
+yeni özellik yok denecek kadar az; yapılan iş uygulamayı mağazanın bugün
+geçerli zorunluluklarına taşımak ve ilk kez gerçek bir **sürüm (Release)**
+paketi üretip çalıştırmak oldu.
 
-**Son oturumda yapılan:** Sesler, Sırayı Tekrarla'nın nota tuşları, profil
-düzenleme, uygulama ikonu ve açılış ekranı, bir de İngilizce/Almanca'daki
-tekil-çoğul hatası. Sırayla:
+**Son oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
+korunması, MAUI 10'un kaldırdığı çağrılar, SQLite'ta bir güvenlik açığı ve
+yanlış paketlenmiş bir yerel kütüphane. Sırayla:
 
-### Sesler
+### Neden .NET 10
 
-Yedi geri bildirim sesi ve Sırayı Tekrarla'nın altı tuş notası artık depoda.
-Hazır bir ses bankasından alınmadılar, **üretiliyorlar**:
-`tools/build_sounds.py` her sesi harmoniklerin toplamı olarak sentezliyor ve
-`Resources/Raw/sounds/` altına yazıyor. Sebebi lisans — hazır bankalar
-çocuk uygulamasında atıf ve ticari kullanım şartı getiriyor, üretilmiş bir
-dalga getirmiyor. Uygulama zaten hiçbir görsel varlık taşımıyordu; ses de
-aynı yolu izliyor.
+31 Ağustos 2026'dan itibaren Play'e yeni uygulama yalnızca **API 36**
+hedefliyorsa kabul ediliyor. .NET 9 en fazla API 35 hedefleyebiliyor — yani
+bu geçiş bir tercih değil, kapıdan geçmenin tek yolu. Bütün projeler
+`net10.0`'a alındı, MAUI iş yükü 10.0.400 ile kuruldu ve paket artık
+`targetSdkVersion 36` / `compileSdkVersion 36` ile çıkıyor.
 
-Biçim WAV, MP3 değil: kodlayıcı gerektirmiyor ve hepsi bir saniyenin altında,
-toplamı 764 KB. Bu boyda sıkıştırmanın kazandıracağı yer, çözücünün ilk
-çalmada getirdiği gecikmeye değmiyor.
+### Yatay kilit ve appCategory
 
-İki karar tınıdan daha çok işe yaradı:
+API 36'yı hedefleyen uygulamalarda Android, **sw600dp'den geniş ekranlarda
+`screenOrientation`'ı yok sayıyor**. Yani geçişin sessiz bedeli tam hedef
+cihazımızda ödenecekti: tablette yatay kilit düşecek, her oyun için ikinci
+bir dikey yerleşim gerekecekti.
 
-- **Hepsi do majör pentatonik içinde.** Çocuk oyununda sesler sürekli
-  çakışıyor (yıldız + tur sonu, dokunuş + doğru) ve bu dizide hangi ikisi
-  üst üste binerse binsin uyumsuz bir aralık çıkmıyor.
-- **Kuyruklar kısa** (-28 dB'de kesiliyor). Uzun kuyruk bu oyunda zarar
-  veriyordu: art arda düşen iki yıldız sesinden ikincisi birincisini
-  kesiyor ve kesilen ses tıkırdıyor.
+Oyunlar bu değişiklikten muaf ve muafiyet `android:appCategory` ile
+belirleniyor. Manifest'e bir satır eklendi; etiket zaten doğru, uygulama on
+mini oyundan oluşuyor. Emülatörde doğrulandı: etkinlik hâlâ 1600×1200'lük
+yatay banda yerleşiyor (`topActivityBoundsLetterboxed=true`), yani kilit
+yerinde duruyor. API 37'de bu muafiyetin de kalkacağı biliniyor — dikey
+yerleşim sorusu ertelendi, kapanmadı.
 
-Sesi kulakla doğrulamak mümkün değildi (kulak yok), o yüzden yapbozun
-tırnak geometrisinde izlenen yol tekrarlandı ve dosyalar **sayıyla**
-sınandı: kırpılma yok, ilk ve son örnek sıfırda (kenarda tık yok) ve altı
-tuşun altısında beklenen temel frekans komşu yarım tonlardan en az dört kat
-güçlü. Gerçek dinleme testi cihazda.
+### MAUI 10'un kaldırdığı çağrılar
 
-### Sırayı Tekrarla artık çalıyor
+`ScaleTo`, `TranslateTo`, `RotateYTo`, `FadeTo` ve `DisplayAlert` kullanımdan
+kalktı; yerlerine `...Async` sürümleri geldi. On dokuz çağrı yeri değişti.
+İmzalar aynı, hepsi zaten `await` ediliyordu, davranış değişmiyor.
 
-Bilinen eksikler listesindeki en eski madde kapandı: her tuşun kendi notası
-var. Klasik oyunun asıl işi burada — dizi kulakla da hatırlanıyor ve
-gösterim bir ezgiye dönüşüyor. Özellikle Filiz bandında değerli: henüz
-"üçüncü sıradaki" diye düşünemeyen çocuk üç notalık bir ezgiyi
-tekrarlayabiliyor. Çocuk bir tuşa dokunduğunda gösterimde duyduğu notanın
-aynısını duyuyor, dolayısıyla çaldığını duyduğuyla karşılaştırabiliyor.
+Bu sırada `Directory.Build.props`'ta bir tutarsızlık ortaya çıktı:
+"uyarıları hata sayma kuralı MAUI projelerinde geçerli değil" diyen koşul
+**hiç çalışmıyor**. Koşul `$(UseMaui)`'ye bakıyor ama Directory.Build.props
+projenin kendi gövdesinden önce okunuyor ve o an değişken boş. Yani
+`TreatWarningsAsErrors` bütün projelerde açık. Şimdiye kadar sorun
+çıkarmamıştı, çünkü .NET 9'da o projeler uyarı üretmiyordu. Dokunulmadı:
+kuralın fiilen açık olması bu geçişte işe yaradı — kaldırılacaksa önce
+karar, sonra yorumun düzeltilmesi gerekiyor.
 
-### Profil düzenleme
+### SQLite: bir açık, bir de yanlış kütüphane
 
-Avatar, ad ve yaş bandı artık profil kurulduktan sonra da değiştirilebiliyor.
-Ayarlardaki profil satırına bir kalem düğmesi geldi; aynı ekran hem ekleme
-hem düzenleme yapıyor (`profileeditor?profileId=3`). Ayrı bir düzenleme
-ekranı yazmak otuz iki avatarlık ızgarayı iki yere kopyalamak olurdu.
+`SQLitePCLRaw.bundle_green` 2.1.11'in taşıdığı SQLite'ta yüksek önem
+dereceli bir açık var (GHSA-2m69-gcr7-jv3q) ve .NET 10 bunu **derleme
+hatasına** çeviriyor. Paketin kendisinin yenisi yok, taşıdığı yerel
+kütüphanenin var: `lib.e_sqlite3` 2.1.13 doğrudan referansla sabitlendi.
 
-Yaş bandının da düzenlenebilir olması önemli: çocuk büyüyor ve tek yol
-profili silmek olsaydı bütün yıldızları giderdi. Bant değişince eski
-yıldızlar duruyor — ilerleme oyun **ve** bant başına tutuluyor.
+Sabitleme yeni bir kusur doğurdu ve yakalandı. Paketin içinde Android yapısı
+yok, ama RID grafiğinde `android-x64` `linux-x64`'ün altında duruyor; NuGet
+masaüstü Linux derlemesini Android için uygun sayıp AAR'dan gelen gerçek
+Android kütüphanesinin önüne geçirdi. APK bir anda glibc'ye bağlı bir `.so`
+taşımaya başladı. Gözle görülmüyordu — md5 karşılaştırmasıyla çıktı:
+paketlenen dosya, paketin `runtimes/linux-x64/native/` kopyasıyla bit bit
+aynıydı. `ExcludeAssets="native"` ile yol kapatıldı.
 
-Bu iş sırasında küçük bir kusur da çıktı: yeni profil ekranında varsayılan
-yaş bandı seçili görünmüyordu. `SelectedBand` listedeki örneğe değil onun
-eşdeğerine kuruluyordu; CollectionView seçili öğeyi referansla arıyor.
+Sonuç yine **sayıyla** doğrulandı: APK'daki 230 `.so` dosyasının 230'u 16 KB
+sayfa hizalı ve `libe_sqlite3.so` artık SourceGear 3.53.3'ün Android yapısı.
+Hizalama önemli, çünkü Android 15'ten beri 16 KB sayfa desteği Play'in kabul
+şartlarından biri; hizalanmamış tek bir kütüphane paketi geri çeviriyor.
 
-### İkon ve açılış ekranı
+### İlk sürüm paketi
 
-MAUI şablonunun mor ".NET" logosu gitti. Yerine Balon Patlatma'nın mavi
-kabarcığından gelen gülen bir yüz: sarı zemin (paletteki Sunny), mavi gövde,
-pembe yanaklar. Açılış ekranı aynı yüzün büyüğü.
+Bugüne kadar yalnızca Debug derlenmişti. Release başka bir şey: trimming ve
+AOT açık, MAUI'de XAML ile bağımlılık enjeksiyonunu kıran klasik yer orası.
 
-SVG'lerde degrade, süzgeç ve yazı yok — yalnızca düz dolgu ve daireler.
-Hacim, üst üste iki daireyle veriliyor (koyu olan altta bir milim taşıyor);
-oyun yüzeylerindeki yol da bu. Yazı olmamasının ayrı bir sebebi var: üç
-dilde açılan bir uygulamanın açılış ekranında tek bir dilin sözcüğü yanlış
-duruyor. Ön katman merkezden 126 birim yarıçapın içinde kalıyor, çünkü
-Android'in uyarlanabilir ikonu dış üçte biri maskeyle kırpıyor.
+- AAB üretildi (40 MB), API 36 tablet emülatörüne kuruldu ve açıldı; profil
+  seçme ekranı düzgün çizildi, çökme yok
+- Türkçe uydu kaynağı (`tr/Ploofy.App.resources.dll`) derleme blob'unun
+  içinde duruyor — trimming yemedi, üç dil sürümde de sağlam
+- Windows geliştirme hedefi de .NET 10'da derleniyor
 
-Üretilen PNG'ler gözle doğrulandı. İlk denemede yanaklar mor çıkmıştı:
-saydam pembe mavinin üstünde mora kayıyor.
+### Yayın imzası ve sürüm 1.0
 
-### Emülatörde doğrulama
+Sürüm `0.1` → **`1.0`**; `ApplicationVersion` (Android'de versionCode) 1'de
+kaldı, Play'e her yüklemede artması gerekiyor.
 
-Beşi de tablet emülatöründe çalıştırıldı. Profil düzenleme uçtan uca
-denendi: ayarlardan kalem düğmesi, ekranın "Çocuğu düzenle" başlığıyla ve
-dolu alanlarla açılması, avatarın tilkiden pandaya değişmesi, kaydetme ve
-değişikliğin hem ayarlarda hem profil seçme ekranında görünmesi. Yaş bandı
-da doğru seçili geliyor.
+İmzalama yapılandırması kuruldu. Dört değer (`PloofyKeystore`,
+`PloofyKeystoreAlias`, `PloofyKeystorePassword`, `PloofyKeyPassword`)
+dışarıdan geliyor: ya `Ploofy.local.props` ya da aynı adlı ortam
+değişkenleri. Anahtar ve parola depoya girmiyor.
 
-Ses gerçekten çalıyor: kart dokunuşunda sistem günlüğünde `audio/raw`
-çözücüsü açılıyor ve `AudioTrack` 10 054 kare teslim ediyor — tap.wav'ın
-uzunluğu (0,23 sn × 44 100) tam olarak bu. Duyulan sesin kendisi hâlâ
-denenmedi, yalnızca çalındığı.
+Değerler yoksa derleme durmuyor — sürüm paketi hata ayıklama anahtarıyla
+çıkıyor, cihazda denemek için bu yeterli. Ama o durumda derleme **uyarı
+veriyor**, çünkü asıl tehlike paketin kırılması değil, farkında olmadan
+mağazaya yüklenmesi.
 
-Bir kusur çıktı ve düzeltildi: kalem düğmesi boş görünüyordu. Çıplak
-U+270F cihazda soluk ince bir çizgi olarak çiziliyor; çöp kutusunun yanında
-düğme boşmuş gibi duruyordu. VS16 eklenince (`&#x270F;&#xFE0F;`) renkli
-emoji olarak çıkıyor.
+İki yol da atılabilir bir anahtarla denendi: anahtar verildiğinde sertifika
+`CN=Ploofy Test`, verilmediğinde `CN=Android Debug` ve uyarı görünüyor.
+Deneme anahtarı sonra silindi — **gerçek yayın anahtarı henüz üretilmedi**,
+o parolayla birlikte size ait.
 
-Uygulama ikonu başlatıcıda yuvarlak maskeyle doğru duruyor, yüz
-kırpılmıyor. Masal grubundaki emojiler (peri, büyücü, deniz kızı, süper
-kahraman) API 36 emülatöründe eksiksiz çıkıyor.
+### Gizlilik politikası
 
-### "1 stars in total"
+Üç dil tek bir sayfada toplandı ve **ayrı bir depoya** kondu — diğer
+uygulamalarda olduğu gibi, GitHub Pages'ten yayımlanacak. Metin uydurulmadı,
+koddan çıkarıldı — hangi tablonun hangi alanı tuttuğu (`Entities.cs`), hangi
+iznin neden istendiği (manifest), ebeveyn kilidinin neyi kapattığı
+(`ParentalGateReason` çağrı yerleri) ve profil silinince nelerin gittiği
+(`DeleteProfileAsync` yıldızları ve rozetleri de siliyor) tek tek bakılarak
+yazıldı.
 
-`LocalizationService.Format` artık tek argüman 1 olduğunda anahtarın
-`.One` ekli satırını arıyor. Üç dilin üçünde de yalnızca "bir" ayrı
-davranıyor, o yüzden tam bir çoğul kuralı motoru yazılmadı; Lehçe gibi
-birden çok çoğul biçimi olan bir dil eklenirse orası genişler.
+İki iddia bu yüzden düzeltildi: README "uygulamadan dışarı çıkan her bağlantı
+kilidin arkasında" diyor ama `ExternalLink` gerekçesinin **hiç çağrıldığı yer
+yok** — uygulamada şu an dışarı açılan bağlantı da yok, o yüzden politikada
+yalnızca gerçekten kilitli olan üç yol sayıldı. İkincisi, kilit "basit bir
+aritmetik" değil: iki basamaklı çarpma + toplama, kasıtlı olarak 6–9 bandının
+üstünde.
+
+Sayfa tek dosya: dil değiştirici, açık/koyu tema, derleme adımı yok, Google
+Fonts dışında dış bağımlılık yok. Renkleri de uydurmadım —
+`PloofyPalette.cs` ve `PloofyStyles.xaml`'dan aldım: mürekkep `#402A1E`,
+vurgu Sunny'nin koyu ucu `#E08600` (parlak `#FFC733` metin olarak okunmuyor,
+yalnızca dolgu), bağlantılar Ocean gölgesi `#0F6FC4`.
+
+Sayfa **taslak** ve iki şeyle öyle olduğunu söylüyor: başlıktaki "Taslak"
+rozeti ve sarı işaretli on iki alan (her dilde tarih, yayıncı adı-adresi,
+iletişim e-postası). İkisi de yayımdan önce temizlenecek.
+
+Depo yerel olarak hazır ve ilk commit'i atıldı; uzak adresi eklenmedi çünkü
+adres henüz belli değil. Yeri: `../ploofy-privacy` (bu deponun kardeşi).
 
 **Sayılar:** 229 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir ·
-13 ses dosyası.
+13 ses dosyası · AAB 40 MB · targetSdk 36 · sürüm 1.0.
 
 **Buradan başla: gerçek tablet.** Emülatör her şeyi gösterdi ama iki şeyi
 ölçemiyor — parmağı ve hoparlörü. Tableti USB'den tak, hata ayıklamayı aç,
-`dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-android -t:Run`.
+`dotnet build src/Ploofy.App/Ploofy.App.csproj -f net10.0-android -t:Run`.
 Bakılacaklar:
 
 - **Sesler.** Hiçbiri henüz kulakla duyulmadı. Ses seviyeleri birbirine
@@ -141,8 +162,8 @@ Sonrası 4. bölümdeki öncelik sırası.
 
 ## 2. Depo düzeni
 
-- **src/Ploofy.Engine** — oyun mantığı, UI'ya sıfır bağımlılık (net9.0)
-- **src/Ploofy.Data** — SQLite ilerleme deposu (net9.0)
+- **src/Ploofy.Engine** — oyun mantığı, UI'ya sıfır bağımlılık (net10.0)
+- **src/Ploofy.Data** — SQLite ilerleme deposu (net10.0)
 - **src/Ploofy.Ui** — ortak MAUI arayüz katmanı: tema, çizim, ses/haptik, ebeveyn kilidi
 - **src/Ploofy.App** — MAUI uygulaması (Android + iOS; Windows sadece geliştirme için)
 - **tests/Ploofy.Engine.Tests** — xUnit, motor + depo
@@ -196,15 +217,42 @@ başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
 değişmeyecek. Play Console'da ürün tanımı ve test hesabı gerekiyor —
 onlar olmadan yazılacak kod denenemez, o yüzden mağaza hesabı ilk adım.
 
-**Öncelik 3 — iOS.** Hiç denenmedi. Mac gerektiriyor.
+**Öncelik 3 — Yayın anahtarını üret.** Yapılandırma hazır (1. bölüm);
+eksik olan tek şey anahtarın kendisi. Komut README'de, "Yayın imzası"
+başlığı. Anahtarı kaybetmek uygulamayı kaybetmek demek: aynı anahtarla
+imzalanmayan bir güncelleme Play'e yüklenemiyor. Play App Signing
+açılırsa yükleme anahtarı yenilenebilir kalıyor — çocuk uygulamasında
+uzun ömür beklendiği için açılması mantıklı.
 
-**Öncelik 4 — Yayın hazırlığı.** Play Console yaş beyanı, App Store Kids
-kategorisi, gizlilik formu, mağaza görselleri ve tanıtım metinleri.
-İkon ve açılış ekranı tamam.
+**Öncelik 4 — Gizlilik politikasını yayımla.** Sayfa hazır ve ayrı
+deposunda duruyor (`../ploofy-privacy`, ilk commit atılmış). Kalanlar:
+GitHub'da depoyu açıp uzak adresi bağlamak, Pages'i açmak, on iki alanı
+doldurup "Taslak" rozetini kaldırmak, sonra adresi hem buradaki README'ye
+hem Play Console'a yazmak.
+
+İki uyarı: 4. bölüm (abonelik) gerçek billing bağlanmadan doğru değil,
+çünkü satın almanın Play üzerinden yürüdüğünü anlatıyor. Ve metnin bir
+hukukçuya okutulması yerinde olur — iddialar koda dayanıyor ama yasal
+biçim ayrı bir iş.
+
+**Öncelik 5 — iOS.** Hiç denenmedi. Mac gerektiriyor.
+
+**Öncelik 6 — Mağaza vitrini.** Play Console yaş beyanı, App Store Kids
+kategorisi, Data safety formu, içerik derecelendirme anketi, ekran
+görüntüleri ve üç dilde tanıtım metinleri. İkon ve açılış ekranı tamam.
+Sürüm numarası da ilk yayından önce `1.0` olmalı; şu an `0.1` / kod `1`.
 
 ## 5. Bilinen eksikler
 
 - Gerçek satın alma yok; abonelik cihazda sahte olarak açılıyor
+- Yayın anahtarı henüz üretilmedi; imzalama yapılandırması hazır ama
+  anahtar yokken paket hata ayıklama sertifikasıyla çıkıyor
+- Gizlilik politikası sayfası hazır ama yayımlanmadı: depo yerelde, uzak
+  adresi yok, on iki alan hâlâ boş ve "Taslak" rozeti duruyor
+- Mağaza vitrini (görseller, tanıtım metinleri, formlar) hiç başlamadı
+- Pakette yalnızca `arm64-v8a` ve `x86_64` var. Gerçek tabletlerin hepsi
+  arm64 olduğu için sorun değil, ama manifest `minSdk 21` diyor ve o
+  çağın 32 bit ARM cihazları bu paketi kuramaz — beyan olduğundan geniş
 - Yerel ağ eşleşmesi ve aile bağlantısı yok (arayüzde "yakında" olarak duruyor)
 - iOS derlenmedi
 - Öğretici oyunlarda sesli yönerge yok; şu an yönerge tamamen görsel (avda
@@ -225,19 +273,35 @@ kategorisi, gizlilik formu, mağaza görselleri ve tanıtım metinleri.
 
 ## 6. Yeni makinede kurulum
 
-1. `dotnet workload install maui` — **yönetici** terminal gerektiriyor
-2. Android SDK ve **JDK 17** (daha yeni JDK kabul edilmiyor)
-3. Kök dizine `Ploofy.local.props` oluştur (depoya girmiyor):
+1. **.NET 10 SDK** (10.0.400 ile kuruldu) — API 36 hedefi .NET 9'da yok
+2. `dotnet workload install maui` — **yönetici** terminal gerektiriyor
+3. Android SDK ve **JDK 17** (daha yeni JDK kabul edilmiyor)
+4. Kök dizine `Ploofy.local.props` oluştur (depoya girmiyor):
    AndroidSdkDirectory ve JavaSdkDirectory özellikleri
-4. `dotnet restore && dotnet test`
+5. `dotnet restore && dotnet test`
 
-Hızlı deneme (Windows): `dotnet build src/Ploofy.App/Ploofy.App.csproj -f net9.0-windows10.0.19041.0`
+Hızlı deneme (Windows): `dotnet build src/Ploofy.App/Ploofy.App.csproj -f net10.0-windows10.0.19041.0`
 
 ## 7. Tekrar tuzağa düşmemek için
 
 Bunların hepsi bir kez derlemeyi ya da uygulamayı kırdı; çözümleri koddan
 okunmuyor:
 
+- **`appCategory="game"` manifestten çıkmamalı.** Bir sınıflandırma etiketi
+  gibi duruyor ama işlevi başka: API 36'yı hedefleyen uygulamalarda geniş
+  ekranlarda `screenOrientation` yok sayılıyor, oyunlar bundan muaf ve
+  muafiyet bu bayrakla belirleniyor. Silinirse yatay kilit tablette düşer.
+- **Yerel kütüphane hangi paketten geldiğini söylemez; md5 söyler.** Bir
+  NuGet paketinin Android yapısı yoksa RID grafiği `linux-x64` kopyasını
+  `android-x64` için uygun sayabiliyor ve APK'ya masaüstü kütüphanesi
+  giriyor. Derleme bunu `XA4301` ("zaten içeriyor, yok sayılıyor") diye
+  geçiştiriyor. Şüphe varsa APK'daki `.so`'yu paketteki kopyalarla md5
+  karşılaştır; hizalamayı da ELF program başlığındaki `p_align` söylüyor
+  (16384 olmalı).
+- **Uyarılar bütün projelerde hata sayılıyor.** `Directory.Build.props`
+  bunu MAUI projelerinde kapatmayı amaçlıyor ama koşulu çalışmıyor
+  (`$(UseMaui)` dosya okunurken henüz boş). Yani MAUI tarafında da her
+  uyarı derlemeyi kırar; bunu bilmeden bir bağımlılık yükseltmek şaşırtır.
 - **Partial property zorunlu.** MVVM üreticisi WinUI hedefinde alan biçimini
   MVVMTK0045 ile reddediyor, partial property'yi de yalnızca
   `LangVersion=preview` ile üretiyor (ayar Ploofy.App.csproj içinde).

@@ -185,7 +185,7 @@ public sealed partial class PlaySetupViewModel(
         if (!option.IsAvailable)
         {
             var l = LocalizationService.Instance;
-            await Shell.Current.DisplayAlert(option.Title, l["CommonNotYet"], l["CommonOk"]);
+            await Shell.Current.DisplayAlertAsync(option.Title, l["CommonNotYet"], l["CommonOk"]);
             return;
         }
 

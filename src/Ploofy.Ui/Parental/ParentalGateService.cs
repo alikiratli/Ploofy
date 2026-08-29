@@ -73,7 +73,7 @@ public sealed class ParentalGateService(Func<ParentalGateStrings> stringsProvide
 
             if (attempt < MaxAttempts - 1)
             {
-                await page.DisplayAlert(strings.Title, strings.WrongAnswer, strings.Ok);
+                await page.DisplayAlertAsync(strings.Title, strings.WrongAnswer, strings.Ok);
             }
         }
 

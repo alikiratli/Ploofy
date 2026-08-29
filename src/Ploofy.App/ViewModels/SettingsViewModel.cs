@@ -157,7 +157,7 @@ public sealed partial class SettingsViewModel(
         }
 
         var l = LocalizationService.Instance;
-        var confirmed = await Shell.Current.DisplayAlert(
+        var confirmed = await Shell.Current.DisplayAlertAsync(
             l["ProfileDelete"],
             l.Format("ProfileDeleteConfirm", row.DisplayName),
             l["CommonOk"],
