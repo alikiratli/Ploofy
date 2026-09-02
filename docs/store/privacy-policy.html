@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index, follow">
+<meta name="description" content="Ploofy gizlilik politikası — Türkçe, İngilizce, Almanca.">
+<title>Ploofy Gizlilik Politikası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0..100,0..1&family=Karla:wght@400;500;700&display=swap">
+<style>
+  :root {
+    /* Palet uygulamanın kendi renklerinden: PloofyPalette.cs ve PloofyStyles.xaml */
+    --paper:      #FBF6EE;
+    --paper-deep: #F3E9DA;
+    --card:       #FFFFFF;
+    --ink:        #402A1E;
+    --muted:      #7A6A5C;
+    --rule:       #E7DACA;
+    --accent:     #E08600;  /* Sunny'nin gölge ucu — metin olarak okunabilen sarı */
+    --accent-fill:#FFC733;  /* Sunny gövde — yalnızca dolgu */
+    --accent-wash:#FFF4DA;
+    --link:       #0F6FC4;  /* Ocean gölge */
+    --ok:         #2E932B;  /* Lime gölge */
+    --shadow:     0 1px 2px rgba(64, 42, 30, .06), 0 8px 24px -12px rgba(64, 42, 30, .18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #17110D;
+      --paper-deep: #1E1612;
+      --card:       #221A15;
+      --ink:        #F3E8DA;
+      --muted:      #A8927E;
+      --rule:       #3A2C22;
+      --accent:     #FFC733;
+      --accent-fill:#FFC733;
+      --accent-wash:#2B2013;
+      --link:       #6FC4F5;
+      --ok:         #7BE06A;
+      --shadow:     0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .7);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper:      #17110D;
+    --paper-deep: #1E1612;
+    --card:       #221A15;
+    --ink:        #F3E8DA;
+    --muted:      #A8927E;
+    --rule:       #3A2C22;
+    --accent:     #FFC733;
+    --accent-fill:#FFC733;
+    --accent-wash:#2B2013;
+    --link:       #6FC4F5;
+    --ok:         #7BE06A;
+    --shadow:     0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .7);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Karla, "Segoe UI", system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.68;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Üst çubuk ---------- */
+
+  .bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 12px clamp(18px, 5vw, 40px);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .mark { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+  .mark svg { display: block; width: 30px; height: 30px; }
+  .mark b {
+    font-family: Fraunces, Georgia, serif;
+    font-variation-settings: "SOFT" 60, "WONK" 1;
+    font-weight: 600;
+    font-size: 1.12rem;
+    letter-spacing: .01em;
+  }
+
+
+  .langs { display: flex; gap: 2px; padding: 3px; background: var(--paper-deep); border-radius: 999px; }
+
+  .langs button {
+    font: inherit;
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: var(--muted);
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    padding: 5px 13px;
+    cursor: pointer;
+    transition: color .15s, background .15s;
+  }
+  .langs button:hover { color: var(--ink); }
+  .langs button[aria-pressed="true"] { color: var(--ink); background: var(--card); box-shadow: var(--shadow); }
+  .langs button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+  /* ---------- Sayfa ---------- */
+
+  main { max-width: 41rem; margin: 0 auto; padding: clamp(36px, 7vw, 72px) clamp(18px, 5vw, 40px) 96px; }
+
+  .eyebrow {
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+
+  h1 {
+    font-family: Fraunces, Georgia, serif;
+    font-variation-settings: "SOFT" 60, "WONK" 1;
+    font-weight: 600;
+    font-size: clamp(2.1rem, 6vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -.015em;
+    text-wrap: balance;
+    margin: 0 0 28px;
+  }
+
+  h2 {
+    font-family: Fraunces, Georgia, serif;
+    font-variation-settings: "SOFT" 50, "WONK" 0;
+    font-weight: 600;
+    font-size: 1.32rem;
+    line-height: 1.25;
+    letter-spacing: -.005em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h3 {
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 6px;
+  }
+
+  p { margin: 0; }
+  dl { margin: 0; }
+  a { color: var(--link); text-underline-offset: 3px; }
+
+  /* ---------- Künye ---------- */
+
+  .meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 8px 22px;
+    padding: 20px 22px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    font-size: .94rem;
+  }
+  .meta dt { color: var(--muted); font-weight: 500; }
+  .meta dd { margin: 0; }
+
+  /* ---------- Özet kartı ---------- */
+
+  .lede {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 30px;
+    padding: 26px 26px 26px 30px;
+    background: var(--accent-wash);
+    border-radius: 14px;
+    border-left: 5px solid var(--accent-fill);
+  }
+  .lede h2 { font-size: 1.15rem; }
+  .lede p { font-size: 1.06rem; }
+  .lede p:last-child { color: var(--muted); font-size: .95rem; }
+
+  /* ---------- Bölümler ---------- */
+
+  .sections { display: flex; flex-direction: column; gap: 44px; margin-top: 52px; }
+
+  section { display: flex; flex-direction: column; gap: 14px; scroll-margin-top: 80px; }
+
+  .head { display: flex; align-items: baseline; gap: 14px; }
+
+  .num {
+    flex: none;
+    font-family: Fraunces, Georgia, serif;
+    font-variation-settings: "WONK" 1;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    min-width: 1.4em;
+  }
+
+  ul { margin: 0; padding-left: 1.15em; display: flex; flex-direction: column; gap: 7px; }
+  li::marker { color: var(--accent); }
+
+  ol.steps { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 12px; }
+  ol.steps::marker, ol.steps li::marker { color: var(--accent); font-weight: 700; }
+
+  .group { display: flex; flex-direction: column; gap: 8px; }
+  .stack { display: flex; flex-direction: column; gap: 16px; }
+
+  code {
+    font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, monospace;
+    font-size: .86em;
+    background: var(--paper-deep);
+    border-radius: 5px;
+    padding: 1px 5px;
+  }
+
+  /* ---------- İzin tablosu ---------- */
+
+  .table-wrap { overflow-x: auto; }
+
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom-color: var(--ink);
+  }
+  tbody th { font-weight: 400; white-space: nowrap; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+
+
+  /* ---------- Alt bilgi ---------- */
+
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: .9rem;
+  }
+
+  [hidden] { display: none !important; }
+
+  article { animation: rise .28s ease-out; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    article { animation: none; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="mark">
+    <!-- Uygulama ikonunun küçüğü: sarı zemin, mavi gövde, pembe yanaklar.
+         Hacim üst üste iki daireyle veriliyor — ikon SVG'lerindeki kural. -->
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="32" fill="#FFC733"/>
+      <circle cx="32" cy="34" r="20" fill="#0F6FC4"/>
+      <circle cx="32" cy="32" r="20" fill="#3FB5F5"/>
+      <circle cx="22" cy="38" r="4" fill="#FF84BD"/>
+      <circle cx="42" cy="38" r="4" fill="#FF84BD"/>
+      <circle cx="25" cy="28" r="3" fill="#FBF6EE"/>
+      <circle cx="39" cy="28" r="3" fill="#FBF6EE"/>
+    </svg>
+    <b>Ploofy</b>
+  </span>
+
+
+  <div class="langs" role="group" aria-label="Dil / Language / Sprache">
+    <button type="button" data-lang="tr" aria-pressed="true">TR</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    <button type="button" data-lang="de" aria-pressed="false">DE</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ============================= TÜRKÇE ============================= -->
+<article lang="tr" data-doc="tr">
+  <p class="eyebrow">Gizlilik Politikası</p>
+  <h1>Ploofy çocuğunuz hakkında hiçbir şey toplamıyor.</h1>
+
+  <dl class="meta">
+    <dt>Yürürlük tarihi</dt><dd>2 Eylül 2026</dd>
+    <dt>Uygulama</dt><dd>Ploofy (<code>io.ploofy.app</code>)</dd>
+    <dt>Sorumlu</dt><dd>Ali Kiratli<br>Ischebecker Straße 8, 58256 Ennepetal, Almanya</dd>
+    <dt>İletişim</dt><dd><a href="mailto:alikiratlide@gmail.com">alikiratlide@gmail.com</a></dd>
+  </dl>
+
+  <div class="lede">
+    <h2>Kısaca</h2>
+    <p>Sunucumuz yok, hesap istemiyoruz, reklam göstermiyoruz. Oyunlarda oluşan
+      her şey — takma ad, yıldızlar, rozetler — yalnızca tabletin kendi içinde
+      kalıyor. Uygulamayı kaldırdığınızda hepsi silinir.</p>
+    <p>Bu politikanın geri kalanı aynı şeyi ayrıntılarıyla anlatıyor.</p>
+  </div>
+
+  <div class="sections">
+
+    <section>
+      <div class="head"><span class="num">1</span><h2>Cihazda tutulan bilgiler</h2></div>
+      <p>Ploofy aşağıdakileri cihazın kendi uygulama klasöründe, yerel bir
+        veritabanında saklar. Bu klasörü başka uygulamalar okuyamaz.</p>
+
+      <div class="stack">
+        <div class="group">
+          <h3>Çocuk profili</h3>
+          <ul>
+            <li>Takma ad (en fazla 24 karakter) — ebeveynin girdiği isim</li>
+            <li>Yaş bandı (2–4, 4–6 veya 6–9)</li>
+            <li>Seçilen avatar ve tema</li>
+            <li>Profilin oluşturulma tarihi</li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>Oyun ilerlemesi</h3>
+          <ul>
+            <li>Her oyun ve yaş bandı için en iyi yıldız sayısı ve puan</li>
+            <li>Kaç kez oynandığı ve en son ne zaman oynandığı</li>
+            <li>Kazanılan rozetler</li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>Uygulama ayarları</h3>
+          <ul>
+            <li>Seçili profil, arayüz dili, ses ve titreşim tercihleri</li>
+            <li>Aboneliğin son bilinen durumu (yalnızca “var” / “yok” bilgisi)</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>Bu kayıtlar cihazın buluta yedeklenmesine de dahil edilmez; uygulama
+        Android’in otomatik yedeklemesini kapatmıştır
+        (<code>allowBackup="false"</code>).</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">2</span><h2>Toplanmayan bilgiler</h2></div>
+      <p>Ploofy şunları <strong>istemez, toplamaz ve göndermez</strong>:</p>
+      <ul>
+        <li>Çocuğun gerçek adı, doğum tarihi, adresi, telefonu veya e-postası</li>
+        <li>Fotoğraf, ses kaydı, kamera veya mikrofon verisi</li>
+        <li>Rehber, takvim, dosyalar veya diğer uygulamalara ait veriler</li>
+        <li>Konum</li>
+        <li>Reklam kimliği (AAID), cihaz kimliği, IMEI, MAC adresi veya seri numarası</li>
+      </ul>
+      <p>Uygulamada <strong>analitik, çökme raporlama veya izleme aracı
+        bulunmuyor.</strong> Hiçbir katmanda <strong>reklam gösterilmiyor</strong>
+        — ücretsiz kullanımda da.</p>
+      <p>Ploofy’nin sizinle ilgili bir profil çıkarma, davranış izleme veya üçüncü
+        taraflarla veri paylaşma yolu yoktur; çünkü toplanmış bir veri yoktur.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">3</span><h2>İzinler ve gerekçeleri</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">İzin</th><th scope="col">Ne için</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>VIBRATE</code></th>
+              <td>Doğru dokunuşta kısa titreşim. Bu yaş grubunda geri bildirimin yarısı budur.</td></tr>
+            <tr><th scope="row"><code>INTERNET</code></th>
+              <td>Yalnızca mağaza (abonelik) katmanı için. Oyunların tamamı çevrimdışı çalışır.</td></tr>
+            <tr><th scope="row"><code>ACCESS_NETWORK_STATE</code></th>
+              <td>Aynı sebeple: satın alma sırasında bağlantı olup olmadığını anlamak için.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Uygulama kendi sunucusuna bağlanmaz — böyle bir sunucu yoktur.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">4</span><h2>Abonelik ve ödeme</h2></div>
+      <p>Abonelik satın alma işlemi <strong>Google Play üzerinden</strong> yürür.
+        Ödeme bilgilerinizi (kart numarası, fatura adresi, Google hesabınız)
+        Ploofy hiçbir zaman görmez; bunlar Google ile aranızda kalır ve bu işlem
+        için Google kendi gizlilik politikası kapsamında sorumludur.</p>
+      <p>Ploofy’nin cihazda tuttuğu tek şey aboneliğin son bilinen durumudur.
+        Bunun sebebi pratik: tablet çevrimdışıyken mağazaya sorulamıyor ve
+        çocuğun oyunları “internet yok” diye kilitlenmemeli.</p>
+      <p>Satın alma ekranı <strong>ebeveyn kilidinin arkasındadır</strong>;
+        çocuğun yanlışlıkla satın alma yapması engellenir.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">5</span><h2>Ebeveyn kilidi</h2></div>
+      <p>Satın alma, ayarlar ekranı ve profil ekleme/silme tek soruluk bir
+        aritmetik engelin arkasındadır: iki basamaklı bir çarpma ve bir toplama.
+        Zorluk kasıtlı olarak en büyük yaş bandının (6–9) üstünde tutulmuştur —
+        çocuğun kafadan çözemeyeceği, yetişkini ise oyalamayacak kadar.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">6</span><h2>Çocuklar</h2></div>
+      <p>Ploofy 2–9 yaş arası çocuklar için tasarlanmıştır ve bu politikanın
+        tamamı bu gerçeğe göre yazılmıştır. Uygulama çocuklardan kişisel veri
+        toplamadığı için veri işlemeye dayalı bir rıza mekanizmasına da ihtiyaç
+        duymaz.</p>
+      <p>Profil oluştururken çocuğun <strong>gerçek adı istenmez</strong> —
+        ekranda da takma ad kullanılması istenir. Yaş bandı, oyunların zorluğunu
+        ayarlamak için sorulur ve cihazdan dışarı çıkmaz.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">7</span><h2>Verilerin silinmesi</h2></div>
+      <p>İki yol var, ikisi de anında sonuç verir:</p>
+      <ol class="steps">
+        <li><strong>Tek bir profili silmek:</strong> Ayarlar → ilgili profilin
+          yanındaki çöp kutusu. O profilin adı, avatarı, yıldızları ve rozetleri
+          gider.</li>
+        <li><strong>Her şeyi silmek:</strong> Uygulamayı kaldırın. Uygulama
+          klasörü, veritabanı dahil tamamen silinir.</li>
+      </ol>
+      <p>Bize silme talebi göndermenize gerek yoktur; elimizde silinecek bir veri
+        bulunmaz.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">8</span><h2>Veri aktarımı ve üçüncü taraflar</h2></div>
+      <p>Kişisel veri toplanmadığı için üçüncü taraflara aktarılan, satılan veya
+        yurt dışına gönderilen bir veri de yoktur. Uygulamanın kullandığı yazılım
+        kütüphaneleri (grafik, ses, veritabanı) yerel olarak çalışır ve veri
+        göndermez.</p>
+      <p>Tek istisna, 4. bölümde anlatılan satın alma işlemidir; orada
+        muhatabınız doğrudan Google’dır.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">9</span><h2>Bu politikadaki değişiklikler</h2></div>
+      <p>Politika değişirse bu sayfa güncellenir ve yukarıdaki yürürlük tarihi
+        yenilenir. Uygulamanın veri davranışını değiştiren bir güncelleme
+        yapılırsa değişiklik burada açıkça belirtilir.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">10</span><h2>İletişim</h2></div>
+      <p>Sorularınız için: <a href="mailto:alikiratlide@gmail.com">alikiratlide@gmail.com</a></p>
+      <p>Ploofy üç dilde yayımlanmıştır. Bu metnin İngilizce ve Almanca sürümleri
+        de aynı adreste bulunur.</p>
+    </section>
+
+  </div>
+
+  <footer>Ploofy — 2–9 yaş için çevrimdışı öğrenme oyunları. · <a href="impressum.html">Künye / Impressum</a></footer>
+</article>
+
+<!-- ============================= ENGLISH ============================= -->
+<article lang="en" data-doc="en" hidden>
+  <p class="eyebrow">Privacy Policy</p>
+  <h1>Ploofy collects nothing about your child.</h1>
+
+  <dl class="meta">
+    <dt>Effective date</dt><dd>2 September 2026</dd>
+    <dt>App</dt><dd>Ploofy (<code>io.ploofy.app</code>)</dd>
+    <dt>Provider</dt><dd>Ali Kiratli<br>Ischebecker Straße 8, 58256 Ennepetal, Germany</dd>
+    <dt>Contact</dt><dd><a href="mailto:alikiratlide@gmail.com">alikiratlide@gmail.com</a></dd>
+  </dl>
+
+  <div class="lede">
+    <h2>In short</h2>
+    <p>We have no server, we ask for no account, and we show no ads. Everything
+      the games create — the nickname, the stars, the badges — stays on the
+      tablet itself. Uninstalling the app deletes all of it.</p>
+    <p>The rest of this policy says the same thing in detail.</p>
+  </div>
+
+  <div class="sections">
+
+    <section>
+      <div class="head"><span class="num">1</span><h2>What is stored on the device</h2></div>
+      <p>Ploofy stores the following in the device’s own app folder, in a local
+        database. No other app can read that folder.</p>
+
+      <div class="stack">
+        <div class="group">
+          <h3>Child profile</h3>
+          <ul>
+            <li>Nickname (up to 24 characters) — the name a parent types in</li>
+            <li>Age band (2–4, 4–6 or 6–9)</li>
+            <li>Chosen avatar and theme</li>
+            <li>The date the profile was created</li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>Game progress</h3>
+          <ul>
+            <li>Best star count and score, per game and per age band</li>
+            <li>How many times a game was played and when it was last played</li>
+            <li>Badges earned</li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>App settings</h3>
+          <ul>
+            <li>Selected profile, interface language, sound and vibration preferences</li>
+            <li>Last known subscription state (only “active” / “none”)</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>None of this is included in the device’s cloud backup either: the app
+        turns Android’s automatic backup off
+        (<code>allowBackup="false"</code>).</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">2</span><h2>What is not collected</h2></div>
+      <p>Ploofy does <strong>not ask for, collect or transmit</strong>:</p>
+      <ul>
+        <li>The child’s real name, date of birth, address, phone number or email</li>
+        <li>Photos, voice recordings, camera or microphone data</li>
+        <li>Contacts, calendar, files or data belonging to other apps</li>
+        <li>Location</li>
+        <li>Advertising ID (AAID), device ID, IMEI, MAC address or serial number</li>
+      </ul>
+      <p>The app contains <strong>no analytics, no crash reporting and no
+        tracking tools.</strong> There are <strong>no ads at any tier</strong> —
+        not even in the free one.</p>
+      <p>Ploofy has no way to build a profile of you, track behaviour or share
+        data with third parties, because there is no collected data to begin
+        with.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">3</span><h2>Permissions and why they exist</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Permission</th><th scope="col">What it is for</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>VIBRATE</code></th>
+              <td>A short buzz on a correct tap. At this age that is half of the feedback.</td></tr>
+            <tr><th scope="row"><code>INTERNET</code></th>
+              <td>Only for the store (subscription) layer. All games work fully offline.</td></tr>
+            <tr><th scope="row"><code>ACCESS_NETWORK_STATE</code></th>
+              <td>Same reason: to tell whether there is a connection during a purchase.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The app never connects to a server of ours — there is no such server.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">4</span><h2>Subscription and payment</h2></div>
+      <p>Subscriptions are purchased <strong>through Google Play</strong>. Ploofy
+        never sees your payment details (card number, billing address, your
+        Google account); those stay between you and Google, and for that
+        transaction Google is responsible under its own privacy policy.</p>
+      <p>The only thing Ploofy keeps on the device is the last known subscription
+        state. The reason is practical: when the tablet is offline the store
+        cannot be asked, and a child’s games must not lock themselves because
+        there is no internet.</p>
+      <p>The purchase screen sits <strong>behind the parental gate</strong>, so a
+        child cannot buy anything by accident.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">5</span><h2>Parental gate</h2></div>
+      <p>Purchases, the settings screen, and adding or deleting a profile sit
+        behind a single arithmetic question: a two-digit multiplication plus an
+        addition. The difficulty is deliberately set above the oldest age band
+        (6–9) — beyond what a child can do in their head, not enough to hold up
+        an adult.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">6</span><h2>Children</h2></div>
+      <p>Ploofy is designed for children aged 2–9, and this entire policy is
+        written around that fact. Because the app collects no personal data from
+        children, it also needs no consent mechanism for data processing.</p>
+      <p>When a profile is created the child’s <strong>real name is not
+        requested</strong> — the screen asks for a nickname. The age band is
+        asked in order to scale the difficulty of the games, and it never leaves
+        the device.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">7</span><h2>Deleting the data</h2></div>
+      <p>There are two ways, and both take effect immediately:</p>
+      <ol class="steps">
+        <li><strong>Delete a single profile:</strong> Settings → the bin icon
+          next to that profile. Its name, avatar, stars and badges are gone.</li>
+        <li><strong>Delete everything:</strong> Uninstall the app. The app
+          folder, database included, is removed completely.</li>
+      </ol>
+      <p>You do not need to send us a deletion request; we hold nothing that
+        could be deleted.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">8</span><h2>Data transfer and third parties</h2></div>
+      <p>Since no personal data is collected, none is transferred to third
+        parties, sold or sent abroad. The software libraries the app uses
+        (graphics, audio, database) run locally and send nothing.</p>
+      <p>The one exception is the purchase described in section 4, where your
+        counterpart is Google directly.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">9</span><h2>Changes to this policy</h2></div>
+      <p>If the policy changes, this page is updated and the effective date above
+        is renewed. If an update changes how the app handles data, the change is
+        stated here explicitly.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">10</span><h2>Contact</h2></div>
+      <p>Questions: <a href="mailto:alikiratlide@gmail.com">alikiratlide@gmail.com</a></p>
+      <p>Ploofy is published in three languages. Turkish and German versions of
+        this text are available at the same address.</p>
+    </section>
+
+  </div>
+
+  <footer>Ploofy — offline learning games for ages 2–9. · <a href="impressum.html">Legal Notice / Impressum</a></footer>
+</article>
+
+<!-- ============================= DEUTSCH ============================= -->
+<article lang="de" data-doc="de" hidden>
+  <p class="eyebrow">Datenschutzerklärung</p>
+  <h1>Ploofy erhebt keinerlei Daten über Ihr Kind.</h1>
+
+  <dl class="meta">
+    <dt>Gültig ab</dt><dd>2. September 2026</dd>
+    <dt>App</dt><dd>Ploofy (<code>io.ploofy.app</code>)</dd>
+    <dt>Verantwortlich</dt><dd>Ali Kiratli<br>Ischebecker Straße 8, 58256 Ennepetal, Deutschland</dd>
+    <dt>Kontakt</dt><dd><a href="mailto:alikiratlide@gmail.com">alikiratlide@gmail.com</a></dd>
+  </dl>
+
+  <div class="lede">
+    <h2>Kurz gesagt</h2>
+    <p>Wir betreiben keinen Server, verlangen kein Konto und zeigen keine
+      Werbung. Alles, was in den Spielen entsteht — der Spitzname, die Sterne,
+      die Abzeichen — bleibt auf dem Tablet selbst. Wird die App
+      deinstalliert, ist alles davon gelöscht.</p>
+    <p>Der Rest dieser Erklärung sagt dasselbe, nur ausführlich.</p>
+  </div>
+
+  <div class="sections">
+
+    <section>
+      <div class="head"><span class="num">1</span><h2>Was auf dem Gerät gespeichert wird</h2></div>
+      <p>Ploofy speichert das Folgende im app-eigenen Ordner des Geräts, in einer
+        lokalen Datenbank. Andere Apps können diesen Ordner nicht lesen.</p>
+
+      <div class="stack">
+        <div class="group">
+          <h3>Kinderprofil</h3>
+          <ul>
+            <li>Spitzname (höchstens 24 Zeichen) — der von einem Elternteil eingegebene Name</li>
+            <li>Altersstufe (2–4, 4–6 oder 6–9)</li>
+            <li>Gewählter Avatar und gewähltes Thema</li>
+            <li>Datum der Profilerstellung</li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>Spielfortschritt</h3>
+          <ul>
+            <li>Beste Sternzahl und Punktzahl, je Spiel und je Altersstufe</li>
+            <li>Wie oft gespielt wurde und wann zuletzt</li>
+            <li>Erworbene Abzeichen</li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>App-Einstellungen</h3>
+          <ul>
+            <li>Ausgewähltes Profil, Oberflächensprache, Ton- und Vibrationseinstellung</li>
+            <li>Zuletzt bekannter Abo-Status (nur „aktiv“ / „keins“)</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>Nichts davon gelangt in die Cloud-Sicherung des Geräts: Die App schaltet
+        Androids automatische Sicherung ab
+        (<code>allowBackup="false"</code>).</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">2</span><h2>Was nicht erhoben wird</h2></div>
+      <p>Ploofy fragt <strong>nicht</strong> nach, erhebt und übermittelt
+        <strong>nicht</strong>:</p>
+      <ul>
+        <li>Echten Namen, Geburtsdatum, Anschrift, Telefonnummer oder E-Mail des Kindes</li>
+        <li>Fotos, Sprachaufnahmen, Kamera- oder Mikrofondaten</li>
+        <li>Kontakte, Kalender, Dateien oder Daten anderer Apps</li>
+        <li>Standort</li>
+        <li>Werbe-ID (AAID), Geräte-ID, IMEI, MAC-Adresse oder Seriennummer</li>
+      </ul>
+      <p>Die App enthält <strong>keine Analyse-, Absturzberichts- oder
+        Tracking-Werkzeuge.</strong> Es gibt <strong>auf keiner Stufe
+        Werbung</strong> — auch nicht in der kostenlosen.</p>
+      <p>Ploofy hat keine Möglichkeit, ein Profil über Sie zu bilden, Verhalten
+        zu verfolgen oder Daten an Dritte weiterzugeben, weil es schlicht keine
+        erhobenen Daten gibt.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">3</span><h2>Berechtigungen und ihre Gründe</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Berechtigung</th><th scope="col">Wofür</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>VIBRATE</code></th>
+              <td>Kurzes Vibrieren bei einer richtigen Berührung. In diesem Alter ist das die Hälfte der Rückmeldung.</td></tr>
+            <tr><th scope="row"><code>INTERNET</code></th>
+              <td>Nur für die Store-Schicht (Abo). Sämtliche Spiele laufen offline.</td></tr>
+            <tr><th scope="row"><code>ACCESS_NETWORK_STATE</code></th>
+              <td>Aus demselben Grund: um beim Kauf zu erkennen, ob eine Verbindung besteht.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Die App verbindet sich nie mit einem Server von uns — einen solchen gibt
+        es nicht.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">4</span><h2>Abonnement und Bezahlung</h2></div>
+      <p>Abonnements werden <strong>über Google Play</strong> gekauft. Ploofy
+        sieht Ihre Zahlungsdaten niemals (Kartennummer, Rechnungsanschrift, Ihr
+        Google-Konto); diese bleiben zwischen Ihnen und Google, und für diesen
+        Vorgang ist Google nach seiner eigenen Datenschutzerklärung
+        verantwortlich.</p>
+      <p>Das Einzige, was Ploofy auf dem Gerät behält, ist der zuletzt bekannte
+        Abo-Status. Der Grund ist praktisch: Ist das Tablet offline, lässt sich
+        der Store nicht fragen — und die Spiele eines Kindes dürfen sich nicht
+        sperren, nur weil kein Internet da ist.</p>
+      <p>Der Kaufbildschirm liegt <strong>hinter der Elternsperre</strong>, damit
+        ein Kind nicht versehentlich etwas kauft.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">5</span><h2>Elternsperre</h2></div>
+      <p>Käufe, der Einstellungsbildschirm sowie das Anlegen und Löschen von
+        Profilen liegen hinter einer einzigen Rechenaufgabe: eine zweistellige
+        Multiplikation plus eine Addition. Der Schwierigkeitsgrad liegt bewusst
+        über der ältesten Altersstufe (6–9) — mehr, als ein Kind im Kopf rechnet,
+        und wenig genug, um Erwachsene nicht aufzuhalten.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">6</span><h2>Kinder</h2></div>
+      <p>Ploofy ist für Kinder von 2 bis 9 Jahren gemacht, und diese gesamte
+        Erklärung ist um diese Tatsache herum geschrieben. Da die App keine
+        personenbezogenen Daten von Kindern erhebt, braucht sie auch keinen
+        Einwilligungsmechanismus für eine Datenverarbeitung.</p>
+      <p>Beim Anlegen eines Profils wird <strong>nicht nach dem echten
+        Namen</strong> des Kindes gefragt — der Bildschirm bittet um einen
+        Spitznamen. Die Altersstufe wird erfragt, um die Schwierigkeit der Spiele
+        anzupassen, und sie verlässt das Gerät nicht.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">7</span><h2>Löschen der Daten</h2></div>
+      <p>Es gibt zwei Wege, beide wirken sofort:</p>
+      <ol class="steps">
+        <li><strong>Ein einzelnes Profil löschen:</strong> Einstellungen → das
+          Papierkorbsymbol neben diesem Profil. Name, Avatar, Sterne und
+          Abzeichen sind damit weg.</li>
+        <li><strong>Alles löschen:</strong> Die App deinstallieren. Der
+          App-Ordner wird samt Datenbank vollständig entfernt.</li>
+      </ol>
+      <p>Sie müssen uns keinen Löschantrag schicken; wir halten nichts, was
+        gelöscht werden könnte.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">8</span><h2>Datenweitergabe und Dritte</h2></div>
+      <p>Da keine personenbezogenen Daten erhoben werden, werden auch keine an
+        Dritte weitergegeben, verkauft oder ins Ausland übermittelt. Die
+        verwendeten Softwarebibliotheken (Grafik, Ton, Datenbank) arbeiten lokal
+        und senden nichts.</p>
+      <p>Die einzige Ausnahme ist der in Abschnitt 4 beschriebene Kauf; dort ist
+        Google unmittelbar Ihr Gegenüber.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">9</span><h2>Änderungen dieser Erklärung</h2></div>
+      <p>Ändert sich die Erklärung, wird diese Seite aktualisiert und das oben
+        genannte Datum erneuert. Ändert ein Update das Datenverhalten der App,
+        wird die Änderung hier ausdrücklich benannt.</p>
+    </section>
+
+    <section>
+      <div class="head"><span class="num">10</span><h2>Kontakt</h2></div>
+      <p>Fragen an: <a href="mailto:alikiratlide@gmail.com">alikiratlide@gmail.com</a></p>
+      <p>Ploofy erscheint in drei Sprachen. Die türkische und die englische
+        Fassung dieses Textes finden Sie unter derselben Adresse.</p>
+    </section>
+
+  </div>
+
+  <footer>Ploofy — Offline-Lernspiele für 2 bis 9 Jahre. · <a href="impressum.html">Impressum</a></footer>
+</article>
+
+</main>
+
+<script>
+  (function () {
+    var STORE = "ploofy-privacy-lang";
+
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(".langs button"));
+    var docs = Array.prototype.slice.call(document.querySelectorAll("[data-doc]"));
+
+    function show(lang, remember) {
+      docs.forEach(function (doc) { doc.hidden = doc.getAttribute("data-doc") !== lang; });
+      buttons.forEach(function (btn) {
+        btn.setAttribute("aria-pressed", String(btn.getAttribute("data-lang") === lang));
+      });
+      document.documentElement.lang = lang;
+
+      if (remember) {
+        try { localStorage.setItem(STORE, lang); } catch (e) { /* özel pencere: sorun değil */ }
+      }
+    }
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () { show(btn.getAttribute("data-lang"), true); });
+    });
+
+    var saved = null;
+    try { saved = localStorage.getItem(STORE); } catch (e) { /* okunamıyorsa varsayılan kalır */ }
+    show(saved === "en" || saved === "de" ? saved : "tr", false);
+  })();
+</script>
+</body>
+</html>

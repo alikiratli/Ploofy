@@ -19,6 +19,8 @@ src/Ploofy.Ui/                 Gemeinsame MAUI-Oberflächenschicht (Theme, Ton/
 src/Ploofy.App/                MAUI-Anwendung (Android + iOS; Windows nur zum
                                schnellen Ausprobieren während der Entwicklung)
 content/strings.tsv            Texte aller drei Sprachen — die einzige Quelle
+docs/store/                    Datenschutzerklärung, Impressum und Startseite —
+                               die Quelle der veröffentlichten Seiten
 tools/build_strings.py         strings.tsv -> Resources/Strings/*.resx
 tools/build_sounds.py          synthetisiert die Rückmeldungstöne -> Resources/Raw/sounds/
 tests/Ploofy.Engine.Tests/     xUnit — Tests für Engine + Speicher
@@ -138,11 +140,20 @@ nachträglich angeklebt:
   eigenen Server.
 - **Altersangabe** — Zielaltersgruppe in der Play Console und die Kids-Kategorie
   im App Store werden vor der Veröffentlichung korrekt angegeben.
-- **Datenschutzerklärung** — liegt wie bei den übrigen Apps in einem **eigenen
-  Repository** und wird von dort über GitHub Pages ausgeliefert; Play verlangt
-  dafür eine öffentlich erreichbare URL. Der Text (tr/en/de auf einer Seite) ist
-  fertig, aber noch als Entwurf markiert: zwölf Stellen für Anbieter, Kontakt
-  und Datum sind auszufüllen. Adresse des Repositories: noch einzutragen.
+- **Datenschutzerklärung** — veröffentlicht. Wie bei den übrigen Apps liegt
+  sie in einem **eigenen Repository** und wird von dort über GitHub Pages
+  ausgeliefert; Play verlangt dafür eine öffentlich erreichbare URL:
+
+  - <https://alikiratli.github.io/ploofy-web/privacy-policy.html> (tr/en/de auf
+    einer Seite) — dieser Link, nicht die Wurzel, gehört in die Play Console
+  - <https://alikiratli.github.io/ploofy-web/impressum.html> (de/en)
+  - <https://alikiratli.github.io/ploofy-web/> — die Wurzel für das Feld
+    „Website“ im Store-Eintrag
+
+  Die Quelle der drei Seiten liegt hier unter `docs/store/`; das Repository
+  <https://github.com/alikiratli/ploofy-web> ist nur die Kopie, die Play liest.
+  Nach einer Änderung beide Stellen gleichziehen — das Vorgehen steht in dessen
+  README.
 
 ## Einrichtung
 
@@ -259,6 +270,7 @@ python tools/build_progress_note.py
 - **Phase 3 — Eltern und Regelkonformität.** Einstellungen, Abo-Ablauf, Prüfung
   der Datenerhebung, Kopplung im lokalen Netz.
 - **Phase 4 — Feinschliff und Veröffentlichung.** App-Symbol und
-  Startbildschirm ✅ · Test auf echtem Gerät, echter Kauf
-  (Plugin.InAppBilling), iOS, Theme-Pakete, Store-Grafiken, Altersangabe,
-  Veröffentlichung ⏳
+  Startbildschirm ✅ · Datenschutzerklärung und Impressum veröffentlicht ✅ ·
+  Veröffentlichungsschlüssel erzeugt, Release-Paket damit signiert ✅ · Test auf
+  echtem Gerät, echter Kauf (Plugin.InAppBilling), iOS, Theme-Pakete,
+  Store-Grafiken, Altersangabe, Veröffentlichung ⏳

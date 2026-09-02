@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Ploofy — werbefreie Minispielsammlung für Kinder von 2 bis 9 Jahren.">
+<title>Ploofy</title>
+<style>
+  /* Farben aus der App: PloofyPalette.cs und PloofyStyles.xaml. */
+  :root { color-scheme: light dark; }
+  body {
+    max-width: 40rem; margin: 0 auto; padding: 3rem 1.25rem 4rem;
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: #402A1E; background: #FBF6EE;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #F3E8DA; background: #17110D; }
+    a { color: #6FC4F5; }
+  }
+  a { color: #0F6FC4; }
+  .mark { display: flex; align-items: center; gap: 12px; }
+  .mark svg { display: block; width: 44px; height: 44px; }
+  h1 { font-size: 1.8rem; margin: 0 0 .2rem; }
+  .sub { opacity: .7; margin-top: 0; }
+  ul { padding-left: 1.2rem; }
+  .links { margin-top: 2.5rem; }
+</style>
+</head>
+<body>
+
+<div class="mark">
+  <!-- Dasselbe Zeichen wie auf der Datenschutzseite: gelber Grund, blauer
+       Koerper, rosa Wangen. Volumen aus zwei gestapelten Kreisen. -->
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="32" r="32" fill="#FFC733"/>
+    <circle cx="32" cy="34" r="20" fill="#0F6FC4"/>
+    <circle cx="32" cy="32" r="20" fill="#3FB5F5"/>
+    <circle cx="22" cy="38" r="4" fill="#FF84BD"/>
+    <circle cx="42" cy="38" r="4" fill="#FF84BD"/>
+    <circle cx="25" cy="28" r="3" fill="#FBF6EE"/>
+    <circle cx="39" cy="28" r="3" fill="#FBF6EE"/>
+  </svg>
+  <div>
+    <h1>Ploofy</h1>
+    <p class="sub">Minispiele für Kinder von 2 bis 9 Jahren</p>
+  </div>
+</div>
+
+<p>
+  Ploofy ist eine werbefreie Sammlung aus zehn Minispielen — sieben zum Spaß,
+  drei zum Lernen. Jedes Spiel passt sich der Altersstufe des Kindes an, und
+  alle Kinder einer Runde spielen in ihrer eigenen Stufe.
+</p>
+
+<p>Enthalten sind:</p>
+<ul>
+  <li>Memory · Blasen platzen · Formen sortieren · Wiederhole die Folge</li>
+  <li>Fang den Korb · Finde den Weg · Puzzle</li>
+  <li>Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen</li>
+</ul>
+
+<p>
+  Kein Konto, keine Registrierung, keine Werbung. Alle Spiele laufen offline,
+  und der Fortschritt bleibt auf dem Gerät. Die App gibt es auf Türkisch,
+  Englisch und Deutsch.
+</p>
+
+<p class="links">
+  <a href="privacy-policy.html">Datenschutzerklärung / Privacy Policy</a><br>
+  <a href="impressum.html">Impressum / Legal Notice</a>
+</p>
+
+</body>
+</html>

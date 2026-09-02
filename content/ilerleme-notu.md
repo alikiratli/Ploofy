@@ -1,7 +1,8 @@
 # Ploofy — İlerleme Notu
 
-Son güncelleme: 29.08.2026
+Son güncelleme: 02.09.2026
 Depo: https://github.com/alikiratli/Ploofy (public)
+Web: https://alikiratli.github.io/ploofy-web/ (gizlilik politikası + Impressum)
 
 ## 1. Nerede kaldık
 
@@ -16,7 +17,12 @@ yeni özellik yok denecek kadar az; yapılan iş uygulamayı mağazanın bugün
 geçerli zorunluluklarına taşımak ve ilk kez gerçek bir **sürüm (Release)**
 paketi üretip çalıştırmak oldu.
 
-**Son oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
+**Son oturumda yapılan: mağaza kapısındaki iki engel kalktı.** Yayın
+anahtarı üretildi ve gizlilik politikası yayımlandı — ikisi de kod işi
+değildi, ikisi de sürümü bloke ediyordu. Ayrıntı aşağıda, "Yayın imzası" ve
+"Gizlilik politikası" başlıklarında.
+
+**Bir önceki oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
 korunması, MAUI 10'un kaldırdığı çağrılar, SQLite'ta bir güvenlik açığı ve
 yanlış paketlenmiş bir yerel kütüphane. Sırayla:
 
@@ -103,10 +109,20 @@ Değerler yoksa derleme durmuyor — sürüm paketi hata ayıklama anahtarıyla
 veriyor**, çünkü asıl tehlike paketin kırılması değil, farkında olmadan
 mağazaya yüklenmesi.
 
-İki yol da atılabilir bir anahtarla denendi: anahtar verildiğinde sertifika
-`CN=Ploofy Test`, verilmediğinde `CN=Android Debug` ve uyarı görünüyor.
-Deneme anahtarı sonra silindi — **gerçek yayın anahtarı henüz üretilmedi**,
-o parolayla birlikte size ait.
+**Gerçek yayın anahtarı üretildi (02.09.2026).** RSA 2048, 10000 gün
+geçerli, PKCS12; sertifika `CN=Ali Kiratli, O=Ploofy, L=Ennepetal,
+ST=Nordrhein-Westfalen, C=DE`. Dosya `ploofy-release.keystore` deponun
+kökünde ve `.gitignore`'da, dört değer `Ploofy.local.props`'ta (o da
+gitignore'da). Parola 32 karakterlik rastgele bir dize.
+
+Doğrulandı: anahtarla üretilen Release APK'sında `apksigner verify
+--print-certs` yukarıdaki DN'i basıyor ve "yayın anahtarı tanımlı değil"
+uyarısı artık çıkmıyor.
+
+**İki dosyanın da makine dışında bir yedeği olmalı.** Anahtarı kaybetmek
+uygulamayı kaybetmek demek: aynı anahtarla imzalanmayan bir güncellemeyi
+Play kabul etmiyor. Play App Signing açılırsa yükleme anahtarı yenilenebilir
+kalıyor — çocuk uygulamasında uzun ömür beklendiği için açılması mantıklı.
 
 ### Gizlilik politikası
 
@@ -131,12 +147,29 @@ Fonts dışında dış bağımlılık yok. Renkleri de uydurmadım —
 vurgu Sunny'nin koyu ucu `#E08600` (parlak `#FFC733` metin olarak okunmuyor,
 yalnızca dolgu), bağlantılar Ocean gölgesi `#0F6FC4`.
 
-Sayfa **taslak** ve iki şeyle öyle olduğunu söylüyor: başlıktaki "Taslak"
-rozeti ve sarı işaretli on iki alan (her dilde tarih, yayıncı adı-adresi,
-iletişim e-postası). İkisi de yayımdan önce temizlenecek.
+**Yayımlandı (02.09.2026).** SchiriFit ve CertPilot'taki düzenin aynısı
+kuruldu: sayfaların kaynağı bu depoda `docs/store/`, yayın nüshası ayrı ve
+herkese açık `alikiratli/ploofy-web` deposunda, GitHub Pages'ten servis
+ediliyor. Üçü de 200 dönüyor:
 
-Depo yerel olarak hazır ve ilk commit'i atıldı; uzak adresi eklenmedi çünkü
-adres henüz belli değil. Yeri: `../ploofy-privacy` (bu deponun kardeşi).
+- https://alikiratli.github.io/ploofy-web/privacy-policy.html — Play
+  Console'a **bu** adres girilecek, kök değil; denetim sayfanın kendisini
+  görsün
+- https://alikiratli.github.io/ploofy-web/impressum.html
+- https://alikiratli.github.io/ploofy-web/ — mağaza girişindeki "Web sitesi"
+
+On iki alan dolduruldu (2 Eylül 2026 · Ali Kiratli, Ischebecker Straße 8,
+58256 Ennepetal · alikiratlide@gmail.com) ve "Taslak" rozeti hem HTML'den
+hem betikten kaldırıldı. Yayıncı bilgileri uydurulmadı; CertPilot'un
+Impressum'undan alındı.
+
+Ploofy'nin de bir **Impressum**'u oldu (de/en, bağlayıcı olan Almanca) —
+diğer iki uygulamada var, burada yoktu. § 5 DDG, § 19 UStG Kleinunternehmer,
+§ 18/2 MStV, § 36 VSBG; artı aboneliğin mağazayla kurulduğunu söyleyen bir
+bölüm.
+
+Eski `../ploofy-privacy` yerel deposu artık gereksiz — içeriği `docs/store/`
+ile `ploofy-web`'e taşındı.
 
 **Sayılar:** 229 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir ·
 13 ses dosyası · AAB 40 MB · targetSdk 36 · sürüm 1.0.
@@ -168,6 +201,8 @@ Sonrası 4. bölümdeki öncelik sırası.
 - **src/Ploofy.App** — MAUI uygulaması (Android + iOS; Windows sadece geliştirme için)
 - **tests/Ploofy.Engine.Tests** — xUnit, motor + depo
 - **content/strings.tsv** — üç dilin metinleri, tek kaynak
+- **docs/store** — gizlilik politikası, Impressum ve tanıtım sayfası; yayın
+  nüshası `alikiratli/ploofy-web` deposunda
 - **tools/build_strings.py** — strings.tsv'den resx üretir
 - **tools/build_sounds.py** — geri bildirim seslerini sentezler
 
@@ -217,38 +252,26 @@ başarılı sayıyor. Gerçek mağaza bağlantısı (Plugin.InAppBilling) aynı
 değişmeyecek. Play Console'da ürün tanımı ve test hesabı gerekiyor —
 onlar olmadan yazılacak kod denenemez, o yüzden mağaza hesabı ilk adım.
 
-**Öncelik 3 — Yayın anahtarını üret.** Yapılandırma hazır (1. bölüm);
-eksik olan tek şey anahtarın kendisi. Komut README'de, "Yayın imzası"
-başlığı. Anahtarı kaybetmek uygulamayı kaybetmek demek: aynı anahtarla
-imzalanmayan bir güncelleme Play'e yüklenemiyor. Play App Signing
-açılırsa yükleme anahtarı yenilenebilir kalıyor — çocuk uygulamasında
-uzun ömür beklendiği için açılması mantıklı.
+**Öncelik 3 — iOS.** Hiç denenmedi. Mac gerektiriyor.
 
-**Öncelik 4 — Gizlilik politikasını yayımla.** Sayfa hazır ve ayrı
-deposunda duruyor (`../ploofy-privacy`, ilk commit atılmış). Kalanlar:
-GitHub'da depoyu açıp uzak adresi bağlamak, Pages'i açmak, on iki alanı
-doldurup "Taslak" rozetini kaldırmak, sonra adresi hem buradaki README'ye
-hem Play Console'a yazmak.
-
-İki uyarı: 4. bölüm (abonelik) gerçek billing bağlanmadan doğru değil,
-çünkü satın almanın Play üzerinden yürüdüğünü anlatıyor. Ve metnin bir
-hukukçuya okutulması yerinde olur — iddialar koda dayanıyor ama yasal
-biçim ayrı bir iş.
-
-**Öncelik 5 — iOS.** Hiç denenmedi. Mac gerektiriyor.
-
-**Öncelik 6 — Mağaza vitrini.** Play Console yaş beyanı, App Store Kids
+**Öncelik 4 — Mağaza vitrini.** Play Console yaş beyanı, App Store Kids
 kategorisi, Data safety formu, içerik derecelendirme anketi, ekran
 görüntüleri ve üç dilde tanıtım metinleri. İkon ve açılış ekranı tamam.
-Sürüm numarası da ilk yayından önce `1.0` olmalı; şu an `0.1` / kod `1`.
+Gizlilik politikası URL'i hazır (1. bölüm); Play Console'a
+`privacy-policy.html` doğrudan girilecek. Sürüm `1.0`, versionCode `1` —
+Play'e her yüklemede versionCode'un artması gerekiyor.
+
+İki uyarı politikanın metniyle ilgili: 4. bölümü (abonelik) gerçek billing
+bağlanmadan tam doğru değil, çünkü satın almanın Play üzerinden yürüdüğünü
+anlatıyor — Öncelik 2 ile birlikte gözden geçirilmeli. Ve metnin bir
+hukukçuya okutulması yerinde olur; iddialar koda dayanıyor ama yasal biçim
+ayrı bir iş.
 
 ## 5. Bilinen eksikler
 
 - Gerçek satın alma yok; abonelik cihazda sahte olarak açılıyor
-- Yayın anahtarı henüz üretilmedi; imzalama yapılandırması hazır ama
-  anahtar yokken paket hata ayıklama sertifikasıyla çıkıyor
-- Gizlilik politikası sayfası hazır ama yayımlanmadı: depo yerelde, uzak
-  adresi yok, on iki alan hâlâ boş ve "Taslak" rozeti duruyor
+- Yayın anahtarının makine dışında yedeği yok; `ploofy-release.keystore`
+  ve `Ploofy.local.props` yalnızca bu bilgisayarda duruyor
 - Mağaza vitrini (görseller, tanıtım metinleri, formlar) hiç başlamadı
 - Pakette yalnızca `arm64-v8a` ve `x86_64` var. Gerçek tabletlerin hepsi
   arm64 olduğu için sorun değil, ama manifest `minSdk 21` diyor ve o
