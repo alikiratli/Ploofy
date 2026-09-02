@@ -44,6 +44,10 @@ eigene App mit Vorschulmathematik) darauf aufbauen, ohne die Engine anzufassen.
 | `ParentalGateChallenge` | `Engine/Access/` | Die Elternsperre. Eine Rechenaufgabe oberhalb der Stufe Eiche. |
 | `StarRating` | `Engine/Progress/` | Die einzige Stelle, die aus einer Runde Sterne macht. Die Regel ändert sich mit der Altersstufe. |
 | `BubblePopRound` | `Engine/Games/` | Entstehen, Aufsteigen und Platzen der Blasen. Die Positionen sind normalisiert, also unabhängig von der Bildschirmgröße, und im Test wird die Uhr von Hand weitergestellt. |
+| `TracePath` | `Engine/Games/Tracing/` | Eine Linie, die mit dem Finger verfolgt wird: Toleranz, Fortschritt, der nie zurückgeht, und das Zählen der Ausrutscher. Finde den Weg und Buchstaben schreiben teilen sich diese Mechanik. |
+| `GlyphShapes` | `Engine/Games/Tracing/` | Die Schreibwege der Großbuchstaben und Ziffern: Striche in Lehrreihenfolge, dazu nicht nachgefahrene Zeichen (der Punkt auf dem İ, die Cedille des Ç). |
+| `PatternRound` | `Engine/Games/` | Eine sich wiederholende Reihe mit einer Lücke. Die Einheit (AB, AAB, ABC, AABB) und die Lage der Lücke hängen an der Altersstufe; vor der Lücke steht immer mindestens eine vollständige Einheit. |
+| `PlayReport` | `Engine/Progress/` | Der Elternbericht: Tagesbalken, Summen und die Spieleliste eines Zeitraums. Jede einzelne Runde wird bei 15 Minuten gekappt, damit eine vergessene App den Bericht nicht auffrisst. |
 
 ### Ein neues Minispiel hinzufügen
 
@@ -65,9 +69,10 @@ Sperre, Altersfilter, Sterneerfassung und Elternbereich funktionieren von selbst
 **Spaßspiele (7):** Memory · Blasen platzen · Formen sortieren ·
 Wiederhole die Folge · Fang den Korb · Finde den Weg · Puzzle
 
-**Lernspiele (3):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen
+**Lernspiele (5):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen ·
+Buchstaben schreiben · Was kommt als Nächstes
 
-Alle zehn sind spielbar.
+Alle zwölf sind spielbar.
 
 Sie decken fünf verschiedene Interaktionsarten ab (Tippen, Ziehen, einer Linie
 folgen, Gedächtnis, Reihenfolge) — dieses Maß löst das Problem "alles fühlt sich
@@ -75,7 +80,8 @@ gleich an" von Anfang an.
 
 **Zeichentechnik:** karten- und kachelbasierte Spiele mit MAUI-Steuerelementen;
 alles, was dauernde Bewegung, Partikel oder freies Zeichnen braucht (Blasen
-platzen, Finde den Weg, Puzzle, Fang den Korb), mit SkiaSharp.
+platzen, Finde den Weg, Puzzle, Fang den Korb, Buchstaben schreiben), mit
+SkiaSharp.
 
 ## Die Bildsprache
 
@@ -101,10 +107,19 @@ kommt allein von den letzten beiden.
 
 | | Gratis | Abo |
 |---|---|---|
-| Spiele | 2 (Memory, Blasen platzen) | 10 + alles später Hinzukommende |
+| Spiele | 2 (Memory, Blasen platzen) | 12 + alles später Hinzukommende |
 | Kinderprofile | 1 | 4 |
 | Werbung | **Keine** | **Keine** |
 | Offline | Ja | Ja + Inhaltspakete |
+
+Das Abo wird auf einem eigenen Bildschirm verwaltet (`SubscriptionPage`,
+Route `subscription`): Zustand, Ende des bezahlten Zeitraums, der Weg in die
+Abo-Verwaltung des Stores und das **Beenden**. Beenden schaltet nur die
+automatische Verlängerung ab — die Spiele bleiben bis zum Ende des bezahlten
+Zeitraums offen (`SubscriptionStatus.Canceled`), und Sterne, Abzeichen und
+Profile bleiben in jedem Fall erhalten. Sobald echtes Billing angebunden ist,
+kündigt die App nicht selbst: Play und App Store erlauben das nur in ihren
+eigenen Abo-Zentren, deshalb führt der Weg dorthin.
 
 ## Mehrspielermodus
 
@@ -134,8 +149,15 @@ nachträglich angeklebt:
   MAC/IMEI oder Standort werden erhoben oder übertragen. Die Profile bleiben nur
   auf dem Gerät; verwendet wird ein Spitzname, nach dem echten Namen wird nicht
   gefragt.
-- **Elternsperre** — Kauf, Einstellungen, Profilverwaltung und jeder Link, der
-  aus der App hinausführt, liegen hinter `ParentalGateChallenge`.
+- **Der Spielbericht bleibt auf dem Gerät.** Seit der Bericht existiert, wird
+  jede beendete Runde in `round_history` festgehalten (Spiel, Sterne, Dauer,
+  Zeitpunkt). Die Tabelle wird nur lokal gelesen, hinter der Elternsperre, und
+  verschwindet mit dem Profil (`DeleteProfileAsync`). Sie geht nirgendwohin —
+  die Datenschutzerklärung gilt unverändert.
+- **Elternsperre** — Kauf, Beenden des Abos, Einstellungen, Profilverwaltung
+  und jeder Link, der aus der App hinausführt (Datenschutzerklärung,
+  Impressum, Abo-Verwaltung des Stores; die Adressen stehen in
+  `Services/PloofyLinks.cs`), liegen hinter `ParentalGateChallenge`.
 - **Abo** — hängt am Konto des Stores; die App hat kein eigenes Konto und keinen
   eigenen Server.
 - **Altersangabe** — Zielaltersgruppe in der Play Console und die Kids-Kategorie

@@ -7,6 +7,7 @@ using Ploofy.Data;
 using Ploofy.Engine;
 using Ploofy.Engine.Access;
 using Ploofy.Ui.Feedback;
+using Ploofy.Ui.Parental;
 
 namespace Ploofy.App.ViewModels;
 
@@ -43,6 +44,7 @@ public sealed partial class SettingsViewModel(
     ProgressRepository repository,
     AppState state,
     ISubscriptionService subscriptions,
+    IParentalGateService parentalGate,
     IFeedbackService feedback) : ObservableObject
 {
     public static readonly IReadOnlyList<LanguageOption> Languages =
@@ -64,11 +66,29 @@ public sealed partial class SettingsViewModel(
     [ObservableProperty]
     public partial string SubscriptionStatusText { get; set; }
 
+    /// <summary>Abonelik kartındaki rozetin metni ve rengi.</summary>
+    [ObservableProperty]
+    public partial string SubscriptionBadgeText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial Color SubscriptionBadgeColor { get; set; } = Colors.Gray;
+
+    /// <summary>"{tarih} tarihinde yenilenir" gibi tek satır; aboneliksizken boş.</summary>
+    [ObservableProperty]
+    public partial string SubscriptionPeriodText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool HasSubscription { get; set; }
+
     [ObservableProperty]
     public partial bool ShowsBillingWarning { get; set; }
 
     [ObservableProperty]
     public partial bool CanSubscribe { get; set; }
+
+    /// <summary>Mağaza girişindeki sürüm; destek yazışmasında ilk sorulan şey.</summary>
+    public string VersionText =>
+        LocalizationService.Instance.Format("SettingsVersion", AppInfo.Current.VersionString);
 
     public ObservableCollection<LanguageOption> LanguageChoices { get; } = [.. Languages];
 
@@ -94,18 +114,41 @@ public sealed partial class SettingsViewModel(
     private void ApplyEntitlements()
     {
         var l = LocalizationService.Instance;
-        var entitlements = subscriptions.Current;
+        var info = subscriptions.Info;
+        var entitlements = info.Entitlements;
 
+        HasSubscription = entitlements.HasFullAccess;
         CanSubscribe = !entitlements.HasFullAccess;
         ShowsBillingWarning = entitlements.NeedsBillingAttention;
 
-        SubscriptionStatusText = entitlements.Status switch
+        (SubscriptionBadgeText, SubscriptionBadgeColor, SubscriptionStatusText) = info.Status switch
         {
-            SubscriptionStatus.Active => l["SubscriptionActive"],
-            SubscriptionStatus.Grace => l["SubscriptionGrace"],
-            _ => l["SubscriptionPitch"],
+            SubscriptionStatus.Active =>
+                (l["SubscriptionBadgeActive"], Palette("Leaf"), l["SubscriptionActive"]),
+            SubscriptionStatus.Grace =>
+                (l["SubscriptionBadgeGrace"], Palette("Retry"), l["SubscriptionGrace"]),
+            SubscriptionStatus.Canceled =>
+                (l["SubscriptionBadgeCanceled"], Palette("Coral"), l["SubscriptionEndedTitle"]),
+            _ =>
+                (l["SubscriptionBadgeFree"], Palette("Locked"), l["SubscriptionPitch"]),
         };
+
+        // Tarih yalnızca bir satır: ayrıntı ve bitirme yolu abonelik
+        // ekranında. Ayarlar sayfası özet olmalı, ikinci bir abonelik
+        // ekranı değil.
+        SubscriptionPeriodText = info.PeriodEndsOn is { } end && entitlements.HasFullAccess
+            ? l.Format(
+                entitlements.AccessEndsAfterPeriod ? "SubscriptionEndsOn" : "SubscriptionRenewsOn",
+                end.ToString("d MMMM yyyy", l.Culture))
+            : string.Empty;
+
+        OnPropertyChanged(nameof(VersionText));
     }
+
+    private static Color Palette(string key) =>
+        Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+            ? color
+            : Colors.Gray;
 
     partial void OnSoundEnabledChanged(bool value)
     {
@@ -179,14 +222,70 @@ public sealed partial class SettingsViewModel(
         }
     }
 
+    /// <summary>
+    /// Abonelik yönetimine götürür.
+    /// </summary>
+    /// <remarks>
+    /// Aboneliksizken doğrudan paywall'a gitmiyor: yönetim ekranı ücretsiz
+    /// katmanda ne kaldığını da anlatıyor ve satın alma düğmesi orada da var.
+    /// Tek kapı olması, "bitir" yolunun her durumda aynı yerde durmasını
+    /// sağlıyor.
+    /// </remarks>
     [RelayCommand]
-    private static async Task OpenPaywallAsync() => await Shell.Current.GoToAsync("paywall");
+    private static async Task ManageSubscriptionAsync() =>
+        await Shell.Current.GoToAsync("subscription");
+
+    /// <summary>
+    /// Oyun raporuna götürür.
+    /// </summary>
+    /// <remarks>
+    /// Ayrı bir ebeveyn kilidi istemiyor: bu ekran zaten kilidin arkasında ve
+    /// rapor cihazdan hiçbir şey çıkarmıyor.
+    /// </remarks>
+    [RelayCommand]
+    private static async Task OpenReportAsync() => await Shell.Current.GoToAsync("report");
+
+    /// <summary>
+    /// Geri bildirim seslerinden ikisini çalar.
+    /// </summary>
+    /// <remarks>
+    /// Ebeveynin sesi cihazın hoparlöründe duymadan "açık kalsın mı"
+    /// diye karar vermesi mümkün değil — anahtarın hemen yanında bir
+    /// örnek olması bu kararı ayarlar ekranında bitiriyor. İkisi
+    /// seçildi çünkü aralarındaki seviye farkı en belirgin olan bunlar:
+    /// yıldız sesi tizden çıkıyor, doğru sesi orta bantta.
+    /// </remarks>
+    [RelayCommand]
+    private async Task PlaySoundSampleAsync()
+    {
+        await feedback.PlayAsync(FeedbackCue.Correct);
+        await Task.Delay(TimeSpan.FromMilliseconds(400));
+        await feedback.PlayAsync(FeedbackCue.StarEarned);
+    }
+
+    /// <summary>
+    /// Gizlilik politikasını tarayıcıda açar.
+    /// </summary>
+    /// <remarks>
+    /// Uygulamadan dışarı çıkan ilk bağlantı bu; kilit gerekçesi
+    /// <see cref="ParentalGateReason.ExternalLink"/> bugüne kadar hiç
+    /// çağrılmamıştı. Ayarlar zaten kilidin arkasında ama kilit beş dakika
+    /// açık kalıyor: tarayıcıya çıkmak ayrı bir eşik.
+    /// </remarks>
+    [RelayCommand]
+    private Task OpenPrivacyPolicyAsync() => OpenLinkAsync(PloofyLinks.PrivacyPolicy);
 
     [RelayCommand]
-    private async Task RestoreAsync()
+    private Task OpenImprintAsync() => OpenLinkAsync(PloofyLinks.Imprint);
+
+    private async Task OpenLinkAsync(Uri uri)
     {
-        await subscriptions.RestoreAsync();
-        ApplyEntitlements();
+        if (!await parentalGate.RequestAsync(ParentalGateReason.ExternalLink))
+        {
+            return;
+        }
+
+        await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
     }
 
     [RelayCommand]

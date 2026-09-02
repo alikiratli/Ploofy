@@ -6,7 +6,8 @@ Web: https://alikiratli.github.io/ploofy-web/ (gizlilik politikası + Impressum)
 
 ## 1. Nerede kaldık
 
-**Faz 2 bitti: on oyunun onu da oynanabilir.** Uygulama Android tablette
+**Faz 2 bitti: on ikinin on ikisi de oynanabilir.** (Faz 2 onla kapandı;
+Harf Yazma ve Örüntü sürümden sonra eklendi.) Uygulama Android tablette
 uçtan uca çalışıyor — çocuk profili oluşturuluyor, oyun seçiliyor,
 oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Katalogda artık
 "yakında" olarak duran hiçbir oyun yok ve kütüphane beş etkileşim türünün
@@ -17,10 +18,13 @@ yeni özellik yok denecek kadar az; yapılan iş uygulamayı mağazanın bugün
 geçerli zorunluluklarına taşımak ve ilk kez gerçek bir **sürüm (Release)**
 paketi üretip çalıştırmak oldu.
 
-**Son oturumda yapılan: mağaza kapısındaki iki engel kalktı.** Yayın
-anahtarı üretildi ve gizlilik politikası yayımlandı — ikisi de kod işi
-değildi, ikisi de sürümü bloke ediyordu. Ayrıntı aşağıda, "Yayın imzası" ve
-"Gizlilik politikası" başlıklarında.
+**Son oturumda yapılan: iki mağaza engeli kalktı, abonelik yönetimi yazıldı,
+sonra içerik yol haritasının ilk maddesi.** Yayın anahtarı üretildi ve
+gizlilik politikası yayımlandı — ikisi de kod işi değildi, ikisi de sürümü
+bloke ediyordu. Ardından aboneliğin ekran tarafı tamamlandı, en son da
+**Harf Yazma**, **Örüntü** ve **ebeveyn raporu** eklendi (yol haritası
+maddeleri İ1, İ2, İ3). Ayrıntı aşağıda: "Yayın imzası", "Gizlilik politikası",
+"Abonelik yönetimi", "Harf Yazma", "Örüntü", "Ebeveyn raporu".
 
 **Bir önceki oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
 korunması, MAUI 10'un kaldırdığı çağrılar, SQLite'ta bir güvenlik açığı ve
@@ -124,6 +128,208 @@ uygulamayı kaybetmek demek: aynı anahtarla imzalanmayan bir güncellemeyi
 Play kabul etmiyor. Play App Signing açılırsa yükleme anahtarı yenilenebilir
 kalıyor — çocuk uygulamasında uzun ömür beklendiği için açılması mantıklı.
 
+### Abonelik yönetimi
+
+Abonelik bugüne kadar tek yönlüydü: paywall satın alıyordu, ayarlar tek satır
+durum gösteriyordu ve **bitirmenin yolu yoktu**. Mağazalar bunu kabul etmiyor;
+ayrıca ebeveynin "ne zamana kadar açık" sorusunun da cevabı yoktu.
+
+Motora `SubscriptionStatus.Canceled` eklendi: iptal yenilemeyi kapatır, erişim
+ödenmiş dönemin sonuna kadar sürer. Bu, Play'in ve App Store'un kendi
+davranışı — erişimi iptal anında kesmek ebeveynin parasını yakmak olurdu.
+`Entitlements` üç yeni soruya cevap veriyor (`AutoRenews`,
+`AccessEndsAfterPeriod`, `CanCancel`) ve tarih işi ayrı bir kayda alındı:
+`SubscriptionInfo` (durum + dönem sonu). Ayrılığın sebebi, hiçbir erişim
+kararının tarihe bakmaması — cihazın saatini ileri almak oyunları kilitlemiyor,
+geri almak da abonelik uzatmıyor.
+
+Yeni ekran `SubscriptionPage` (rota `subscription`), ayarlardan açılıyor:
+
+- durum rozeti (Etkin / Ücretsiz katman / Bitiyor / Ödeme sorunu) ve tek
+  cümlelik durum
+- ödenmiş dönemin sonu ve kaç gün kaldığı; tarih yoksa uydurulmuyor, ekran
+  "mağaza henüz bildirmedi" diyor (çevrimdışı ilk açılışta olabiliyor)
+- abone için "neler dahil", aboneliksiz için "aboneliksiz ne kalıyor"
+- mağazanın abonelik merkezine çıkış ve satın alımları geri yükleme
+- **Aboneliği bitir** — en altta, ayrı kartta. Önce ebeveyn kilidi, sonra
+  onay: onay ekranını çocuğa hiç göstermemek "hayır"a basmasına güvenmekten
+  iyi. Metin ne olacağını açıkça yazıyor — yenileme durur, oyunlar dönem
+  sonuna kadar açık kalır, yıldız/rozet/profil silinmez
+- bitirildikten sonra kart yerini "yeniden başlat"a bırakıyor
+
+`ISubscriptionService.CancelAsync` bugün durumu yerel olarak `Canceled`
+yapıyor ki akış denenebilsin. Mağaza bağlandığında **iptali uygulama
+yapmayacak**: Play ve App Store aboneliğin yalnızca kendi abonelik
+merkezlerinden bitirilmesine izin veriyor, o gün bu çağrı `ManagementUri`
+adresini açıp dönüşte durumu mağazaya soracak. Ekranların gördüğü davranış
+iki durumda da aynı.
+
+Ayarlar da zenginleşti: abonelik kartı artık rozet + tarih özeti gösterip
+yönetim ekranına götürüyor, "Sesleri dene" düğmesi eklendi (sesler hiçbir
+hoparlörde duyulmadı; kararı ayarlar ekranında verebilmek için) ve bir
+"Hakkında" kartı geldi — sürüm numarası, gizlilik politikası ve Impressum.
+
+Bu arada eski bir tutarsızlık kapandı: `ParentalGateReason.ExternalLink`
+bugüne kadar **hiç çağrılmıyordu**, çünkü uygulamadan dışarı çıkan bağlantı
+yoktu. Artık üç tane var (politika, Impressum, mağaza abonelik merkezi) ve
+üçü de kilidin arkasında. README'nin "dışarı çıkan her bağlantı kilidin
+arkasında" cümlesi ilk kez gerçekten doğru. Adresler tek yerde:
+`Services/PloofyLinks.cs`.
+
+### Harf Yazma (İ1)
+
+Kütüphanenin on birinci oyunu ve dördüncü öğreticisi: ekranda bir harf ya da
+rakamın boş şeridi duruyor, çocuk darbelerini **öğretilen sırayla** parmakla
+çiziyor, harf gözünün önünde doluyor. Yolu Bul yazı öncesi beceriyi
+(çizgi takip etmek) çalıştırıyordu; bu bir adım sonrası — belirli bir biçimi,
+belirli bir sırayla.
+
+**Önce ortak parça ayıklandı.** Yolu Bul'un takip mekaniği
+`Engine/Games/Tracing/TracePath.cs`'e taşındı: tolerans, geri gitmeyen
+ilerleme, parmak kalkınca korunan konum, çıkış başına bir hata. Yolu Bul artık
+buna devrediyor. Ayıklamanın güvenli olmasının tek sebebi o oyunun 22 testi;
+ikisi de aynı davranışı gösteriyor, hiçbiri değişmedi.
+
+**Harf verisi elle yazıldı** (`GlyphShapes.cs`): 26 büyük harf, 10 rakam,
+artı aksanlılar. Yapı taşları üç tane — düz çizgi dizisi, elips yayı ve
+noktalarının **üstünden** geçen Catmull-Rom eğrisi; böylece S ya da 6 gibi bir
+biçimi ayarlamak noktayı gözle doğru yere koymaktan ibaret. Her darbe boy
+boyunca eşit aralıklı 40 noktaya indirgeniyor: ilerleme nokta indisinden
+sayıldığı için sık örneklenen bir bölge yolun gereğinden büyük bir parçası
+sayılıyor ve L'nin dikeyini bitiren çocuk harfi yarılanmış görüyor.
+
+Üç karar açıklama istiyor:
+
+- **Aksanlar çizilmiyor, çiziliyor.** Ç'nin kuyruğu, İ'nin noktası ve Ö'nün
+  iki noktası baştan dolu duruyor. Bir noktanın yönü yok, dolayısıyla takip
+  edilecek bir şeyi de yok. Gövde taban harften **paylaşılıyor**: C
+  düzeltilince Ç de düzeliyor.
+- **Almanca ß yok.** Sözcük başında hiç bulunmuyor, bu yaşta öğretilmiyor ve
+  tek darbeyle anlatılabilecek bir biçimi yok. Kasıtlı olduğunu söyleyen bir
+  test var.
+- **Sekiz iki halka.** Tek darbede yazılan sekiz kendini kesiyor ve kesişme
+  noktasında parmağın hangi kolda olduğu belirsizleşiyor.
+
+**Bantlar.** En küçük bant Fidan — 2-4 yaş harf yazmıyor, o yaşın karşılığı
+Yolu Bul. Fidan yalnızca kolay işaretleri görüyor (düz çizgiden oluşanlar ve
+tek halkalılar: A E H I L O T U V X Y, 1 4 7 0); Meşe alfabenin tamamını,
+aksanlılar dahil. Tolerans Yolu Bul'unkinden biraz geniş (0,09 / 0,065),
+çünkü harf darbeleri kısa ve köşeli — aynı toleransta zorluk beceriden değil
+biçimden geliyor.
+
+**Doğrulama sayıyla.** Harf şekilleri ekrana bakılarak doğrulanamıyor, ekran
+yok. Onun yerine biçim bozulunca kırılacak özellikler sınandı: kutunun dışına
+taşma, kopuk ya da çok kısa darbe, seyrek örneklenmiş bölge, üç alfabenin
+eksik harfi, kapalı halkanın başına dönmemesi, E'nin darbelerinin öğretim
+sırası. 28 yeni test, toplam **264**.
+
+### Örüntü (İ2)
+
+Kütüphanenin on ikinci oyunu ve beşinci öğreticisi: ekranda tekrar eden bir
+dizi duruyor, bir parçası eksik, çocuk alttaki seçeneklerden doğru olanı
+seçiyor. Okul öncesi matematiğin belkemiği — örüntü görmek, saymadan önce
+gelen ve toplamaya zemin hazırlayan beceri, ve on bir oyunun hiçbirinde yoktu.
+
+Birimler harf dizisi olarak yazılıyor (AB, AAB, ABB, ABC, AABB); harfler
+soyut, her turda başka parçalara karşılık geliyor. Dizi birimin döngüsel
+tekrarı; sonu yarım kalması kusur değil, örüntü zaten sonsuz ve ekran onun
+bir penceresi.
+
+Bantlar:
+
+- **Filiz** yalnızca AB görüyor ve parçalar **yalnızca renkçe** değişiyor —
+  iki boyutta birden değişen bir dizi, örüntüyü henüz kavramamış bir çocuk
+  için iki ayrı bilmece. Yanlış seçim hata sayılmıyor.
+- **Fidan** AAB ve ABB'yi de görüyor, şekil de değişiyor.
+- **Meşe** ABC ve AABB dahil hepsini görüyor, boşluk dizinin **ortasında**
+  olabiliyor ve hedef süre var. Ortadaki boşluk belirgin biçimde zor: sondaki
+  "sırada ne var" sorusu, ortadaki "burada ne eksik" — ikincisi sağdaki
+  parçaları da hesaba katmayı gerektiriyor.
+
+İki karar açıklama istiyor:
+
+- **Boşluktan önce her zaman en az bir tam birim duruyor.** Aksi hâlde örüntü
+  diziden okunamıyor ve soru bilmeceye değil kura çekmeye dönüyor. Bir test
+  bunu bütün tohumlar için doğruluyor.
+- **Çeldiriciler dizinin kendi parçaları.** Örüntüyü çözemeyen çocuğun eli
+  oraya gidiyor, yani yanlış seçim "rastgele bir şeye bastım" değil "örüntüyü
+  yanlış okudum" oluyor. Yetmezse aynı şeklin başka rengi üretiliyor —
+  ekrandaki hiçbir şeye benzemeyen bir parçadan çok daha öğretici.
+
+Yanlış seçimde dizi değişmiyor; çocuk yeniden bakıp deneyebiliyor. Say ve
+Eşleştir ile Harf Avı'ndaki karar burada da geçerli.
+
+Bu arada katalogdaki bir kural keskinleşti. "Öğretici oyunlar Fidan'dan
+başlar" diyen test aslında **harfe ve sayıya** bakıyordu ("harf ve sayıların
+anlam kazandığı bant"); Örüntü'de ikisi de yok ve Filiz'den başlıyor. Kural
+metniyle uyumlu hâle getirildi, istisna da ayrı bir testle yazıldı.
+
+Arayüz tarafında `ShapeTileView` eklendi (`Ploofy.Ui/Controls`): tek bir şekli
+çizen küçük kare, hem dizide hem seçeneklerde kullanılıyor. Boşluk hayalet
+olarak çiziliyor ve nabız gibi atıyor — dokuz kutucuk arasında hangisinin
+eksik olduğunu hareketsiz bir kesik çizgi yeterince söylemiyor.
+
+**25 yeni test, toplam 290.**
+
+### Ebeveyn raporu (İ3)
+
+Ebeveynin ücretli aboneliğin karşılığını gördüğü ekran: çocuk ne oynadı, ne
+kadar oynadı, ne kazandı. Ayarlardan açılıyor, yani ebeveyn kilidinin
+arkasında.
+
+**Yeni tablo: `round_history`.** Bugüne kadar yalnızca "en iyisi ne"
+tutuluyordu (`game_progress`) ve en iyiyi tutan bir satırdan geçmiş
+çıkarılamıyor. Artık biten her tur ayrı bir satır: oyun, bant, yıldız, puan,
+hata, süre ve **yerel** saatle zaman damgası. Yerel olması bilinçli — rapor
+"hangi gün" diye gruplayacak ve gece 22:00'de oynanan bir tur ebeveyn için
+bugün, UTC'de yarın. Satırlar hiç güncellenmiyor, yalnızca ekleniyor; profil
+silinince hepsi gidiyor.
+
+**Hesap motorda: `PlayReport`.** Grafiğin çubuğu doğru yükseklikte mi, ekrana
+bakarak anlaşılmıyor — o yüzden gün kovaları, toplamlar ve oyun listesi
+veritabanı olmadan sınanabilen bir sınıfta. İki savunma var:
+
+- **Tur süresi 15 dakikada kırpılıyor.** Süre, tur başlarken çalışan bir
+  kronometreden geliyor ve uygulama arka plana atıldığında kronometre
+  durmuyor. Cihazı bırakıp akşam dönen çocuk, kırpma olmadan "bugün 6 saat
+  oynadı" satırı üretiyor ve o tek satır bütün raporu yalancı yapıyor. Kırpma
+  raporda, kayıtta değil: ham veri dürüst kalıyor.
+- **Oynanmayan gün listede, sıfır değerle.** Boş günün yerini boş bırakmak,
+  hafta sonu oynanmadığını gösteren tek şey; atlanan gün çubukları yan yana
+  getirip eğilimi olduğundan düzgün gösteriyor.
+
+**Grafik.** Günlük dakika, sütun grafiği. Çizgi değil: günler ayrık ve aradaki
+iki günü birleştiren bir çizgi olmayan bir sürekliliği anlatıyor. Ölçek her
+zaman sıfırdan başlıyor. Tek ölçü olduğu için gösterge kutusu yok — kartın
+başlığı zaten neyin çizildiğini söylüyor. Renk Ocean'ın koyu ucu (`#0F6FC4`);
+beyaz kart üstünde kontrast ölçüldü, geçiyor.
+
+**Çizim ekrana bakılarak doğrulandı.** `TrendPainter` MAUI'den bağımsız, saf
+SkiaSharp; küçük bir konsol programından çağrılıp PNG üretiliyor — kopya değil,
+uygulamanın çizdiği dosyanın kendisi. Beş senaryo (14 gün tipik, tek yüksek
+gün + bir dakikalık günler, tamamen boş, 30 gün, 7 gün) bakılarak üç kusur
+bulundu ve düzeltildi:
+
+1. Sütunlar yuvayı doldurup duvara dönüşüyordu — kalınlık artık yuvanın en
+   fazla %55'i.
+2. Gün adları tek harfti ve Türkçe'de ayırt etmiyordu: Pazar, Pazartesi ve
+   Perşembe'nin üçü de "P". Kültürün `ShortestDayNames`'i tam olarak bunu
+   veriyor; `AbbreviatedDayNames`'e geçildi (Paz/Pzt/Sal/Çar/Per/Cum/Cmt).
+3. 30 günlük dönemde gün adları üst üste biniyor ve kenardakiler taşıyordu.
+   Etiketler artık yazının gerçek genişliğine göre seyreltiliyor (bugün her
+   zaman etiketli) ve kenarda içeri kelepçeleniyor.
+
+Bir dakika oynanan gün, hiç oynanmayan günle aynı görünmüyor: en az 3 piksel
+yüksekliğinde bir sütun çiziliyor. Sıfır yükseklikli bir sütun "hiç oynamadı"
+der ve bu yanlış.
+
+Ekranda ayrıca dönem seçici (7 / 14 / 30 gün), dört sayılık özet (süre, tur,
+oynanan gün, yıldız), çok oynanandan aza oyun listesi ve birden çok çocuk
+varsa profil şeridi var. En altta raporun cihazdan çıkmadığını söyleyen bir
+satır duruyor.
+
+**13 yeni test, toplam 303.**
+
 ### Gizlilik politikası
 
 Üç dil tek bir sayfada toplandı ve **ayrı bir depoya** kondu — diğer
@@ -171,7 +377,7 @@ bölüm.
 Eski `../ploofy-privacy` yerel deposu artık gereksiz — içeriği `docs/store/`
 ile `ploofy-web`'e taşındı.
 
-**Sayılar:** 229 test geçiyor · 10 oyun tanımlı, 10'u oynanabilir ·
+**Sayılar:** 303 test geçiyor · 12 oyun tanımlı, 12'si oynanabilir ·
 13 ses dosyası · AAB 40 MB · targetSdk 36 · sürüm 1.0.
 
 **Buradan başla: gerçek tablet.** Emülatör her şeyi gösterdi ama iki şeyi
@@ -191,13 +397,15 @@ Bakılacaklar:
 - Yapboz'da Meşe'nin on altı parçası bir turu fazla uzatıyor mu
 - İkon başlatıcıda nasıl duruyor (uyarlanabilir maske yüzü kırpıyor mu)
 
-Sonrası 4. bölümdeki öncelik sırası.
+Sonrası 4. bölümdeki öncelik sırası; içerik yol haritası 5. bölümde.
 
 ## 2. Depo düzeni
 
 - **src/Ploofy.Engine** — oyun mantığı, UI'ya sıfır bağımlılık (net10.0)
 - **src/Ploofy.Data** — SQLite ilerleme deposu (net10.0)
 - **src/Ploofy.Ui** — ortak MAUI arayüz katmanı: tema, çizim, ses/haptik, ebeveyn kilidi
+- **src/Ploofy.Ui/Painting/TrendPainter.cs** — rapordaki grafiğin çizimi; MAUI'den
+  bağımsız, bu yüzden konsoldan PNG'ye alınıp gözle bakılabiliyor
 - **src/Ploofy.App** — MAUI uygulaması (Android + iOS; Windows sadece geliştirme için)
 - **tests/Ploofy.Engine.Tests** — xUnit, motor + depo
 - **content/strings.tsv** — üç dilin metinleri, tek kaynak
@@ -228,6 +436,12 @@ Sonrası 4. bölümdeki öncelik sırası.
   sayısı banda göre değişiyor
 - Yapboz: tohumdan üretilen resim, geçmeli tırnaklı kesim; hayalet ve parça
   sırası banda göre değişiyor
+- Harf Yazma: harfin darbeleri öğretilen sırayla parmakla çiziliyor; Fidan
+  kolay işaretleri, Meşe alfabenin tamamını görüyor
+- Örüntü: tekrar eden dizide eksik parçayı bulma; birim, boşluğun yeri ve
+  seçenek sayısı banda göre değişiyor
+- Ebeveyn raporu: dönem seçici, günlük süre grafiği, özet sayılar ve oyun
+  listesi; kaynağı her turun kaydedildiği `round_history` tablosu
 - Avatarlar: 32 emoji, üç tematik grup, her yerde renkli rozet olarak
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
@@ -236,11 +450,18 @@ Sonrası 4. bölümdeki öncelik sırası.
   ikisi de kapatılabiliyor
 - Uygulama ikonu ve açılış ekranı: gülen mavi kabarcık, sarı zemin
 - Abonelik akışı: paywall → ebeveyn kilidi → kilitlerin açılması (mağaza bağlantısı hariç)
+- Abonelik yönetimi (ayrı ekran): durum rozeti, ödenmiş dönemin sonu ve kaç
+  gün kaldığı, "neler dahil", mağazanın abonelik merkezine çıkış ve
+  **aboneliği bitirme**. Bitirme yalnızca yenilemeyi kapatıyor; oyunlar dönem
+  sonuna kadar açık kalıyor, yıldız ve profiller hiç silinmiyor
+- Ayarlar: abonelik özeti (rozet + tarih), sesleri deneme düğmesi, sürüm
+  numarası ve gizlilik politikası / Impressum bağlantıları — ikisi de ebeveyn
+  kilidinin arkasından tarayıcıda açılıyor
 
-## 4. Sıradaki işler
+## 4. Sıradaki işler — sürüme kadar
 
-Oyun kütüphanesi ve varlıklar bitti; kalan her iş bu bilgisayarın dışında
-bir şey istiyor.
+Bu dört madde 1.0'ı bloke ediyor ve hepsi bu bilgisayarın dışında bir şey
+istiyor. İçerik yol haritası ayrı: 5. bölüm.
 
 **Öncelik 1 — Fiziksel cihaz testi.** Artık en acil olan bu ve iki başlığı
 var: parmak (isabet, gerçek kare hızı) ve hoparlör (seslerin dengesi).
@@ -267,9 +488,56 @@ anlatıyor — Öncelik 2 ile birlikte gözden geçirilmeli. Ve metnin bir
 hukukçuya okutulması yerinde olur; iddialar koda dayanıyor ama yasal biçim
 ayrı bir iş.
 
-## 5. Bilinen eksikler
+## 5. İçerik yol haritası — sürümden sonra
 
-- Gerçek satın alma yok; abonelik cihazda sahte olarak açılıyor
+Oyun kütüphanesi 1.0 için yeterliydi (10 oyun, beş etkileşim türü) ve şu an
+12'de. Buradakiler kütüphaneyi derinleştiriyor, sürümü bloke etmiyor. Sıra
+kasıtlı: önce boşluğu büyük olup teknik olarak ucuz olanlar.
+
+**İ1 — Harf ve rakam yazma. ✅ Bitti (02.09.2026).** Ayrıntı 1. bölümde,
+"Harf Yazma" başlığı.
+
+**İ2 — Örüntü tamamlama. ✅ Bitti (02.09.2026).** Ayrıntı 1. bölümde,
+"Örüntü" başlığı.
+
+**İ3 — Ebeveyn raporu. ✅ Bitti (02.09.2026).** Ayrıntı 1. bölümde,
+"Ebeveyn raporu" başlığı.
+
+**İ4 — Sıralama ve karşılaştırma.** Büyükten küçüğe dizme, "hangisi daha çok".
+Say ve Eşleştir sayıyor ama karşılaştırmıyor. Şekil Ayırma'nın sürükleme
+altyapısı doğrudan kullanılabilir.
+
+**İ5 — Yıldızların bir karşılığı.** Şu an yıldız birikiyor ve hiçbir şey
+açmıyor. 32 emoji avatar zaten var; yıldızla açılan avatarlar/çıkartmalar
+küçük bir iş, motivasyon döngüsünü kapatıyor.
+
+**İ6 — Ekran süresi sınırı.** "15 dakika sonra nazikçe bitir." Ebeveyn
+ekranına yakışıyor ve abonelik tarafında somut bir değer.
+
+**İ7 — Kategori ayırma, basit toplama, boyama.** Sırasıyla: hayvan/araç
+ayırma (Şekil Ayırma'nın motoru genelleşir), Meşe bandı için toplama (Say ve
+Eşleştir'in devamı), ve Filiz için boyama — kaybetmenin olmadığı serbest oyun,
+bu yaşta Sago Mini'nin bütün işi o.
+
+**İ8 — Bant içi uyarlama.** Üç bant kaba; çocuk üst üste başarıyorsa zorluğu
+bir kademe artırmak. `BandValue<T>` mimarisi buna hazır. Riski var: gizli
+zorluk değişimi ebeveyni şaşırtır, o yüzden görünür olmalı.
+
+**Asıl darboğaz — sesli yönerge.** Öğretici üç oyunda yönerge tamamen görsel.
+Filiz bandı (2-4 yaş) henüz okumuyor, yani öğrenme oyunlarının o banda
+gerçekten ulaşması bundan geçiyor. Sentez yetmiyor, üç dilde insan kaydı
+gerekiyor. Yeni oyun eklemekten önce bu gelirse mevcut üç oyun bir anda iki
+kat işe yarar hâle gelir.
+
+**Bilerek yapılmayacaklar.** Günlük seri/streak: bu yaş grubunda suçluluk
+mekaniği, Sago Mini ve Toca Boca bilerek kaçınıyor. Yerel ağ eşleşmesi:
+arayüzde "yakında" duruyor ama pass-and-play ihtiyacı karşılıyor,
+karmaşıklığı değmiyor.
+
+## 6. Bilinen eksikler
+
+- Gerçek satın alma yok; abonelik cihazda sahte olarak açılıyor ve iptal de
+  yerel — ekranlar hazır, arkasına Plugin.InAppBilling takılacak
 - Yayın anahtarının makine dışında yedeği yok; `ploofy-release.keystore`
   ve `Ploofy.local.props` yalnızca bu bilgisayarda duruyor
 - Mağaza vitrini (görseller, tanıtım metinleri, formlar) hiç başlamadı
@@ -294,7 +562,7 @@ ayrı bir iş.
   emülatörde çalındıkları günlükten görüldü, ama seviyelerinin birbirine
   göre dengesi ancak kulakla anlaşılır
 
-## 6. Yeni makinede kurulum
+## 7. Yeni makinede kurulum
 
 1. **.NET 10 SDK** (10.0.400 ile kuruldu) — API 36 hedefi .NET 9'da yok
 2. `dotnet workload install maui` — **yönetici** terminal gerektiriyor
@@ -305,7 +573,7 @@ ayrı bir iş.
 
 Hızlı deneme (Windows): `dotnet build src/Ploofy.App/Ploofy.App.csproj -f net10.0-windows10.0.19041.0`
 
-## 7. Tekrar tuzağa düşmemek için
+## 8. Tekrar tuzağa düşmemek için
 
 Bunların hepsi bir kez derlemeyi ya da uygulamayı kırdı; çözümleri koddan
 okunmuyor:
@@ -381,7 +649,7 @@ okunmuyor:
   Responding: com.android.systemui" görünüyorsa sorun bizde değil, emülatörü
   yeniden başlat. Bir kez var olmayan bir kilitlenmeyi kovalamaya yol açtı.
 
-## 8. Yeni mini oyun ekleme
+## 9. Yeni mini oyun ekleme
 
 1. `Engine/Catalog/GameCatalog.cs` içine bir satır: id, etkileşim türü,
    katman, en küçük bant, çizim tekniği
@@ -393,7 +661,9 @@ okunmuyor:
    görünüm modelini DI'ya ekle
 6. Sürekli hareketli ya da sürüklemeli bir oyunsa çizimi `Ploofy.Ui/Controls`
    altında SKCanvasView olarak yaz; `BubblePainter`, `ShapePainter`,
-   `ParticleField`, `PloofyPalette` hazır. Sürükleme için MAUI'nin
+   `ParticleField`, `PloofyPalette` hazır. Parmakla çizgi takibi gerekiyorsa
+   `TracePath` var — tolerans, geri gitmeyen ilerleme ve çıkış sayımı orada,
+   yeniden yazma. Sürükleme için MAUI'nin
    sürükle-bırak tanıyıcıları değil doğrudan dokunma olayları kullanılıyor:
    platformun sürükleme eşiği küçük çocuğun yavaş hareketinde aşılmıyor ve
    parça hiç kıpırdamıyor

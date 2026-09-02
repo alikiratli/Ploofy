@@ -110,6 +110,79 @@ public sealed class BadgeUnlockRow
 }
 
 /// <summary>
+/// Oynanmış tek bir tur.
+/// </summary>
+/// <remarks>
+/// <para>
+/// <see cref="GameProgressRow"/> "en iyisi ne" sorusunu tutuyor; burası "ne
+/// zaman ne oldu" sorusunu. İkisi ayrı çünkü biri oyun kartındaki yıldızı
+/// besliyor, diğeri ebeveyn raporundaki eğilimi — ve en iyiyi tutan bir
+/// satırdan geçmiş çıkarılamıyor.
+/// </para>
+/// <para>
+/// Satır <b>hiç güncellenmiyor</b>, yalnızca ekleniyor: geçmiş değişmez.
+/// Profil silinince o profilin bütün satırları da gidiyor
+/// (<c>DeleteProfileAsync</c>) — rapor da dahil hiçbir şey geride kalmıyor.
+/// </para>
+/// <para>
+/// Bu tablo cihazdan çıkmıyor. Rapor ebeveyn kilidinin arkasında ve yalnızca
+/// bu cihazda okunuyor; gizlilik politikasındaki "hiçbir veri gönderilmez"
+/// cümlesi bu satırlar için de geçerli.
+/// </para>
+/// </remarks>
+[Table("round_history")]
+public sealed class RoundHistoryRow
+{
+    [PrimaryKey, AutoIncrement]
+    [Column("id")]
+    public int Id { get; set; }
+
+    [Indexed(Name = "ix_history_profile", Order = 1)]
+    [Column("profile_id")]
+    public int ProfileId { get; set; }
+
+    [Column("game_id"), MaxLength(40), NotNull]
+    public string GameId { get; set; } = string.Empty;
+
+    [Column("age_band_id"), MaxLength(12), NotNull]
+    public string AgeBandId { get; set; } = string.Empty;
+
+    /// <summary>Bu turda kazanılan yıldız (0-3).</summary>
+    [Column("stars")]
+    public int Stars { get; set; }
+
+    [Column("score")]
+    public int Score { get; set; }
+
+    [Column("mistakes")]
+    public int Mistakes { get; set; }
+
+    /// <summary>
+    /// Turun süresi, saniye.
+    /// </summary>
+    /// <remarks>
+    /// Ham hâliyle yazılıyor. Uygulama arka plana atılıp saatler sonra
+    /// dönüldüğünde bu sayı şişebiliyor; kırpma raporun kendisinde yapılıyor
+    /// (<c>PlayReport</c>), böylece kayıt dürüst kalıyor.
+    /// </remarks>
+    [Column("duration_seconds")]
+    public double DurationSeconds { get; set; }
+
+    /// <summary>
+    /// Turun bittiği an, <b>yerel</b> saatle.
+    /// </summary>
+    /// <remarks>
+    /// Diğer sütunlar UTC ama bu değil: rapor "hangi gün" diye gruplayacak ve
+    /// gece 22:00'de oynanan bir tur ebeveyn için bugün, UTC'de yarın olabilir.
+    /// Cihaz saat dilimi değiştirse bile geçmiş günler oynandıkları güne
+    /// yazılı kalıyor.
+    /// </remarks>
+    [Indexed(Name = "ix_history_played", Order = 1)]
+    [Column("played_at_local")]
+    public DateTime PlayedAtLocal { get; set; } = DateTime.Now;
+}
+
+/// <summary>
 /// Uygulama geneli ayar (seçili profil, dil, ses, abonelik önbelleği).
 /// </summary>
 /// <remarks>

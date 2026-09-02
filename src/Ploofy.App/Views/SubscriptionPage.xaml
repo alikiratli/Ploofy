@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.SubscriptionPage"
+             x:DataType="vm:SubscriptionViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="22">
+
+            <Label Text="{loc:Translate SubscriptionManageTitle}" Style="{StaticResource TitleLabel}" />
+
+            <!-- Durum: rozet + tek cümle + dönem. Ebeveynin bu ekranda aradığı
+                 ilk şey "ne zamana kadar açık", o yüzden en üstte. -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="10">
+
+                    <HorizontalStackLayout Spacing="10">
+                        <Border BackgroundColor="{Binding BadgeColor}"
+                                StrokeThickness="0"
+                                Padding="12,4"
+                                VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="999" />
+                            </Border.StrokeShape>
+                            <Label Text="{Binding BadgeText}"
+                                   TextColor="{StaticResource OnAccent}"
+                                   FontSize="13"
+                                   FontAttributes="Bold" />
+                        </Border>
+
+                        <Label Text="{Binding PlanText}"
+                               Style="{StaticResource HintLabel}"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding HasSubscription}" />
+                    </HorizontalStackLayout>
+
+                    <Label Text="{Binding StatusText}" FontSize="18" />
+
+                    <Label Text="{Binding PeriodText}"
+                           Style="{StaticResource HintLabel}"
+                           IsVisible="{Binding HasSubscription}" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Abone: neler açık. -->
+            <Border Style="{StaticResource CardBorder}" IsVisible="{Binding HasSubscription}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Translate SubscriptionIncluded}" Style="{StaticResource SectionLabel}" />
+                    <CollectionView ItemsSource="{Binding Benefits}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Padding="0,6">
+                                    <Label Grid.Column="0"
+                                           Text="✓"
+                                           FontSize="20"
+                                           TextColor="{StaticResource Leaf}"
+                                           VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding .}" VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Aboneliksiz: ne kalıyor + satın alma. -->
+            <Border Style="{StaticResource CardBorder}" IsVisible="{Binding CanSubscribe}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{loc:Translate SubscriptionFreeTierTitle}" Style="{StaticResource SectionLabel}" />
+                    <Label Text="{loc:Translate SubscriptionFreeTierBody}" Style="{StaticResource HintLabel}" />
+                    <Button Text="{loc:Translate SubscriptionCta}"
+                            Style="{StaticResource AccentButton}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource Not}}"
+                            Command="{Binding SubscribeCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Mağaza. Fiyat ve tahsilat orada; burada gösterilebilecek bir
+                 şey yok çünkü uygulamanın kendi hesabı yok. -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{loc:Translate SubscriptionManageInStore}" Style="{StaticResource SectionLabel}" />
+                    <Label Text="{loc:Translate SubscriptionManageInStoreHint}" Style="{StaticResource HintLabel}" />
+
+                    <Button Text="{loc:Translate SubscriptionManageInStore}"
+                            Style="{StaticResource QuietButton}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource Not}}"
+                            Command="{Binding ManageInStoreCommand}" />
+
+                    <Button Text="{loc:Translate SubscriptionRestore}"
+                            Style="{StaticResource QuietButton}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource Not}}"
+                            Command="{Binding RestoreCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Aboneliği bitir. Ayrı bir kartta ve en altta: yanlışlıkla
+                 basılacak bir yerde durmamalı, ama aranmak zorunda da
+                 kalınmamalı — mağazalar bitirme yolunun görünür olmasını
+                 istiyor. -->
+            <Border Style="{StaticResource CardBorder}" IsVisible="{Binding CanCancel}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{loc:Translate SubscriptionEndTitle}" Style="{StaticResource SectionLabel}" />
+                    <Label Text="{loc:Translate SubscriptionEndBody}" Style="{StaticResource HintLabel}" />
+                    <Label Text="{loc:Translate SubscriptionEndKeeps}" Style="{StaticResource HintLabel}" />
+
+                    <Button Text="{loc:Translate SubscriptionEndTitle}"
+                            Style="{StaticResource QuietButton}"
+                            TextColor="{StaticResource Coral}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource Not}}"
+                            Command="{Binding CancelCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Bitirilmiş ama dönem sürüyor: geri dönüş yolu açık dursun. -->
+            <Border Style="{StaticResource CardBorder}" IsVisible="{Binding IsEnding}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{loc:Translate SubscriptionEndedTitle}" Style="{StaticResource SectionLabel}" />
+                    <Label Text="{loc:Translate SubscriptionEndKeeps}" Style="{StaticResource HintLabel}" />
+                    <Button Text="{loc:Translate SubscriptionResume}"
+                            Style="{StaticResource AccentButton}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource Not}}"
+                            Command="{Binding SubscribeCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="{loc:Translate CommonClose}"
+                    Style="{StaticResource BigButton}"
+                    Command="{Binding CloseCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

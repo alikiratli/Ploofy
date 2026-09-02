@@ -29,6 +29,13 @@ public static class SettingKeys
     /// kullanılır.
     /// </summary>
     public const string CachedSubscription = "cached_subscription_status";
+
+    /// <summary>
+    /// Ödenmiş dönemin son günü (yyyy-MM-dd). Bu da yalnızca önbellek:
+    /// ekranın "şu tarihte yenilenir / şu tarihte kapanır" diyebilmesi için
+    /// var, erişim kararına girmiyor.
+    /// </summary>
+    public const string SubscriptionPeriodEnd = "subscription_period_end";
 }
 
 /// <summary>
@@ -99,6 +106,8 @@ public sealed class ProgressRepository(ProgressDatabase database)
             .DeleteAsync(r => r.ProfileId == id);
         await _database.Connection.Table<BadgeUnlockRow>()
             .DeleteAsync(r => r.ProfileId == id);
+        await _database.Connection.Table<RoundHistoryRow>()
+            .DeleteAsync(r => r.ProfileId == id);
         await _database.Connection.Table<ChildProfileRow>()
             .DeleteAsync(r => r.Id == id);
     }
@@ -155,7 +164,42 @@ public sealed class ProgressRepository(ProgressDatabase database)
             await _database.Connection.UpdateAsync(existing);
         }
 
+        // Geçmiş ayrı bir satır: yukarıdaki tablo "en iyisi ne" diyor, bu
+        // "ne zaman ne oldu". Ebeveyn raporundaki eğilim yalnızca buradan
+        // çıkabiliyor.
+        await _database.Connection.InsertAsync(new RoundHistoryRow
+        {
+            ProfileId = outcome.ProfileId,
+            GameId = outcome.GameId,
+            AgeBandId = bandId,
+            Stars = stars,
+            Score = score,
+            Mistakes = outcome.Mistakes,
+            DurationSeconds = outcome.Elapsed.TotalSeconds,
+            PlayedAtLocal = DateTime.Now,
+        });
+
         return stars;
+    }
+
+    /// <summary>
+    /// Bir profilin oynanmış turları, yeniden eskiye.
+    /// </summary>
+    /// <param name="since">
+    /// Bu <b>yerel</b> günden itibaren. Rapor kaç günü kapsıyorsa o kadarı
+    /// okunuyor; bütün geçmişi belleğe almanın bir sebebi yok.
+    /// </param>
+    public async Task<IReadOnlyList<RoundHistoryRow>> HistorySinceAsync(
+        int profileId, DateOnly since)
+    {
+        await _database.InitializeAsync();
+
+        var from = since.ToDateTime(TimeOnly.MinValue);
+
+        return await _database.Connection.Table<RoundHistoryRow>()
+            .Where(r => r.ProfileId == profileId && r.PlayedAtLocal >= from)
+            .OrderByDescending(r => r.PlayedAtLocal)
+            .ToListAsync();
     }
 
     public async Task<IReadOnlyList<GameProgressRow>> ProgressForAsync(int profileId)

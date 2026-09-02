@@ -121,30 +121,12 @@ public sealed class MazeTraceRound
     /// <summary>Yol kaç noktayla örnekleniyor.</summary>
     private const int Samples = 120;
 
-    /// <summary>
-    /// İlerlemenin bir hamlede atlayabileceği en fazla parça sayısı.
-    /// </summary>
-    /// <remarks>
-    /// Parmağın yola en yakın noktası yalnızca bu pencere içinde aranıyor.
-    /// Penceresiz arama, yola yakın geçen ileri bir bölüme atlamayı mümkün
-    /// kılıyor: çocuk parmağını kaldırıp yolun ortasına koyarak yarısını
-    /// atlayabiliyordu.
-    /// </remarks>
-    private const int Lookahead = 10;
-
-    /// <summary>Yolun sonu sayılan ilerleme oranı.</summary>
-    /// <remarks>
-    /// Son noktaya birebir değmesini beklemiyoruz: yolun sonuna gelmiş bir
-    /// çocuğun son birkaç pikseli de kovalaması, bitirmeyi bir beceriden
-    /// inada çeviriyor.
-    /// </remarks>
-    private const float FinishAt = 0.96f;
-
     private readonly Random _rng;
-    private readonly List<PathPoint> _points = new(Samples);
 
-    private float _progressIndex;
-    private bool _isOffPath;
+    /// <summary>Bitirilmiş yollarda yapılan çıkışlar; içinde bulunulanınki ayrı.</summary>
+    private int _slipsCarried;
+
+    private TracePath _path = null!;
 
     private MazeTraceRound(AgeBand band, Random rng)
     {
@@ -170,7 +152,7 @@ public sealed class MazeTraceRound
     public int Completed { get; private set; }
 
     /// <summary>Yoldan çıkma sayısı — hata sayılıp sayılmadığından bağımsız.</summary>
-    public int Slips { get; private set; }
+    public int Slips => _slipsCarried + _path.Slips;
 
     /// <summary>Yıldız hesabına giden hata sayısı.</summary>
     public int Mistakes => CountsSlips ? Slips : 0;
@@ -187,29 +169,29 @@ public sealed class MazeTraceRound
     /// Parmağı ince bir çizginin tam üstüne indirmek, onu takip etmekten
     /// daha zor: dokunmadan önce parmağın altını göremiyorsun.
     /// </remarks>
-    public float GrabTolerance => Tolerance * 1.7f;
+    public float GrabTolerance => _path.GrabTolerance;
 
     /// <summary>Şu anki yolun biçimi.</summary>
     public PathShape Shape { get; private set; }
 
     /// <summary>Yolun örneklenmiş noktaları, baştan sona.</summary>
-    public IReadOnlyList<PathPoint> Points => _points;
+    public IReadOnlyList<PathPoint> Points => _path.Points;
 
-    public PathPoint Start => _points[0];
+    public PathPoint Start => _path.Start;
 
-    public PathPoint Goal => _points[^1];
+    public PathPoint Goal => _path.Goal;
 
     /// <summary>Parmak yolu tutuyor mu?</summary>
-    public bool IsTracing { get; private set; }
+    public bool IsTracing => _path.IsTracing;
 
     /// <summary>Parmak şu an yolun dışında mı?</summary>
-    public bool IsOffPath => IsTracing && _isOffPath;
+    public bool IsOffPath => _path.IsOffPath;
 
     /// <summary>Yolun ne kadarı geçildi (0-1).</summary>
-    public float Progress => _progressIndex / (_points.Count - 1);
+    public float Progress => _path.Progress;
 
     /// <summary>İlerlemenin ucu — arayüz parmağın nereye konacağını buradan gösteriyor.</summary>
-    public PathPoint Head => PointAt(_progressIndex);
+    public PathPoint Head => _path.Head;
 
     public bool IsComplete => Completed >= Total;
 
@@ -222,63 +204,24 @@ public sealed class MazeTraceRound
     /// olmuyor, çünkü ilerleme geri gitmiyor ve oradan devam etmek yolun
     /// yarısını boşuna çizmek olurdu.
     /// </remarks>
-    public TraceOutcome Begin(float x, float y)
+    public TraceOutcome Begin(float x, float y) =>
+        IsComplete ? TraceOutcome.Ignored : _path.Begin(x, y);
+
+    /// <summary>Parmağı yol boyunca taşır.</summary>
+    public TraceOutcome MoveTo(float x, float y)
     {
         if (IsComplete)
         {
             return TraceOutcome.Ignored;
         }
 
-        var head = Head;
-        if (Distance(x, y, head.X, head.Y) > GrabTolerance)
+        var outcome = _path.MoveTo(x, y);
+        if (outcome != TraceOutcome.LevelComplete)
         {
-            return TraceOutcome.Ignored;
+            return outcome;
         }
 
-        IsTracing = true;
-        _isOffPath = false;
-        return TraceOutcome.Started;
-    }
-
-    /// <summary>Parmağı yol boyunca taşır.</summary>
-    public TraceOutcome MoveTo(float x, float y)
-    {
-        if (!IsTracing || IsComplete)
-        {
-            return TraceOutcome.Ignored;
-        }
-
-        var (index, distance) = NearestAhead(x, y);
-
-        if (distance > Tolerance)
-        {
-            // Bir çıkış bir hata. Her karede saymak, yolun dışında duran bir
-            // parmağı saniyede altmış hataya çeviriyordu.
-            if (!_isOffPath)
-            {
-                _isOffPath = true;
-                Slips++;
-            }
-
-            return TraceOutcome.Slipped;
-        }
-
-        _isOffPath = false;
-
-        // İlerleme geri gitmiyor: titreyen parmak kazanılanı geri almıyor.
-        if (index > _progressIndex)
-        {
-            _progressIndex = index;
-        }
-
-        if (Progress < FinishAt)
-        {
-            return TraceOutcome.Advanced;
-        }
-
-        _progressIndex = _points.Count - 1;
         Completed++;
-        IsTracing = false;
 
         if (!IsComplete)
         {
@@ -295,87 +238,7 @@ public sealed class MazeTraceRound
     /// Hata değil ve ilerleme silinmiyor. Küçük çocuk parmağını uzun süre
     /// ekranda tutamıyor; kalkmayı cezalandırmak oyunu bitirilemez yapardı.
     /// </remarks>
-    public void Release()
-    {
-        IsTracing = false;
-        _isOffPath = false;
-    }
-
-    /// <summary>
-    /// Parmağın yola en yakın olduğu yer — ileriye doğru pencere içinde.
-    /// </summary>
-    /// <remarks>
-    /// Pencere yalnızca <b>ileriyi</b> sınırlıyor; geriye doğru yolun tamamı
-    /// açık. Sebebi cihazda görüldü: dar bir geri pay (iki parça, yaklaşık
-    /// yolun %1,7'si) bırakıldığında köşede geriye kayan parmak yoldan
-    /// çıkmış sayılıyordu — Meşe'de bu bir hata puanı, ve o kadar geri
-    /// kayma beş yaşındaki bir çocuğun titremesi kadar bir mesafe.
-    /// Geriye gitmek zaten hiçbir şey kazandırmıyor, çünkü ilerleme geri
-    /// gitmiyor; sınırlanması gereken tek yön ileri.
-    /// </remarks>
-    /// <returns>Kesirli parça indisi ve o noktaya olan uzaklık.</returns>
-    private (float Index, float Distance) NearestAhead(float x, float y)
-    {
-        var current = (int)_progressIndex;
-
-        var first = 0;
-        var last = Math.Min(_points.Count - 2, current + Lookahead);
-
-        var bestIndex = _progressIndex;
-        var bestDistance = float.MaxValue;
-
-        for (var i = first; i <= last; i++)
-        {
-            var (t, distance) = ProjectOnSegment(x, y, _points[i], _points[i + 1]);
-            if (distance < bestDistance)
-            {
-                bestDistance = distance;
-                bestIndex = i + t;
-            }
-        }
-
-        return (bestIndex, bestDistance);
-    }
-
-    /// <summary>Noktanın parçaya izdüşümü: parça üstündeki oran ve uzaklık.</summary>
-    private static (float T, float Distance) ProjectOnSegment(
-        float x, float y, PathPoint from, PathPoint to)
-    {
-        var dx = to.X - from.X;
-        var dy = to.Y - from.Y;
-        var lengthSquared = (dx * dx) + (dy * dy);
-
-        if (lengthSquared <= float.Epsilon)
-        {
-            return (0f, Distance(x, y, from.X, from.Y));
-        }
-
-        var t = Math.Clamp((((x - from.X) * dx) + ((y - from.Y) * dy)) / lengthSquared, 0f, 1f);
-        var px = from.X + (t * dx);
-        var py = from.Y + (t * dy);
-
-        return (t, Distance(x, y, px, py));
-    }
-
-    private PathPoint PointAt(float index)
-    {
-        var i = Math.Clamp((int)index, 0, _points.Count - 2);
-        var t = Math.Clamp(index - i, 0f, 1f);
-
-        var from = _points[i];
-        var to = _points[i + 1];
-
-        return new PathPoint(
-            from.X + ((to.X - from.X) * t),
-            from.Y + ((to.Y - from.Y) * t));
-    }
-
-    private static float Distance(float ax, float ay, float bx, float by)
-    {
-        var dx = ax - bx;
-        var dy = ay - by;
-        return MathF.Sqrt((dx * dx) + (dy * dy));
-    }
+    public void Release() => _path.Release();
 
     /// <summary>Yeni bir yol üretir ve ilerlemeyi sıfırlar.</summary>
     private void BuildPath()
@@ -403,20 +266,20 @@ public sealed class MazeTraceRound
         var amplitude = AmplitudeFor(Shape) * span;
         var sign = _rng.Next(2) == 0 ? 1f : -1f;
 
-        _points.Clear();
+        var points = new List<PathPoint>(Samples);
         for (var i = 0; i < Samples; i++)
         {
             var t = i / (float)(Samples - 1);
             var offset = sign * amplitude * Displacement(Shape, t);
 
-            _points.Add(new PathPoint(
+            points.Add(new PathPoint(
                 Math.Clamp(from.X + (axisX * t) + (normalX * offset), 0f, 1f),
                 Math.Clamp(from.Y + (axisY * t) + (normalY * offset), 0f, 1f)));
         }
 
-        _progressIndex = 0f;
-        _isOffPath = false;
-        IsTracing = false;
+        // Biten yolun çıkışları toplamda kalıyor, yenisi sıfırdan başlıyor.
+        _slipsCarried += _path?.Slips ?? 0;
+        _path = new TracePath(points, Tolerance);
     }
 
     /// <summary>Yolun iki ucu. Dört yönden biri seçiliyor.</summary>

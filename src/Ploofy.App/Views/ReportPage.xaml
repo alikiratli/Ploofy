@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:ui="clr-namespace:Ploofy.Ui.Controls;assembly=Ploofy.Ui"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.ReportPage"
+             x:Name="Page"
+             x:DataType="vm:ReportViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="18">
+
+            <Label Text="{loc:Translate ReportTitle}" Style="{StaticResource TitleLabel}" />
+
+            <!-- Çocuk seçimi. Tek profil varsa şerit hiç görünmüyor. -->
+            <FlexLayout BindableLayout.ItemsSource="{Binding Profiles}"
+                        IsVisible="{Binding ShowsProfilePicker}"
+                        Wrap="Wrap"
+                        AlignItems="Center">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ReportProfile">
+                        <Border Margin="0,0,8,8"
+                                Padding="12,6"
+                                StrokeShape="RoundRectangle 999"
+                                Stroke="Transparent">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Sky}" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="False">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource SurfaceMuted}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectProfileCommand, x:DataType=ContentPage}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <HorizontalStackLayout Spacing="8">
+                                <ui:AvatarBadgeView Avatar="{Binding AvatarId}"
+                                                    Size="30"
+                                                    VerticalOptions="Center" />
+                                <Label Text="{Binding DisplayName}"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+
+            <!-- Dönem. Süzgeç grafiğin üstünde, tek sıra. -->
+            <FlexLayout BindableLayout.ItemsSource="{Binding Ranges}" AlignItems="Center">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ReportRange">
+                        <Border Margin="0,0,8,0"
+                                Padding="16,7"
+                                StrokeShape="RoundRectangle 999"
+                                Stroke="Transparent">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Sky}" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="False">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource SurfaceMuted}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectRangeCommand, x:DataType=ContentPage}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Label Text="{Binding Label}" FontAttributes="Bold" />
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+
+            <!-- Özet. Dört sayı, en solda ebeveynin ilk sorduğu: ne kadar. -->
+            <Border Style="{StaticResource CardBorder}">
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="{Binding TimePlayed}" FontSize="26" FontAttributes="Bold" />
+                        <Label Text="{loc:Translate ReportTimePlayed}" Style="{StaticResource HintLabel}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="{Binding Rounds}" FontSize="26" FontAttributes="Bold" />
+                        <Label Text="{loc:Translate ReportRounds}" Style="{StaticResource HintLabel}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="2" Spacing="2">
+                        <Label Text="{Binding ActiveDays}" FontSize="26" FontAttributes="Bold" />
+                        <Label Text="{loc:Translate ReportActiveDays}" Style="{StaticResource HintLabel}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="3" Spacing="2">
+                        <Label Text="{Binding Stars}" FontSize="26" FontAttributes="Bold" />
+                        <Label Text="{loc:Translate ReportStars}" Style="{StaticResource HintLabel}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Eğilim. Tek ölçü, tek renk, gösterge yok: başlık zaten neyin
+                 çizildiğini söylüyor. -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Translate ReportDaily}" Style="{StaticResource SectionLabel}" />
+
+                    <ui:PlayTrendChart Days="{Binding Days}"
+                                       WeekdayInitials="{Binding WeekdayInitials}"
+                                       MinuteSuffix="{Binding MinuteSuffix}"
+                                       HeightRequest="190" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="{loc:Translate ReportEmpty}"
+                   Style="{StaticResource HintLabel}"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="{Binding IsEmpty}" />
+
+            <!-- Oyunlar, çok oynanandan aza. -->
+            <Border Style="{StaticResource CardBorder}"
+                    IsVisible="{Binding IsEmpty, Converter={StaticResource Not}}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Translate ReportGames}" Style="{StaticResource SectionLabel}" />
+
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Games}" Spacing="4">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ReportGameRow">
+                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                      ColumnSpacing="12"
+                                      HeightRequest="{StaticResource TouchTarget}">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Glyph}"
+                                           FontSize="26"
+                                           VerticalOptions="Center" />
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                        <Label Style="{StaticResource HintLabel}">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding Rounds}" />
+                                                    <Span Text=" · " />
+                                                    <Span Text="{Binding Duration}" />
+                                                    <Span Text=" · " />
+                                                    <Span Text="{Binding BestStars}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+
+                                    <Label Grid.Column="2"
+                                           Text="{Binding LastPlayed}"
+                                           Style="{StaticResource HintLabel}"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="{loc:Translate ReportPrivacy}"
+                   Style="{StaticResource HintLabel}"
+                   HorizontalTextAlignment="Center" />
+
+            <Button Text="{loc:Translate CommonClose}"
+                    Style="{StaticResource BigButton}"
+                    Command="{Binding CloseCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

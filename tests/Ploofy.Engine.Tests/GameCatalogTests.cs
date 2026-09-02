@@ -13,10 +13,13 @@ public class GameCatalogTests
     }
 
     [Fact]
-    public void The_first_release_ships_seven_fun_games_and_three_learning_games()
+    public void The_library_is_seven_fun_games_and_five_learning_games()
     {
-        Assert.Equal(10, GameCatalog.Games.Count);
-        Assert.Equal(3, GameCatalog.Educational.Count);
+        // 1.0 yedi + üç ile çıktı; Harf Yazma ve Örüntü sürümden sonra
+        // eklendi ve öğretici tarafı beşe çıkardı. Sayı burada duruyor ki
+        // kütüphaneye bir oyun sessizce girmesin: yeni oyun bilinçli bir karar.
+        Assert.Equal(12, GameCatalog.Games.Count);
+        Assert.Equal(5, GameCatalog.Educational.Count);
         Assert.Equal(7, GameCatalog.Games.Count(g => !g.IsEducational));
     }
 
@@ -39,7 +42,23 @@ public class GameCatalogTests
     [Fact]
     public void Learning_games_start_at_the_band_where_letters_and_numbers_mean_something()
     {
-        Assert.All(GameCatalog.Educational, g => Assert.True(g.MinBand >= AgeBand.Fidan));
+        // Kural harfe ve sayıya bakıyor, "öğretici" etiketine değil: iki
+        // yaşındaki çocuğa A'yı göstermenin karşılığı yok.
+        var withSymbols = GameCatalog.Educational.Where(g => g.Id != GameCatalog.Pattern);
+        Assert.All(withSymbols, g => Assert.True(g.MinBand >= AgeBand.Fidan));
+    }
+
+    [Fact]
+    public void The_one_learning_game_without_letters_or_numbers_starts_earlier()
+    {
+        // Örüntü ne harf ne sayı kullanıyor: Filiz bandında yalnızca AB
+        // dizisi ve renk değişimi var, ki oradaki amaç örüntü kurmak değil
+        // "bir şey tekrar ediyor" fikrini yakalamak. Sayılardan önce gelen
+        // beceri bu.
+        var pattern = GameCatalog.ById(GameCatalog.Pattern);
+
+        Assert.True(pattern.IsEducational);
+        Assert.Equal(AgeBand.Filiz, pattern.MinBand);
     }
 
     [Fact]

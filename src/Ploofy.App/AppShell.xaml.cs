@@ -24,6 +24,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("result", typeof(RoundResultPage));
         Routing.RegisterRoute("settings", typeof(SettingsPage));
         Routing.RegisterRoute("paywall", typeof(PaywallPage));
+        Routing.RegisterRoute("subscription", typeof(SubscriptionPage));
+        Routing.RegisterRoute("report", typeof(ReportPage));
 
         // Mini oyunlar
         Routing.RegisterRoute("memorymatch", typeof(MemoryMatchPage));
@@ -35,6 +37,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("basketcatch", typeof(BasketCatchPage));
         Routing.RegisterRoute("mazetrace", typeof(MazeTracePage));
         Routing.RegisterRoute("jigsaw", typeof(JigsawPage));
+        Routing.RegisterRoute("lettertrace", typeof(LetterTracePage));
+        Routing.RegisterRoute("pattern", typeof(PatternPage));
 
         // Harf Avı ve Sayı Avı aynı mekaniği paylaşıyor; hangisi
         // olduğu oturumdaki oyun kimliğinden çözülüyor.

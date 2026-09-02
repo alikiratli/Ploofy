@@ -24,6 +24,17 @@ public enum SubscriptionStatus
     /// çocuğun oyununu ödeme uyarısıyla kesmek doğru değil.
     /// </summary>
     Grace,
+
+    /// <summary>
+    /// Abonelik bitirildi ama ödenmiş dönem henüz dolmadı.
+    /// </summary>
+    /// <remarks>
+    /// Hem Play hem App Store aynı şekilde davranıyor: iptal, otomatik
+    /// yenilemeyi kapatır; erişim dönem sonuna kadar sürer. Erişimi iptal
+    /// anında kesmek ebeveynin parasını yakmak olurdu ve mağazanın kendi
+    /// davranışıyla da çelişirdi.
+    /// </remarks>
+    Canceled,
 }
 
 /// <summary>
@@ -51,10 +62,24 @@ public sealed record Entitlements(SubscriptionStatus Status)
     public static Entitlements Subscribed { get; } = new(SubscriptionStatus.Active);
 
     public bool HasFullAccess =>
-        Status is SubscriptionStatus.Active or SubscriptionStatus.Grace;
+        Status is SubscriptionStatus.Active or SubscriptionStatus.Grace
+            or SubscriptionStatus.Canceled;
 
     /// <summary>Ödeme sorunu var mı? Yalnızca ebeveyn ekranında gösterilir.</summary>
     public bool NeedsBillingAttention => Status == SubscriptionStatus.Grace;
+
+    /// <summary>Dönem sonunda kendiliğinden yenilenecek mi?</summary>
+    public bool AutoRenews =>
+        Status is SubscriptionStatus.Active or SubscriptionStatus.Grace;
+
+    /// <summary>
+    /// Erişim var ama dönem sonunda bitecek. Ebeveyn ekranı buna bakıp
+    /// "şu tarihte kapanacak" diyor ve yeniden başlatmayı öneriyor.
+    /// </summary>
+    public bool AccessEndsAfterPeriod => Status == SubscriptionStatus.Canceled;
+
+    /// <summary>Bitirilecek bir abonelik var mı?</summary>
+    public bool CanCancel => Status is SubscriptionStatus.Active or SubscriptionStatus.Grace;
 
     public int ProfileLimit => HasFullAccess ? SubscribedProfileLimit : FreeProfileLimit;
 

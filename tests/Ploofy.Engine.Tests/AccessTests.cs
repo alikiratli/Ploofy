@@ -39,6 +39,33 @@ public class EntitlementsTests
     }
 
     [Fact]
+    public void Ending_a_subscription_keeps_the_games_open_until_the_period_runs_out()
+    {
+        // İptal yenilemeyi kapatır, ödenmiş günleri geri almaz. Erişimi iptal
+        // anında kesmek hem ebeveynin parasını yakardı hem de mağazanın kendi
+        // davranışıyla çelişirdi.
+        var canceled = new Entitlements(SubscriptionStatus.Canceled);
+
+        Assert.True(canceled.HasFullAccess);
+        Assert.False(canceled.AutoRenews);
+        Assert.True(canceled.AccessEndsAfterPeriod);
+        Assert.False(canceled.NeedsBillingAttention);
+    }
+
+    [Fact]
+    public void Only_a_running_subscription_can_be_ended()
+    {
+        // Ödeme sorunlu abonelik de bitirilebilir olmalı: ebeveyn tam da o
+        // noktada vazgeçmek isteyebilir.
+        Assert.True(Entitlements.Subscribed.CanCancel);
+        Assert.True(new Entitlements(SubscriptionStatus.Grace).CanCancel);
+
+        // Zaten bitirilmiş ya da hiç başlamamış bir aboneliği bitirmek yok.
+        Assert.False(new Entitlements(SubscriptionStatus.Canceled).CanCancel);
+        Assert.False(Entitlements.Free.CanCancel);
+    }
+
+    [Fact]
     public void Profile_limits_follow_the_tier()
     {
         Assert.Equal(1, Entitlements.Free.ProfileLimit);
@@ -58,6 +85,69 @@ public class EntitlementsTests
         Assert.False(Entitlements.Free.ShowsAds);
         Assert.False(Entitlements.Subscribed.ShowsAds);
         Assert.False(new Entitlements(SubscriptionStatus.Grace).ShowsAds);
+        Assert.False(new Entitlements(SubscriptionStatus.Canceled).ShowsAds);
+    }
+}
+
+public class SubscriptionInfoTests
+{
+    private static readonly DateOnly Today = new(2026, 9, 2);
+
+    [Fact]
+    public void A_running_subscription_reports_a_renewal_date_not_an_end_date()
+    {
+        var info = new SubscriptionInfo(SubscriptionStatus.Active, Today.AddMonths(1));
+
+        Assert.Equal(new DateOnly(2026, 10, 2), info.RenewsOn);
+        Assert.Null(info.AccessEndsOn);
+        Assert.Equal(30, info.DaysLeft(Today));
+        Assert.False(info.HasExpired(Today));
+    }
+
+    [Fact]
+    public void An_ended_subscription_reports_an_end_date_not_a_renewal_date()
+    {
+        // Ekrandaki cümle bu ikisinden hangisinin dolu olduğuna göre kuruluyor;
+        // ikisini birden doldurmak "hem yenilenecek hem bitecek" derdi.
+        var info = new SubscriptionInfo(SubscriptionStatus.Canceled, new DateOnly(2026, 9, 20));
+
+        Assert.Null(info.RenewsOn);
+        Assert.Equal(new DateOnly(2026, 9, 20), info.AccessEndsOn);
+        Assert.Equal(18, info.DaysLeft(Today));
+    }
+
+    [Fact]
+    public void A_missing_date_is_not_invented()
+    {
+        // Çevrimdışı ilk açılışta mağazaya sorulamıyor. Tarih yoksa ekran
+        // "mağaza henüz bildirmedi" diyor; hiçbir kural tarihe bağlı değil.
+        var info = new SubscriptionInfo(SubscriptionStatus.Active);
+
+        Assert.Null(info.RenewsOn);
+        Assert.Null(info.AccessEndsOn);
+        Assert.Null(info.DaysLeft(Today));
+        Assert.False(info.HasExpired(Today));
+        Assert.True(info.Entitlements.HasFullAccess);
+    }
+
+    [Fact]
+    public void The_period_can_be_over_without_access_being_cut()
+    {
+        // Süre dolduğunu görmek erişimi kapatmıyor: o kararı mağaza veriyor.
+        // Cihazın saatini ileri almak da oyunları kilitlemiyor.
+        var info = new SubscriptionInfo(SubscriptionStatus.Active, new DateOnly(2026, 8, 1));
+
+        Assert.True(info.HasExpired(Today));
+        Assert.Equal(0, info.DaysLeft(Today));
+        Assert.True(info.Entitlements.HasFullAccess);
+    }
+
+    [Fact]
+    public void The_free_tier_has_no_period_at_all()
+    {
+        Assert.Null(SubscriptionInfo.Free.PeriodEndsOn);
+        Assert.Null(SubscriptionInfo.Free.RenewsOn);
+        Assert.False(SubscriptionInfo.Free.Entitlements.HasFullAccess);
     }
 }
 

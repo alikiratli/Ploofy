@@ -34,6 +34,13 @@ SettingsProfiles	Child profiles	Çocuk profilleri	Kinderprofile
 SettingsSubscription	Subscription	Abonelik	Abo
 SettingsPrivacy	Privacy	Gizlilik	Datenschutz
 SettingsPrivacyBody	Ploofy collects no data. Profiles, stars and settings stay on this device only; nothing is sent anywhere. There are no ads on any tier.	Ploofy hiçbir veri toplamaz. Profiller, yıldızlar ve ayarlar yalnızca bu cihazda kalır; hiçbir yere gönderilmez. Hiçbir katmanda reklam yoktur.	Ploofy sammelt keine Daten. Profile, Sterne und Einstellungen bleiben nur auf diesem Gerät; nichts wird irgendwohin gesendet. In keiner Stufe gibt es Werbung.
+SettingsManageSubscription	Manage subscription	Aboneliği yönet	Abo verwalten
+SettingsSoundTest	Try the sounds	Sesleri dene	Töne anhören
+SettingsAbout	About	Hakkında	Über die App
+SettingsVersion	Version {0}	Sürüm {0}	Version {0}
+SettingsLegalPrivacy	Privacy policy	Gizlilik politikası	Datenschutzerklärung
+SettingsLegalImprint	Legal notice	Künye (Impressum)	Impressum
+SettingsLegalHint	These two open in the browser.	Bu ikisi tarayıcıda açılır.	Diese beiden öffnen den Browser.
 SubscriptionTitle	Ploofy Family	Ploofy Aile	Ploofy Familie
 SubscriptionPitch	Ad-free and safe. Always.	Reklamsız ve güvenli. Her zaman.	Werbefrei und sicher. Immer.
 SubscriptionBenefitAllGames	Every mini game unlocked	Bütün mini oyunlar açılır	Alle Minispiele freigeschaltet
@@ -46,6 +53,27 @@ SubscriptionRestore	Restore purchases	Satın alımları geri yükle	Käufe wiede
 SubscriptionActive	Your subscription is active.	Aboneliğin etkin.	Dein Abo ist aktiv.
 SubscriptionGrace	Payment failed. Games stay unlocked for now.	Ödeme alınamadı. Oyunlar açık kalmaya devam ediyor.	Zahlung fehlgeschlagen. Die Spiele bleiben vorerst offen.
 SubscriptionLockedGameTitle	This game is in the subscription	Bu oyun abonelikte	Dieses Spiel ist im Abo
+SubscriptionManageTitle	Your subscription	Aboneliğin	Dein Abo
+SubscriptionPlan	Ploofy Family, monthly	Ploofy Aile, aylık	Ploofy Familie, monatlich
+SubscriptionBadgeActive	Active	Etkin	Aktiv
+SubscriptionBadgeFree	Free tier	Ücretsiz katman	Gratis-Stufe
+SubscriptionBadgeCanceled	Ending	Bitiyor	Endet
+SubscriptionBadgeGrace	Payment problem	Ödeme sorunu	Zahlungsproblem
+SubscriptionRenewsOn	Renews on {0}.	{0} tarihinde yenilenir.	Verlängert sich am {0}.
+SubscriptionEndsOn	Open until {0}.	{0} tarihine kadar açık.	Geöffnet bis {0}.
+SubscriptionDaysLeft	{0} days left	{0} gün kaldı	Noch {0} Tage
+SubscriptionNoDate	The store has not reported a date yet.	Mağaza henüz bir tarih bildirmedi.	Der Store hat noch kein Datum gemeldet.
+SubscriptionIncluded	What the subscription opens	Abonelik neleri açıyor	Was das Abo freischaltet
+SubscriptionFreeTierTitle	Without a subscription	Aboneliksiz	Ohne Abo
+SubscriptionFreeTierBody	Two games and one child profile stay open. There are no ads here either, and nothing is collected.	İki oyun ve tek çocuk profili açık kalır. Burada da reklam yoktur, hiçbir veri toplanmaz.	Zwei Spiele und ein Kinderprofil bleiben offen. Auch hier gibt es keine Werbung, und es wird nichts erhoben.
+SubscriptionManageInStore	Manage in the store	Mağazada yönet	Im Store verwalten
+SubscriptionManageInStoreHint	Price, payment method and the billing date live in the store account. Ploofy has no account of its own.	Fiyat, ödeme yöntemi ve tahsilat tarihi mağaza hesabında durur. Ploofy'nin kendi hesabı yoktur.	Preis, Zahlungsart und Abbuchungstermin liegen im Store-Konto. Ploofy hat kein eigenes Konto.
+SubscriptionEndTitle	End subscription	Aboneliği bitir	Abo beenden
+SubscriptionEndBody	Automatic renewal stops. The games stay open until the end of the period you already paid for.	Otomatik yenileme durur. Oyunlar ödediğin dönemin sonuna kadar açık kalır.	Die automatische Verlängerung endet. Die Spiele bleiben bis zum Ende des bereits bezahlten Zeitraums offen.
+SubscriptionEndKeeps	Stars, badges and profiles are kept. Nothing is deleted.	Yıldızlar, rozetler ve profiller korunur. Hiçbir şey silinmez.	Sterne, Abzeichen und Profile bleiben erhalten. Nichts wird gelöscht.
+SubscriptionEndConfirm	End the subscription?	Abonelik bitirilsin mi?	Das Abo beenden?
+SubscriptionEndedTitle	The subscription has been ended	Abonelik bitirildi	Das Abo wurde beendet
+SubscriptionResume	Start again	Yeniden başlat	Erneut starten
 PlaySolo	On my own	Tek başıma	Alleine
 PlayTogether	Take turns	Sırayla oynayalım	Abwechselnd spielen
 PlayTogetherHint	Same device, one after the other. No internet needed.	Aynı cihazda, sırayla. İnternet gerekmez.	Gleiches Gerät, einer nach dem anderen. Kein Internet nötig.
@@ -74,6 +102,29 @@ HuntPrompt	Find this one	Bunu bul	Finde das hier
 GameLetterHunt	Letter Hunt	Harf Avı	Buchstabenjagd
 GameNumberHunt	Number Hunt	Sayı Avı	Zahlenjagd
 GameCountMatch	Count and Match	Say ve Eşleştir	Zählen und Zuordnen
+GameLetterTrace	Write it	Harf Yazma	Buchstaben schreiben
+GamePattern	What comes next	Örüntü	Was kommt als Nächstes
+PatternHint	Which one is missing?	Hangisi eksik?	Welches fehlt?
+SettingsReport	Play report	Oyun raporu	Spielbericht
+ReportTitle	Play report	Oyun raporu	Spielbericht
+ReportRange7	7 days	7 gün	7 Tage
+ReportRange14	14 days	14 gün	14 Tage
+ReportRange30	30 days	30 gün	30 Tage
+ReportTimePlayed	Time played	Oynanan süre	Spielzeit
+ReportRounds	Rounds	Tur	Runden
+ReportActiveDays	Days played	Oynanan gün	Gespielte Tage
+ReportStars	Stars	Yıldız	Sterne
+ReportDaily	Minutes per day	Günlük dakika	Minuten pro Tag
+ReportGames	Games	Oyunlar	Spiele
+ReportGameRounds	{0} rounds	{0} tur	{0} Runden
+ReportBestStars	best {0}★	en iyi {0}★	beste {0}★
+ReportEmpty	Nothing played yet in this period.	Bu dönemde henüz oynanmadı.	In diesem Zeitraum wurde noch nicht gespielt.
+ReportPrivacy	This report is built on this device and never leaves it.	Bu rapor cihazda oluşturulur ve cihazdan çıkmaz.	Dieser Bericht entsteht auf dem Gerät und verlässt es nie.
+ReportMinuteShort	min	dk	Min.
+ReportMinutes	{0} min	{0} dk	{0} Min.
+ReportHoursMinutes	{0} h {1} min	{0} sa {1} dk	{0} Std {1} Min.
+LetterTraceHintLetter	Trace the letter	Harfi çiz	Zeichne den Buchstaben
+LetterTraceHintNumber	Trace the number	Rakamı çiz	Zeichne die Zahl
 CountMatchPrompt	How many? Drag them onto the number.	Kaç tane? Sayının üstüne sürükle.	Wie viele? Zieh sie auf die Zahl.
 SimonWatch	Watch	İzle	Schau zu
 SimonRepeat	Your turn	Sıra sende	Du bist dran

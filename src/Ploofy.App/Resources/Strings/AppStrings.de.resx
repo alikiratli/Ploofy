@@ -166,6 +166,27 @@
   <data name="SettingsPrivacyBody" xml:space="preserve">
     <value>Ploofy sammelt keine Daten. Profile, Sterne und Einstellungen bleiben nur auf diesem Gerät; nichts wird irgendwohin gesendet. In keiner Stufe gibt es Werbung.</value>
   </data>
+  <data name="SettingsManageSubscription" xml:space="preserve">
+    <value>Abo verwalten</value>
+  </data>
+  <data name="SettingsSoundTest" xml:space="preserve">
+    <value>Töne anhören</value>
+  </data>
+  <data name="SettingsAbout" xml:space="preserve">
+    <value>Über die App</value>
+  </data>
+  <data name="SettingsVersion" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="SettingsLegalPrivacy" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+  </data>
+  <data name="SettingsLegalImprint" xml:space="preserve">
+    <value>Impressum</value>
+  </data>
+  <data name="SettingsLegalHint" xml:space="preserve">
+    <value>Diese beiden öffnen den Browser.</value>
+  </data>
   <data name="SubscriptionTitle" xml:space="preserve">
     <value>Ploofy Familie</value>
   </data>
@@ -201,6 +222,69 @@
   </data>
   <data name="SubscriptionLockedGameTitle" xml:space="preserve">
     <value>Dieses Spiel ist im Abo</value>
+  </data>
+  <data name="SubscriptionManageTitle" xml:space="preserve">
+    <value>Dein Abo</value>
+  </data>
+  <data name="SubscriptionPlan" xml:space="preserve">
+    <value>Ploofy Familie, monatlich</value>
+  </data>
+  <data name="SubscriptionBadgeActive" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="SubscriptionBadgeFree" xml:space="preserve">
+    <value>Gratis-Stufe</value>
+  </data>
+  <data name="SubscriptionBadgeCanceled" xml:space="preserve">
+    <value>Endet</value>
+  </data>
+  <data name="SubscriptionBadgeGrace" xml:space="preserve">
+    <value>Zahlungsproblem</value>
+  </data>
+  <data name="SubscriptionRenewsOn" xml:space="preserve">
+    <value>Verlängert sich am {0}.</value>
+  </data>
+  <data name="SubscriptionEndsOn" xml:space="preserve">
+    <value>Geöffnet bis {0}.</value>
+  </data>
+  <data name="SubscriptionDaysLeft" xml:space="preserve">
+    <value>Noch {0} Tage</value>
+  </data>
+  <data name="SubscriptionNoDate" xml:space="preserve">
+    <value>Der Store hat noch kein Datum gemeldet.</value>
+  </data>
+  <data name="SubscriptionIncluded" xml:space="preserve">
+    <value>Was das Abo freischaltet</value>
+  </data>
+  <data name="SubscriptionFreeTierTitle" xml:space="preserve">
+    <value>Ohne Abo</value>
+  </data>
+  <data name="SubscriptionFreeTierBody" xml:space="preserve">
+    <value>Zwei Spiele und ein Kinderprofil bleiben offen. Auch hier gibt es keine Werbung, und es wird nichts erhoben.</value>
+  </data>
+  <data name="SubscriptionManageInStore" xml:space="preserve">
+    <value>Im Store verwalten</value>
+  </data>
+  <data name="SubscriptionManageInStoreHint" xml:space="preserve">
+    <value>Preis, Zahlungsart und Abbuchungstermin liegen im Store-Konto. Ploofy hat kein eigenes Konto.</value>
+  </data>
+  <data name="SubscriptionEndTitle" xml:space="preserve">
+    <value>Abo beenden</value>
+  </data>
+  <data name="SubscriptionEndBody" xml:space="preserve">
+    <value>Die automatische Verlängerung endet. Die Spiele bleiben bis zum Ende des bereits bezahlten Zeitraums offen.</value>
+  </data>
+  <data name="SubscriptionEndKeeps" xml:space="preserve">
+    <value>Sterne, Abzeichen und Profile bleiben erhalten. Nichts wird gelöscht.</value>
+  </data>
+  <data name="SubscriptionEndConfirm" xml:space="preserve">
+    <value>Das Abo beenden?</value>
+  </data>
+  <data name="SubscriptionEndedTitle" xml:space="preserve">
+    <value>Das Abo wurde beendet</value>
+  </data>
+  <data name="SubscriptionResume" xml:space="preserve">
+    <value>Erneut starten</value>
   </data>
   <data name="PlaySolo" xml:space="preserve">
     <value>Alleine</value>
@@ -285,6 +369,75 @@
   </data>
   <data name="GameCountMatch" xml:space="preserve">
     <value>Zählen und Zuordnen</value>
+  </data>
+  <data name="GameLetterTrace" xml:space="preserve">
+    <value>Buchstaben schreiben</value>
+  </data>
+  <data name="GamePattern" xml:space="preserve">
+    <value>Was kommt als Nächstes</value>
+  </data>
+  <data name="PatternHint" xml:space="preserve">
+    <value>Welches fehlt?</value>
+  </data>
+  <data name="SettingsReport" xml:space="preserve">
+    <value>Spielbericht</value>
+  </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>Spielbericht</value>
+  </data>
+  <data name="ReportRange7" xml:space="preserve">
+    <value>7 Tage</value>
+  </data>
+  <data name="ReportRange14" xml:space="preserve">
+    <value>14 Tage</value>
+  </data>
+  <data name="ReportRange30" xml:space="preserve">
+    <value>30 Tage</value>
+  </data>
+  <data name="ReportTimePlayed" xml:space="preserve">
+    <value>Spielzeit</value>
+  </data>
+  <data name="ReportRounds" xml:space="preserve">
+    <value>Runden</value>
+  </data>
+  <data name="ReportActiveDays" xml:space="preserve">
+    <value>Gespielte Tage</value>
+  </data>
+  <data name="ReportStars" xml:space="preserve">
+    <value>Sterne</value>
+  </data>
+  <data name="ReportDaily" xml:space="preserve">
+    <value>Minuten pro Tag</value>
+  </data>
+  <data name="ReportGames" xml:space="preserve">
+    <value>Spiele</value>
+  </data>
+  <data name="ReportGameRounds" xml:space="preserve">
+    <value>{0} Runden</value>
+  </data>
+  <data name="ReportBestStars" xml:space="preserve">
+    <value>beste {0}★</value>
+  </data>
+  <data name="ReportEmpty" xml:space="preserve">
+    <value>In diesem Zeitraum wurde noch nicht gespielt.</value>
+  </data>
+  <data name="ReportPrivacy" xml:space="preserve">
+    <value>Dieser Bericht entsteht auf dem Gerät und verlässt es nie.</value>
+  </data>
+  <data name="ReportMinuteShort" xml:space="preserve">
+    <value>Min.</value>
+  </data>
+  <data name="ReportMinutes" xml:space="preserve">
+    <value>{0} Min.</value>
+  </data>
+  <data name="ReportHoursMinutes" xml:space="preserve">
+    <value>{0} Std {1} Min.</value>
+  </data>
+  <data name="LetterTraceHintLetter" xml:space="preserve">
+    <value>Zeichne den Buchstaben</value>
+  </data>
+  <data name="LetterTraceHintNumber" xml:space="preserve">
+    <value>Zeichne die Zahl</value>
   </data>
   <data name="CountMatchPrompt" xml:space="preserve">
     <value>Wie viele? Zieh sie auf die Zahl.</value>

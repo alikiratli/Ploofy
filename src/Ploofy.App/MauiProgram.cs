@@ -111,6 +111,12 @@ public static class MauiProgram
         services.AddTransient<JigsawPage>();
         services.AddTransient<JigsawViewModel>();
 
+        services.AddTransient<LetterTracePage>();
+        services.AddTransient<LetterTraceViewModel>();
+
+        services.AddTransient<PatternPage>();
+        services.AddTransient<PatternViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 
@@ -119,5 +125,11 @@ public static class MauiProgram
 
         services.AddTransient<PaywallPage>();
         services.AddTransient<PaywallViewModel>();
+
+        services.AddTransient<SubscriptionPage>();
+        services.AddTransient<SubscriptionViewModel>();
+
+        services.AddTransient<ReportPage>();
+        services.AddTransient<ReportViewModel>();
     }
 }

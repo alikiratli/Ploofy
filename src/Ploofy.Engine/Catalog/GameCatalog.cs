@@ -22,6 +22,8 @@ public static class GameCatalog
     public const string LetterHunt = "letter_hunt";
     public const string NumberHunt = "number_hunt";
     public const string CountMatch = "count_match";
+    public const string LetterTrace = "letter_trace";
+    public const string Pattern = "pattern";
 
     public static readonly ReadOnlyCollection<MiniGameDescriptor> Games = new([
 
@@ -113,6 +115,31 @@ public static class GameCatalog
             InteractionKind.Drag,
             GameTier.Subscription,
             AgeBand.Fidan,
+            RenderKind.Layout,
+            IsEducational: true,
+            SupportsPassAndPlay: true),
+
+        // Harf ve rakam yazma. En küçük bant Fidan: 2-4 yaş harf yazmıyor,
+        // o yaşın yazı öncesi karşılığı Yolu Bul.
+        //
+        // Sıralı oyunu desteklemiyor: bir harfi yazmak on saniye sürüyor ve
+        // her harfte cihazı elden ele vermek oyunu devir ekranına çeviriyor.
+        new MiniGameDescriptor(
+            LetterTrace,
+            InteractionKind.Trace,
+            GameTier.Subscription,
+            AgeBand.Fidan,
+            RenderKind.Canvas,
+            IsEducational: true),
+
+        // Örüntü tamamlama. En küçük bant Filiz: o bantta yalnızca AB
+        // örüntüsü ve renk değişimi var, ki amaç örüntü kurmak değil
+        // "bir şey tekrar ediyor" fikrini yakalamak.
+        new MiniGameDescriptor(
+            Pattern,
+            InteractionKind.Tap,
+            GameTier.Subscription,
+            AgeBand.Filiz,
             RenderKind.Layout,
             IsEducational: true,
             SupportsPassAndPlay: true),

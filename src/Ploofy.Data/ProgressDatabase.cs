@@ -39,6 +39,7 @@ public sealed class ProgressDatabase : IAsyncDisposable
         await _connection.CreateTableAsync<ChildProfileRow>();
         await _connection.CreateTableAsync<GameProgressRow>();
         await _connection.CreateTableAsync<BadgeUnlockRow>();
+        await _connection.CreateTableAsync<RoundHistoryRow>();
         await _connection.CreateTableAsync<AppSettingRow>();
     }
 

@@ -43,6 +43,13 @@ public sealed class LocalizationService : INotifyPropertyChanged
     public string CurrentLanguage => _culture.TwoLetterISOLanguageName;
 
     /// <summary>
+    /// Seçili dilin kültürü. Tarih biçimlendiren yerler bunu kullanıyor:
+    /// <c>CultureInfo.CurrentCulture</c>'a güvenmek, dil değiştirildikten
+    /// sonra oluşturulmuş bir iş parçacığında yanlış biçimi veriyor.
+    /// </summary>
+    public CultureInfo Culture => _culture;
+
+    /// <summary>
     /// Dili değiştirir ve açık ekranların metinlerini tazeler.
     /// </summary>
     /// <param name="language">

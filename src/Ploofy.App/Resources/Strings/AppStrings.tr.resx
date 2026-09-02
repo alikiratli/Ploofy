@@ -166,6 +166,27 @@
   <data name="SettingsPrivacyBody" xml:space="preserve">
     <value>Ploofy hiçbir veri toplamaz. Profiller, yıldızlar ve ayarlar yalnızca bu cihazda kalır; hiçbir yere gönderilmez. Hiçbir katmanda reklam yoktur.</value>
   </data>
+  <data name="SettingsManageSubscription" xml:space="preserve">
+    <value>Aboneliği yönet</value>
+  </data>
+  <data name="SettingsSoundTest" xml:space="preserve">
+    <value>Sesleri dene</value>
+  </data>
+  <data name="SettingsAbout" xml:space="preserve">
+    <value>Hakkında</value>
+  </data>
+  <data name="SettingsVersion" xml:space="preserve">
+    <value>Sürüm {0}</value>
+  </data>
+  <data name="SettingsLegalPrivacy" xml:space="preserve">
+    <value>Gizlilik politikası</value>
+  </data>
+  <data name="SettingsLegalImprint" xml:space="preserve">
+    <value>Künye (Impressum)</value>
+  </data>
+  <data name="SettingsLegalHint" xml:space="preserve">
+    <value>Bu ikisi tarayıcıda açılır.</value>
+  </data>
   <data name="SubscriptionTitle" xml:space="preserve">
     <value>Ploofy Aile</value>
   </data>
@@ -201,6 +222,69 @@
   </data>
   <data name="SubscriptionLockedGameTitle" xml:space="preserve">
     <value>Bu oyun abonelikte</value>
+  </data>
+  <data name="SubscriptionManageTitle" xml:space="preserve">
+    <value>Aboneliğin</value>
+  </data>
+  <data name="SubscriptionPlan" xml:space="preserve">
+    <value>Ploofy Aile, aylık</value>
+  </data>
+  <data name="SubscriptionBadgeActive" xml:space="preserve">
+    <value>Etkin</value>
+  </data>
+  <data name="SubscriptionBadgeFree" xml:space="preserve">
+    <value>Ücretsiz katman</value>
+  </data>
+  <data name="SubscriptionBadgeCanceled" xml:space="preserve">
+    <value>Bitiyor</value>
+  </data>
+  <data name="SubscriptionBadgeGrace" xml:space="preserve">
+    <value>Ödeme sorunu</value>
+  </data>
+  <data name="SubscriptionRenewsOn" xml:space="preserve">
+    <value>{0} tarihinde yenilenir.</value>
+  </data>
+  <data name="SubscriptionEndsOn" xml:space="preserve">
+    <value>{0} tarihine kadar açık.</value>
+  </data>
+  <data name="SubscriptionDaysLeft" xml:space="preserve">
+    <value>{0} gün kaldı</value>
+  </data>
+  <data name="SubscriptionNoDate" xml:space="preserve">
+    <value>Mağaza henüz bir tarih bildirmedi.</value>
+  </data>
+  <data name="SubscriptionIncluded" xml:space="preserve">
+    <value>Abonelik neleri açıyor</value>
+  </data>
+  <data name="SubscriptionFreeTierTitle" xml:space="preserve">
+    <value>Aboneliksiz</value>
+  </data>
+  <data name="SubscriptionFreeTierBody" xml:space="preserve">
+    <value>İki oyun ve tek çocuk profili açık kalır. Burada da reklam yoktur, hiçbir veri toplanmaz.</value>
+  </data>
+  <data name="SubscriptionManageInStore" xml:space="preserve">
+    <value>Mağazada yönet</value>
+  </data>
+  <data name="SubscriptionManageInStoreHint" xml:space="preserve">
+    <value>Fiyat, ödeme yöntemi ve tahsilat tarihi mağaza hesabında durur. Ploofy'nin kendi hesabı yoktur.</value>
+  </data>
+  <data name="SubscriptionEndTitle" xml:space="preserve">
+    <value>Aboneliği bitir</value>
+  </data>
+  <data name="SubscriptionEndBody" xml:space="preserve">
+    <value>Otomatik yenileme durur. Oyunlar ödediğin dönemin sonuna kadar açık kalır.</value>
+  </data>
+  <data name="SubscriptionEndKeeps" xml:space="preserve">
+    <value>Yıldızlar, rozetler ve profiller korunur. Hiçbir şey silinmez.</value>
+  </data>
+  <data name="SubscriptionEndConfirm" xml:space="preserve">
+    <value>Abonelik bitirilsin mi?</value>
+  </data>
+  <data name="SubscriptionEndedTitle" xml:space="preserve">
+    <value>Abonelik bitirildi</value>
+  </data>
+  <data name="SubscriptionResume" xml:space="preserve">
+    <value>Yeniden başlat</value>
   </data>
   <data name="PlaySolo" xml:space="preserve">
     <value>Tek başıma</value>
@@ -285,6 +369,75 @@
   </data>
   <data name="GameCountMatch" xml:space="preserve">
     <value>Say ve Eşleştir</value>
+  </data>
+  <data name="GameLetterTrace" xml:space="preserve">
+    <value>Harf Yazma</value>
+  </data>
+  <data name="GamePattern" xml:space="preserve">
+    <value>Örüntü</value>
+  </data>
+  <data name="PatternHint" xml:space="preserve">
+    <value>Hangisi eksik?</value>
+  </data>
+  <data name="SettingsReport" xml:space="preserve">
+    <value>Oyun raporu</value>
+  </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>Oyun raporu</value>
+  </data>
+  <data name="ReportRange7" xml:space="preserve">
+    <value>7 gün</value>
+  </data>
+  <data name="ReportRange14" xml:space="preserve">
+    <value>14 gün</value>
+  </data>
+  <data name="ReportRange30" xml:space="preserve">
+    <value>30 gün</value>
+  </data>
+  <data name="ReportTimePlayed" xml:space="preserve">
+    <value>Oynanan süre</value>
+  </data>
+  <data name="ReportRounds" xml:space="preserve">
+    <value>Tur</value>
+  </data>
+  <data name="ReportActiveDays" xml:space="preserve">
+    <value>Oynanan gün</value>
+  </data>
+  <data name="ReportStars" xml:space="preserve">
+    <value>Yıldız</value>
+  </data>
+  <data name="ReportDaily" xml:space="preserve">
+    <value>Günlük dakika</value>
+  </data>
+  <data name="ReportGames" xml:space="preserve">
+    <value>Oyunlar</value>
+  </data>
+  <data name="ReportGameRounds" xml:space="preserve">
+    <value>{0} tur</value>
+  </data>
+  <data name="ReportBestStars" xml:space="preserve">
+    <value>en iyi {0}★</value>
+  </data>
+  <data name="ReportEmpty" xml:space="preserve">
+    <value>Bu dönemde henüz oynanmadı.</value>
+  </data>
+  <data name="ReportPrivacy" xml:space="preserve">
+    <value>Bu rapor cihazda oluşturulur ve cihazdan çıkmaz.</value>
+  </data>
+  <data name="ReportMinuteShort" xml:space="preserve">
+    <value>dk</value>
+  </data>
+  <data name="ReportMinutes" xml:space="preserve">
+    <value>{0} dk</value>
+  </data>
+  <data name="ReportHoursMinutes" xml:space="preserve">
+    <value>{0} sa {1} dk</value>
+  </data>
+  <data name="LetterTraceHintLetter" xml:space="preserve">
+    <value>Harfi çiz</value>
+  </data>
+  <data name="LetterTraceHintNumber" xml:space="preserve">
+    <value>Rakamı çiz</value>
   </data>
   <data name="CountMatchPrompt" xml:space="preserve">
     <value>Kaç tane? Sayının üstüne sürükle.</value>

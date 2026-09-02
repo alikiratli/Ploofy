@@ -13,20 +13,56 @@
 
             <Label Text="{loc:Translate SettingsTitle}" Style="{StaticResource TitleLabel}" />
 
-            <!-- Abonelik -->
+            <!-- Abonelik: burada yalnızca özet durur. Ayrıntı, mağaza
+                 bağlantısı ve bitirme yolu abonelik ekranında. -->
             <Border Style="{StaticResource CardBorder}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="{loc:Translate SettingsSubscription}" Style="{StaticResource SectionLabel}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="{loc:Translate SettingsSubscription}"
+                               Style="{StaticResource SectionLabel}"
+                               VerticalOptions="Center" />
+                        <Border Grid.Column="1"
+                                BackgroundColor="{Binding SubscriptionBadgeColor}"
+                                StrokeThickness="0"
+                                Padding="12,4"
+                                VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="999" />
+                            </Border.StrokeShape>
+                            <Label Text="{Binding SubscriptionBadgeText}"
+                                   TextColor="{StaticResource OnAccent}"
+                                   FontSize="13"
+                                   FontAttributes="Bold" />
+                        </Border>
+                    </Grid>
+
                     <Label Text="{Binding SubscriptionStatusText}" Style="{StaticResource HintLabel}" />
+
+                    <Label Text="{Binding SubscriptionPeriodText}"
+                           Style="{StaticResource HintLabel}"
+                           IsVisible="{Binding HasSubscription}" />
 
                     <Button Text="{loc:Translate SubscriptionCta}"
                             Style="{StaticResource AccentButton}"
                             IsVisible="{Binding CanSubscribe}"
-                            Command="{Binding OpenPaywallCommand}" />
+                            Command="{Binding ManageSubscriptionCommand}" />
 
-                    <Button Text="{loc:Translate SubscriptionRestore}"
+                    <Button Text="{loc:Translate SettingsManageSubscription}"
                             Style="{StaticResource QuietButton}"
-                            Command="{Binding RestoreCommand}" />
+                            Command="{Binding ManageSubscriptionCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Rapor: çocuğun ne oynadığı. Aboneliğin hemen altında,
+                 çünkü ebeveynin karşılığını gördüğü ikinci yer burası. -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Translate SettingsReport}" Style="{StaticResource SectionLabel}" />
+                    <Label Text="{loc:Translate ReportPrivacy}" Style="{StaticResource HintLabel}" />
+                    <Button Text="{loc:Translate SettingsReport}"
+                            Style="{StaticResource QuietButton}"
+                            Command="{Binding OpenReportCommand}" />
                 </VerticalStackLayout>
             </Border>
 
@@ -41,6 +77,13 @@
                         <Label Text="{loc:Translate SettingsHaptics}" VerticalOptions="Center" />
                         <Switch Grid.Column="1" IsToggled="{Binding HapticsEnabled}" VerticalOptions="Center" />
                     </Grid>
+
+                    <!-- Ses anahtarının hemen yanında bir örnek: ebeveyn
+                         cihazın hoparlöründe duymadan karar veremiyor. -->
+                    <Button Text="{loc:Translate SettingsSoundTest}"
+                            Style="{StaticResource QuietButton}"
+                            IsEnabled="{Binding SoundEnabled}"
+                            Command="{Binding PlaySoundSampleCommand}" />
                 </VerticalStackLayout>
             </Border>
 
@@ -115,6 +158,24 @@
                 <VerticalStackLayout Spacing="8">
                     <Label Text="{loc:Translate SettingsPrivacy}" Style="{StaticResource SectionLabel}" />
                     <Label Text="{loc:Translate SettingsPrivacyBody}" Style="{StaticResource HintLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Hakkında ve yasal. İki bağlantı da tarayıcıya çıkıyor ve
+                 ebeveyn kilidinin arkasında; adresler PloofyLinks'te. -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Translate SettingsAbout}" Style="{StaticResource SectionLabel}" />
+                    <Label Text="{Binding VersionText}" Style="{StaticResource HintLabel}" />
+                    <Label Text="{loc:Translate SettingsLegalHint}" Style="{StaticResource HintLabel}" />
+
+                    <Button Text="{loc:Translate SettingsLegalPrivacy}"
+                            Style="{StaticResource QuietButton}"
+                            Command="{Binding OpenPrivacyPolicyCommand}" />
+
+                    <Button Text="{loc:Translate SettingsLegalImprint}"
+                            Style="{StaticResource QuietButton}"
+                            Command="{Binding OpenImprintCommand}" />
                 </VerticalStackLayout>
             </Border>
 
