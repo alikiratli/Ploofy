@@ -6,8 +6,8 @@ Web: https://alikiratli.github.io/ploofy-web/ (gizlilik politikası + Impressum)
 
 ## 1. Nerede kaldık
 
-**Faz 2 bitti: on ikinin on ikisi de oynanabilir.** (Faz 2 onla kapandı;
-Harf Yazma ve Örüntü sürümden sonra eklendi.) Uygulama Android tablette
+**Faz 2 bitti: on üçün on üçü de oynanabilir.** (Faz 2 onla kapandı; Harf
+Yazma, Örüntü ve Sırala sürümden sonra eklendi.) Uygulama Android tablette
 uçtan uca çalışıyor — çocuk profili oluşturuluyor, oyun seçiliyor,
 oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Katalogda artık
 "yakında" olarak duran hiçbir oyun yok ve kütüphane beş etkileşim türünün
@@ -22,9 +22,10 @@ paketi üretip çalıştırmak oldu.
 sonra içerik yol haritasının ilk maddesi.** Yayın anahtarı üretildi ve
 gizlilik politikası yayımlandı — ikisi de kod işi değildi, ikisi de sürümü
 bloke ediyordu. Ardından aboneliğin ekran tarafı tamamlandı, en son da
-**Harf Yazma**, **Örüntü** ve **ebeveyn raporu** eklendi (yol haritası
-maddeleri İ1, İ2, İ3). Ayrıntı aşağıda: "Yayın imzası", "Gizlilik politikası",
-"Abonelik yönetimi", "Harf Yazma", "Örüntü", "Ebeveyn raporu".
+**Harf Yazma**, **Örüntü**, **ebeveyn raporu** ve **Sırala** eklendi (yol
+haritası maddeleri İ1-İ4). Ayrıntı aşağıda: "Yayın imzası", "Gizlilik
+politikası", "Abonelik yönetimi", "Harf Yazma", "Örüntü", "Ebeveyn raporu",
+"Sırala".
 
 **Bir önceki oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
 korunması, MAUI 10'un kaldırdığı çağrılar, SQLite'ta bir güvenlik açığı ve
@@ -330,6 +331,55 @@ satır duruyor.
 
 **13 yeni test, toplam 303.**
 
+### Sırala (İ4)
+
+Kütüphanenin on üçüncü oyunu ve altıncı öğreticisi. Yol haritası maddesi iki
+şey istiyordu — "büyükten küçüğe dizme" ve "hangisi daha çok" — ve ikisi
+aslında aynı becerinin iki yaşı: karşılaştırma, sıralamanın iki parçalı hâli.
+Tek oyunda, banda göre ayrıldılar:
+
+- **Filiz boyuta göre sıralıyor.** Üç parça, aynı şekil ve renk, yalnızca
+  boyutları farklı. İki yaşındaki çocuk saymıyor ama büyüğü küçükten
+  ayırıyor. En küçük parça en büyüğün üçte biri: fark yan yana durmadan da
+  görülüyor.
+- **Fidan miktara geçiyor.** Dört küme, miktarlar ikişer atlıyor (1, 3, 5, 7):
+  fark bakışla görülüyor, saymak şart değil.
+- **Meşe'de miktarlar ardışık** (4, 5, 6, 7, 8) — orada gerçekten saymak
+  gerekiyor. Ayrıca yön değişebiliyor: "çoktan aza" bir sonraki bilişsel
+  adım, çünkü çocuk sıralamayı ezberlenmiş bir hareket olarak değil verilen
+  bir kurala göre yapıyor.
+
+Her bulmacada tek bir şey değişiyor: boyuta göre sıralarken bütün parçalar
+aynı şekil ve renkte, miktara göre sıralarken hepsi aynı boyutta. Örüntü'deki
+karar burada da geçerli.
+
+Parça **herhangi bir yuvaya** bırakılabiliyor, yalnızca doğru yuva kabul
+ediyor. Soldan sağa doldurmayı dayatmak, en büyüğü ilk gören çocuğa "önce en
+küçüğü bul" demek olurdu; sıralamanın tek doğru yolu yok.
+
+İki şey testler sayesinde düzeldi:
+
+- **Motor kendiliğinden sonraki bulmacaya geçiyordu.** Bir test döngüsü
+  kilitlenince ortaya çıktı ve asıl kusur oradaydı: geçiş anında tamamlanmış
+  dizi ekranda hiç görünmüyor. `NextPuzzle` ayrı bir çağrı oldu — motor
+  "nerede kalındı"yı bilir, "ne zaman"ı bilmez.
+- **`PlaceOutcome` ikinci kez yazılmıştı.** Yapboz'unki birebir aynı üç
+  durumu taşıyor (yok sayıldı, yerine oturdu, yanlış yuva); yenisi silindi,
+  o paylaşıldı.
+
+**Çizim yine ekrana bakılarak doğrulandı.** `LineUpPainter` ve
+`LineUpLayout` MAUI'den bağımsız (rapordaki `TrendPainter` gibi), konsoldan
+PNG'ye alındı. Beş sahne bakılınca iki kusur çıktı:
+
+1. Yön işareti ekranın iki üst köşesinde iki bağsız daireydi ve süs gibi
+   okunuyordu; üstelik sayfanın bilgi şeridinin hemen altına denk gelip dar
+   ekranda arkasında kalıyordu. Şimdi yuvalarla tepsi arasındaki boşlukta,
+   küçük daire — çizgi — büyük daire olarak duruyor.
+2. Dolu yuvanın çerçevesi kayboluyordu ve yerleşen parça yanındaki boş
+   yuvadan küçük görünüyordu. Çerçeve artık duruyor, yalnızca soluklaşıyor.
+
+**26 yeni test, toplam 329.**
+
 ### Gizlilik politikası
 
 Üç dil tek bir sayfada toplandı ve **ayrı bir depoya** kondu — diğer
@@ -377,7 +427,7 @@ bölüm.
 Eski `../ploofy-privacy` yerel deposu artık gereksiz — içeriği `docs/store/`
 ile `ploofy-web`'e taşındı.
 
-**Sayılar:** 303 test geçiyor · 12 oyun tanımlı, 12'si oynanabilir ·
+**Sayılar:** 329 test geçiyor · 13 oyun tanımlı, 13'ü oynanabilir ·
 13 ses dosyası · AAB 40 MB · targetSdk 36 · sürüm 1.0.
 
 **Buradan başla: gerçek tablet.** Emülatör her şeyi gösterdi ama iki şeyi
@@ -404,8 +454,9 @@ Sonrası 4. bölümdeki öncelik sırası; içerik yol haritası 5. bölümde.
 - **src/Ploofy.Engine** — oyun mantığı, UI'ya sıfır bağımlılık (net10.0)
 - **src/Ploofy.Data** — SQLite ilerleme deposu (net10.0)
 - **src/Ploofy.Ui** — ortak MAUI arayüz katmanı: tema, çizim, ses/haptik, ebeveyn kilidi
-- **src/Ploofy.Ui/Painting/TrendPainter.cs** — rapordaki grafiğin çizimi; MAUI'den
-  bağımsız, bu yüzden konsoldan PNG'ye alınıp gözle bakılabiliyor
+- **src/Ploofy.Ui/Painting/TrendPainter.cs**, **LineUpPainter.cs** — rapordaki
+  grafiğin ve Sırala'nın çizimi; MAUI'den bağımsız, bu yüzden konsoldan PNG'ye
+  alınıp gözle bakılabiliyor
 - **src/Ploofy.App** — MAUI uygulaması (Android + iOS; Windows sadece geliştirme için)
 - **tests/Ploofy.Engine.Tests** — xUnit, motor + depo
 - **content/strings.tsv** — üç dilin metinleri, tek kaynak
@@ -442,6 +493,8 @@ Sonrası 4. bölümdeki öncelik sırası; içerik yol haritası 5. bölümde.
   seçenek sayısı banda göre değişiyor
 - Ebeveyn raporu: dönem seçici, günlük süre grafiği, özet sayılar ve oyun
   listesi; kaynağı her turun kaydedildiği `round_history` tablosu
+- Sırala: parçaları boyuta (Filiz) ya da miktara (Fidan/Meşe) göre dizme;
+  Meşe'de miktarlar ardışık ve yön değişebiliyor
 - Avatarlar: 32 emoji, üç tematik grup, her yerde renkli rozet olarak
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
@@ -491,7 +544,7 @@ ayrı bir iş.
 ## 5. İçerik yol haritası — sürümden sonra
 
 Oyun kütüphanesi 1.0 için yeterliydi (10 oyun, beş etkileşim türü) ve şu an
-12'de. Buradakiler kütüphaneyi derinleştiriyor, sürümü bloke etmiyor. Sıra
+13'te. Buradakiler kütüphaneyi derinleştiriyor, sürümü bloke etmiyor. Sıra
 kasıtlı: önce boşluğu büyük olup teknik olarak ucuz olanlar.
 
 **İ1 — Harf ve rakam yazma. ✅ Bitti (02.09.2026).** Ayrıntı 1. bölümde,
@@ -503,9 +556,8 @@ kasıtlı: önce boşluğu büyük olup teknik olarak ucuz olanlar.
 **İ3 — Ebeveyn raporu. ✅ Bitti (02.09.2026).** Ayrıntı 1. bölümde,
 "Ebeveyn raporu" başlığı.
 
-**İ4 — Sıralama ve karşılaştırma.** Büyükten küçüğe dizme, "hangisi daha çok".
-Say ve Eşleştir sayıyor ama karşılaştırmıyor. Şekil Ayırma'nın sürükleme
-altyapısı doğrudan kullanılabilir.
+**İ4 — Sıralama ve karşılaştırma. ✅ Bitti (03.09.2026).** Ayrıntı 1. bölümde,
+"Sırala" başlığı.
 
 **İ5 — Yıldızların bir karşılığı.** Şu an yıldız birikiyor ve hiçbir şey
 açmıyor. 32 emoji avatar zaten var; yıldızla açılan avatarlar/çıkartmalar
@@ -663,7 +715,10 @@ okunmuyor:
    altında SKCanvasView olarak yaz; `BubblePainter`, `ShapePainter`,
    `ParticleField`, `PloofyPalette` hazır. Parmakla çizgi takibi gerekiyorsa
    `TracePath` var — tolerans, geri gitmeyen ilerleme ve çıkış sayımı orada,
-   yeniden yazma. Sürükleme için MAUI'nin
+   yeniden yazma. **Yerleşimin kendisi bir soruysa** (neyin nereye sığdığı,
+   neyin neyle kıyaslandığı) çizimi MAUI'siz bir sınıfa al: `TrendPainter` ve
+   `LineUpPainter` gibi. O zaman `scratchpad`'deki konsol programından PNG
+   üretip gözle bakabiliyorsun ve yerleşim kusurları cihaza gitmeden çıkıyor. Sürükleme için MAUI'nin
    sürükle-bırak tanıyıcıları değil doğrudan dokunma olayları kullanılıyor:
    platformun sürükleme eşiği küçük çocuğun yavaş hareketinde aşılmıyor ve
    parça hiç kıpırdamıyor

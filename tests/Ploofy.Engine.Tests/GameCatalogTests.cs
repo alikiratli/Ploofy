@@ -13,13 +13,14 @@ public class GameCatalogTests
     }
 
     [Fact]
-    public void The_library_is_seven_fun_games_and_five_learning_games()
+    public void The_library_is_seven_fun_games_and_six_learning_games()
     {
-        // 1.0 yedi + üç ile çıktı; Harf Yazma ve Örüntü sürümden sonra
-        // eklendi ve öğretici tarafı beşe çıkardı. Sayı burada duruyor ki
-        // kütüphaneye bir oyun sessizce girmesin: yeni oyun bilinçli bir karar.
-        Assert.Equal(12, GameCatalog.Games.Count);
-        Assert.Equal(5, GameCatalog.Educational.Count);
+        // 1.0 yedi + üç ile çıktı; Harf Yazma, Örüntü ve Sırala sürümden
+        // sonra eklendi ve öğretici tarafı altıya çıkardı. Sayı burada
+        // duruyor ki kütüphaneye bir oyun sessizce girmesin: yeni oyun
+        // bilinçli bir karar.
+        Assert.Equal(13, GameCatalog.Games.Count);
+        Assert.Equal(6, GameCatalog.Educational.Count);
         Assert.Equal(7, GameCatalog.Games.Count(g => !g.IsEducational));
     }
 
@@ -44,21 +45,27 @@ public class GameCatalogTests
     {
         // Kural harfe ve sayıya bakıyor, "öğretici" etiketine değil: iki
         // yaşındaki çocuğa A'yı göstermenin karşılığı yok.
-        var withSymbols = GameCatalog.Educational.Where(g => g.Id != GameCatalog.Pattern);
+        string[] withoutSymbols = [GameCatalog.Pattern, GameCatalog.LineUp];
+
+        var withSymbols = GameCatalog.Educational
+            .Where(g => !withoutSymbols.Contains(g.Id));
+
         Assert.All(withSymbols, g => Assert.True(g.MinBand >= AgeBand.Fidan));
     }
 
     [Fact]
-    public void The_one_learning_game_without_letters_or_numbers_starts_earlier()
+    public void The_learning_games_without_letters_or_numbers_start_earlier()
     {
-        // Örüntü ne harf ne sayı kullanıyor: Filiz bandında yalnızca AB
-        // dizisi ve renk değişimi var, ki oradaki amaç örüntü kurmak değil
-        // "bir şey tekrar ediyor" fikrini yakalamak. Sayılardan önce gelen
-        // beceri bu.
-        var pattern = GameCatalog.ById(GameCatalog.Pattern);
+        // İkisi de sayılardan önce gelen becerileri çalıştırıyor: Örüntü
+        // "bir şey tekrar ediyor", Sırala "bu daha büyük". Filiz bandında
+        // ikisinde de ne harf var ne rakam.
+        foreach (var id in new[] { GameCatalog.Pattern, GameCatalog.LineUp })
+        {
+            var game = GameCatalog.ById(id);
 
-        Assert.True(pattern.IsEducational);
-        Assert.Equal(AgeBand.Filiz, pattern.MinBand);
+            Assert.True(game.IsEducational);
+            Assert.Equal(AgeBand.Filiz, game.MinBand);
+        }
     }
 
     [Fact]

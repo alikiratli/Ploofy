@@ -48,6 +48,7 @@ eigene App mit Vorschulmathematik) darauf aufbauen, ohne die Engine anzufassen.
 | `GlyphShapes` | `Engine/Games/Tracing/` | Die Schreibwege der Großbuchstaben und Ziffern: Striche in Lehrreihenfolge, dazu nicht nachgefahrene Zeichen (der Punkt auf dem İ, die Cedille des Ç). |
 | `PatternRound` | `Engine/Games/` | Eine sich wiederholende Reihe mit einer Lücke. Die Einheit (AB, AAB, ABC, AABB) und die Lage der Lücke hängen an der Altersstufe; vor der Lücke steht immer mindestens eine vollständige Einheit. |
 | `PlayReport` | `Engine/Progress/` | Der Elternbericht: Tagesbalken, Summen und die Spieleliste eines Zeitraums. Jede einzelne Runde wird bei 15 Minuten gekappt, damit eine vergessene App den Bericht nicht auffrisst. |
+| `LineUpRound` | `Engine/Games/` | Reihenfolge und Vergleich. Die jüngste Stufe sortiert nach Größe (ohne Zählen), ab der mittleren nach Menge; nur die sortierte Eigenschaft ändert sich je Aufgabe. Die Runde wechselt nicht von selbst weiter — `NextPuzzle` gehört der Oberfläche. |
 
 ### Ein neues Minispiel hinzufügen
 
@@ -69,10 +70,10 @@ Sperre, Altersfilter, Sterneerfassung und Elternbereich funktionieren von selbst
 **Spaßspiele (7):** Memory · Blasen platzen · Formen sortieren ·
 Wiederhole die Folge · Fang den Korb · Finde den Weg · Puzzle
 
-**Lernspiele (5):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen ·
-Buchstaben schreiben · Was kommt als Nächstes
+**Lernspiele (6):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen ·
+Buchstaben schreiben · Was kommt als Nächstes · Der Reihe nach
 
-Alle zwölf sind spielbar.
+Alle dreizehn sind spielbar.
 
 Sie decken fünf verschiedene Interaktionsarten ab (Tippen, Ziehen, einer Linie
 folgen, Gedächtnis, Reihenfolge) — dieses Maß löst das Problem "alles fühlt sich
@@ -80,8 +81,14 @@ gleich an" von Anfang an.
 
 **Zeichentechnik:** karten- und kachelbasierte Spiele mit MAUI-Steuerelementen;
 alles, was dauernde Bewegung, Partikel oder freies Zeichnen braucht (Blasen
-platzen, Finde den Weg, Puzzle, Fang den Korb, Buchstaben schreiben), mit
-SkiaSharp.
+platzen, Finde den Weg, Puzzle, Fang den Korb, Buchstaben schreiben, Der
+Reihe nach), mit SkiaSharp.
+
+Wo das Layout selbst die Frage ist — der Balken im Elternbericht, die Reihe
+in "Der Reihe nach" — liegt das Zeichnen MAUI-frei in `Ploofy.Ui/Painting`
+(`TrendPainter`, `LineUpPainter`). Dieselben Klassen lassen sich aus einem
+kleinen Konsolenprogramm nach PNG zeichnen und mit dem Auge prüfen; genau
+so wurden dort mehrere Layoutfehler gefunden.
 
 ## Die Bildsprache
 
@@ -107,7 +114,7 @@ kommt allein von den letzten beiden.
 
 | | Gratis | Abo |
 |---|---|---|
-| Spiele | 2 (Memory, Blasen platzen) | 12 + alles später Hinzukommende |
+| Spiele | 2 (Memory, Blasen platzen) | 13 + alles später Hinzukommende |
 | Kinderprofile | 1 | 4 |
 | Werbung | **Keine** | **Keine** |
 | Offline | Ja | Ja + Inhaltspakete |

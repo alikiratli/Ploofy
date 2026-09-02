@@ -24,6 +24,7 @@ public static class GameCatalog
     public const string CountMatch = "count_match";
     public const string LetterTrace = "letter_trace";
     public const string Pattern = "pattern";
+    public const string LineUp = "line_up";
 
     public static readonly ReadOnlyCollection<MiniGameDescriptor> Games = new([
 
@@ -141,6 +142,17 @@ public static class GameCatalog
             GameTier.Subscription,
             AgeBand.Filiz,
             RenderKind.Layout,
+            IsEducational: true,
+            SupportsPassAndPlay: true),
+
+        // Sıralama ve karşılaştırma. Filiz boyuta bakıyor (saymak yok),
+        // Fidan'dan itibaren miktara — Say ve Eşleştir'in devamı.
+        new MiniGameDescriptor(
+            LineUp,
+            InteractionKind.Drag,
+            GameTier.Subscription,
+            AgeBand.Filiz,
+            RenderKind.Canvas,
             IsEducational: true,
             SupportsPassAndPlay: true),
     ]);

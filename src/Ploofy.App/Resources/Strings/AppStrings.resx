@@ -376,6 +376,21 @@
   <data name="GamePattern" xml:space="preserve">
     <value>What comes next</value>
   </data>
+  <data name="GameLineUp" xml:space="preserve">
+    <value>Line them up</value>
+  </data>
+  <data name="LineUpHintSize" xml:space="preserve">
+    <value>Smallest first</value>
+  </data>
+  <data name="LineUpHintSizeDown" xml:space="preserve">
+    <value>Biggest first</value>
+  </data>
+  <data name="LineUpHintCount" xml:space="preserve">
+    <value>Fewest first</value>
+  </data>
+  <data name="LineUpHintCountDown" xml:space="preserve">
+    <value>Most first</value>
+  </data>
   <data name="PatternHint" xml:space="preserve">
     <value>Which one is missing?</value>
   </data>

@@ -28,6 +28,7 @@ public static class GamePresentation
         GameCatalog.CountMatch => "GameCountMatch",
         GameCatalog.LetterTrace => "GameLetterTrace",
         GameCatalog.Pattern => "GamePattern",
+        GameCatalog.LineUp => "GameLineUp",
         _ => gameId,
     };
 
@@ -51,6 +52,7 @@ public static class GamePresentation
         GameCatalog.CountMatch => "🍎",
         GameCatalog.LetterTrace => "✏️",
         GameCatalog.Pattern => "🔁",
+        GameCatalog.LineUp => "📏",
         _ => "🎈",
     };
 
@@ -91,6 +93,7 @@ public static class GamePresentation
         GameCatalog.Jigsaw => "jigsaw",
         GameCatalog.LetterTrace => "lettertrace",
         GameCatalog.Pattern => "pattern",
+        GameCatalog.LineUp => "lineup",
         _ => null,
     };
 

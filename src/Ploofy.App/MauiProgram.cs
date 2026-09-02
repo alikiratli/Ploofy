@@ -117,6 +117,9 @@ public static class MauiProgram
         services.AddTransient<PatternPage>();
         services.AddTransient<PatternViewModel>();
 
+        services.AddTransient<LineUpPage>();
+        services.AddTransient<LineUpViewModel>();
+
         services.AddTransient<RoundResultPage>();
         services.AddTransient<RoundResultViewModel>();
 

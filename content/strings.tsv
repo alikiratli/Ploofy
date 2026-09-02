@@ -104,6 +104,11 @@ GameNumberHunt	Number Hunt	Sayı Avı	Zahlenjagd
 GameCountMatch	Count and Match	Say ve Eşleştir	Zählen und Zuordnen
 GameLetterTrace	Write it	Harf Yazma	Buchstaben schreiben
 GamePattern	What comes next	Örüntü	Was kommt als Nächstes
+GameLineUp	Line them up	Sırala	Der Reihe nach
+LineUpHintSize	Smallest first	Önce en küçük	Das Kleinste zuerst
+LineUpHintSizeDown	Biggest first	Önce en büyük	Das Größte zuerst
+LineUpHintCount	Fewest first	Önce en az	Das Wenigste zuerst
+LineUpHintCountDown	Most first	Önce en çok	Das Meiste zuerst
 PatternHint	Which one is missing?	Hangisi eksik?	Welches fehlt?
 SettingsReport	Play report	Oyun raporu	Spielbericht
 ReportTitle	Play report	Oyun raporu	Spielbericht

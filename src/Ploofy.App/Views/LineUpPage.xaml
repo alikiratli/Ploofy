@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:ui="clr-namespace:Ploofy.Ui.Controls;assembly=Ploofy.Ui"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.LineUpPage"
+             x:Name="Page"
+             x:DataType="vm:LineUpViewModel">
+
+    <Grid>
+        <!-- Oyun yüzeyi bütün sayfayı kaplıyor; yuvalar ve tepsi onun içinde,
+             bilgi şeridi üstünde yüzüyor. -->
+        <ui:LineUpSurface x:Name="Surface" />
+
+        <Border VerticalOptions="Start"
+                Margin="14,14,14,0"
+                Padding="14,10"
+                StrokeShape="RoundRectangle 26"
+                Stroke="Transparent"
+                BackgroundColor="#F2FFFFFF">
+            <Border.Shadow>
+                <Shadow Brush="#40000000" Offset="0,4" Radius="12" Opacity="0.5" />
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto" ColumnSpacing="10">
+
+                <Label Grid.Column="0"
+                       Text="{Binding PlayerAvatar}"
+                       FontSize="26"
+                       VerticalOptions="Center" />
+
+                <Label Grid.Column="1"
+                       Text="{Binding PlayerName}"
+                       FontSize="19"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+
+                <!-- Yön yazısı. Okumayan bant yönü yuvaların üstündeki küçük
+                     ve büyük daireden anlıyor; bu yazı ek bir teyit. -->
+                <Label Grid.Column="2"
+                       Text="{Binding Hint}"
+                       FontSize="17"
+                       TextColor="{StaticResource InkMuted}"
+                       VerticalOptions="Center" />
+
+                <FlexLayout Grid.Column="3"
+                            BindableLayout.ItemsSource="{Binding Pips}"
+                            Wrap="Wrap"
+                            JustifyContent="Center"
+                            AlignItems="Center"
+                            VerticalOptions="Center">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ProgressPip">
+                            <Label Text="●"
+                                   FontSize="15"
+                                   Margin="2,0"
+                                   TextColor="{Binding Fill}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <Label Grid.Column="4"
+                       IsVisible="{Binding ShowsProgressCounter}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource InkMuted}"
+                       VerticalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Completed}" />
+                            <Span Text=" / " />
+                            <Span Text="{Binding Total}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Button Grid.Column="5"
+                        Text="✕"
+                        Style="{StaticResource RoundIconButton}"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        CornerRadius="24"
+                        FontSize="18"
+                        Command="{Binding QuitCommand}" />
+            </Grid>
+        </Border>
+
+        <!-- Devir katmanı -->
+        <Grid IsVisible="{Binding ShowsHandoff}">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#FFC845" Offset="0.0" />
+                    <GradientStop Color="#FF8C42" Offset="1.0" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ConfirmHandoffCommand}" />
+            </Grid.GestureRecognizers>
+
+            <VerticalStackLayout VerticalOptions="Center" Spacing="16" Padding="32">
+                <Label Text="👋" FontSize="76" HorizontalOptions="Center" />
+                <Label Text="{Binding HandoffText}"
+                       Style="{StaticResource TitleLabel}"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="{loc:Translate HandoffHint}"
+                       FontSize="17"
+                       TextColor="#F0FFFFFF"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>
