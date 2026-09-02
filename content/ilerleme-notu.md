@@ -1,6 +1,6 @@
 # Ploofy — İlerleme Notu
 
-Son güncelleme: 02.09.2026
+Son güncelleme: 03.09.2026
 Depo: https://github.com/alikiratli/Ploofy (public)
 Web: https://alikiratli.github.io/ploofy-web/ (gizlilik politikası + Impressum)
 
@@ -430,24 +430,51 @@ ile `ploofy-web`'e taşındı.
 **Sayılar:** 329 test geçiyor · 13 oyun tanımlı, 13'ü oynanabilir ·
 13 ses dosyası · AAB 40 MB · targetSdk 36 · sürüm 1.0.
 
-**Buradan başla: gerçek tablet.** Emülatör her şeyi gösterdi ama iki şeyi
-ölçemiyor — parmağı ve hoparlörü. Tableti USB'den tak, hata ayıklamayı aç,
+## Nerede bırakıldı (03.09.2026)
+
+Son commit: `a63b3ce` — Sırala. Çalışma ağacı temiz, `main` üstünde ve
+**uzağa gönderilmedi**; ilk iş `git push` olabilir.
+
+Bu oturumda kapanan dört madde: yayın anahtarı, gizlilik politikasının
+yayımlanması, abonelik yönetimi, ve içerik yol haritasının ilk dördü
+(İ1 Harf Yazma, İ2 Örüntü, İ3 Ebeveyn raporu, İ4 Sırala). Kütüphane 13
+oyun, testler 329.
+
+**Sıradaki iş: İ5 — yıldızların bir karşılığı.** Şu an yıldız birikiyor ve
+hiçbir şey açmıyor; motivasyon döngüsü kapanmıyor. 32 emoji avatar zaten
+var (üç tematik grup), yani yıldızla açılan avatar/çıkartma küçük bir iş.
+Karar verilecek tek şey, kilidin neye bağlanacağı: toplam yıldız mı, oyun
+başına yıldız mı, yoksa rozetler mi. Sonrası 5. bölümdeki sıra (İ6 ekran
+süresi, İ7 kategori/toplama/boyama, İ8 bant içi uyarlama).
+
+**Ama asıl bekleyen hâlâ gerçek tablet.** Emülatör her şeyi gösterdi, iki
+şeyi ölçemiyor: parmağı ve hoparlörü. Yeni dört oyun da hiç dokunulmadan
+yazıldı; bu liste onlarla birlikte büyüdü. Tableti USB'den tak, hata
+ayıklamayı aç,
 `dotnet build src/Ploofy.App/Ploofy.App.csproj -f net10.0-android -t:Run`.
 Bakılacaklar:
 
 - **Sesler.** Hiçbiri henüz kulakla duyulmadı. Ses seviyeleri birbirine
   göre dengeli mi (dokunuş sesi tekrar tekrar çalıyor, en alçağı o olmalı),
   tuş notaları ezgi gibi mi duyuluyor, tablet hoparlöründe tiz sesler
-  (yıldız) cırlıyor mu
+  (yıldız) cırlıyor mu. Ayarlardaki "Sesleri dene" düğmesi tam bunun için
 - Yolu Bul'da Meşe toleransı (0,055) parmak ucuyla tutturulabiliyor mu —
   bunların en riskli olanı bu
+- **Harf Yazma'da harflerin estetiği.** Sayısal olarak sağlamlar ama S'nin
+  kıvrımı, 6'nın halkası ve 2'nin kuyruğu hiçbir ekranda görülmedi. Nokta
+  listeleri `GlyphShapes.cs` içinde tek satırlık işler; kötü duran bir harf
+  orada elle ayarlanır
+- **Sırala'da Meşe'nin ardışık miktarları** gerçekten sayılabiliyor mu, yoksa
+  11 ile 12 ayırt edilemeyecek kadar mı yakın duruyor
+- **Örüntü'de dokuz kutucuk** yatay ekrana sığıyor mu, dokunma hedefi 64
+  birimin altına düşüyor mu
 - Sepeti Tut'ta düşme hızı Fidan bandında adil mi, sepet parmağı
   gecikmeden takip ediyor mu
 - Sırayı Tekrarla'da 750 ms gösterim hızı Filiz bandında takip edilebiliyor mu
 - Yapboz'da Meşe'nin on altı parçası bir turu fazla uzatıyor mu
 - İkon başlatıcıda nasıl duruyor (uyarlanabilir maske yüzü kırpıyor mu)
 
-Sonrası 4. bölümdeki öncelik sırası; içerik yol haritası 5. bölümde.
+Sürümü bloke edenler 4. bölümde, içerik yol haritası 5. bölümde.
 
 ## 2. Depo düzeni
 
