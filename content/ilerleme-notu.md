@@ -586,6 +586,16 @@ Play'e bir kez yüklenen numara, o paket silinse bile geri alınamıyor.
 `ApplicationDisplayVersion` 1.0'da kalıyor: kullanıcının gördüğü sürüm bu
 ve internal testing bir yayın değil.
 
+versionCode 1'i taşıyan paketler **silindi** ve paket yeni numarayla
+yeniden üretilip doğrulandı: `io.ploofy.app`, versionCode **2**,
+versionName 1.0, minSdk 26, targetSdk 36, yatay kilit, `arm64-v8a` +
+`x86_64`, imza `CN=Ali Kiratli, O=Ploofy`
+(SHA-256 `f7549556…4d27`, önceki paketlerle aynı anahtar). Boyut 38 MB.
+
+Yüklenecek dosya `io.ploofy.app-Signed.aab`. Aynı klasördeki
+`io.ploofy.app.aab` **imzasız** — Play onu kabul etmiyor. `.apk` yalnızca
+tablete USB'den kurmak için; Play yeni uygulamalarda APK almıyor.
+
 ### Gizlilik politikası
 
 Üç dil tek bir sayfada toplandı ve **ayrı bir depoya** kondu — diğer
