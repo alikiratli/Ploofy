@@ -484,4 +484,28 @@
   <data name="CommonNotYet" xml:space="preserve">
     <value>This part isn't ready yet.</value>
   </data>
+  <data name="CollectionTitle" xml:space="preserve">
+    <value>My friends</value>
+  </data>
+  <data name="CollectionCount" xml:space="preserve">
+    <value>{0} / {1} friends</value>
+  </data>
+  <data name="CollectionNext" xml:space="preserve">
+    <value>{0} more stars for a new friend</value>
+  </data>
+  <data name="CollectionNext.One" xml:space="preserve">
+    <value>1 more star for a new friend</value>
+  </data>
+  <data name="CollectionAllUnlocked" xml:space="preserve">
+    <value>You have collected them all!</value>
+  </data>
+  <data name="CollectionHint" xml:space="preserve">
+    <value>Tap a friend to wear it.</value>
+  </data>
+  <data name="RewardUnlockedOne" xml:space="preserve">
+    <value>A new friend!</value>
+  </data>
+  <data name="RewardUnlockedMany" xml:space="preserve">
+    <value>New friends!</value>
+  </data>
 </root>

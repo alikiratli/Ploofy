@@ -140,3 +140,11 @@ CommonCancel	Cancel	Vazgeç	Abbrechen
 CommonOk	OK	Tamam	OK
 CommonClose	Close	Kapat	Schließen
 CommonNotYet	This part isn't ready yet.	Bu bölüm henüz hazır değil.	Dieser Teil ist noch nicht fertig.
+CollectionTitle	My friends	Arkadaşlarım	Meine Freunde
+CollectionCount	{0} / {1} friends	{0} / {1} arkadaş	{0} / {1} Freunde
+CollectionNext	{0} more stars for a new friend	Yeni arkadaş için {0} yıldız	Noch {0} Sterne für einen neuen Freund
+CollectionNext.One	1 more star for a new friend	Yeni arkadaş için 1 yıldız	Noch 1 Stern für einen neuen Freund
+CollectionAllUnlocked	You have collected them all!	Hepsini topladın!	Du hast alle gesammelt!
+CollectionHint	Tap a friend to wear it.	Takmak için bir arkadaşa dokun.	Tippe auf einen Freund, um ihn zu tragen.
+RewardUnlockedOne	A new friend!	Yeni bir arkadaş!	Ein neuer Freund!
+RewardUnlockedMany	New friends!	Yeni arkadaşlar!	Neue Freunde!

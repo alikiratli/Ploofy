@@ -17,6 +17,10 @@ public partial class RoundResultPage : ContentPage
         base.OnAppearing();
         _viewModel.Load();
 
+        // Ödül şeridi kutlamadan önce dolduruluyor: sonradan gelseydi yerleşim
+        // kupa yaylanırken kayardı.
+        await _viewModel.LoadRewardsAsync();
+
         await CelebrateAsync();
     }
 

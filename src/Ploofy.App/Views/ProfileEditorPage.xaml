@@ -74,16 +74,38 @@
                                             AlignItems="Center">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate x:DataType="vm:AvatarChoice">
-                                            <ui:AvatarBadgeView Avatar="{Binding Emoji}"
-                                                                IsSelected="{Binding IsSelected}"
-                                                                Size="68"
-                                                                Margin="4">
-                                                <ui:AvatarBadgeView.GestureRecognizers>
+                                            <!-- Henüz kazanılmamış avatar soluk duruyor ve
+                                                 altında gereken yıldız yazılı. Gizlenmiyor:
+                                                 ebeveynin "yıldız ne işe yarıyor" sorusunun
+                                                 cevabı da burası. -->
+                                            <VerticalStackLayout Margin="4"
+                                                                 Spacing="2"
+                                                                 WidthRequest="76">
+                                                <VerticalStackLayout.GestureRecognizers>
                                                     <TapGestureRecognizer
                                                         Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectAvatarCommand, x:DataType=ContentPage}"
                                                         CommandParameter="{Binding .}" />
-                                                </ui:AvatarBadgeView.GestureRecognizers>
-                                            </ui:AvatarBadgeView>
+                                                </VerticalStackLayout.GestureRecognizers>
+
+                                                <Grid HorizontalOptions="Center" Opacity="{Binding Opacity}">
+                                                    <ui:AvatarBadgeView Avatar="{Binding Emoji}"
+                                                                        IsSelected="{Binding IsSelected}"
+                                                                        Size="68" />
+
+                                                    <Label Text="🔒"
+                                                           FontSize="20"
+                                                           IsVisible="{Binding IsLocked}"
+                                                           HorizontalOptions="End"
+                                                           VerticalOptions="End" />
+                                                </Grid>
+
+                                                <Label Text="{Binding RequirementText}"
+                                                       FontSize="12"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{StaticResource InkMuted}"
+                                                       IsVisible="{Binding IsLocked}"
+                                                       HorizontalTextAlignment="Center" />
+                                            </VerticalStackLayout>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
                                 </FlexLayout>

@@ -72,6 +72,18 @@ public sealed partial class HomeViewModel(
     public partial int TotalStars { get; set; }
 
     /// <summary>
+    /// Sıradaki ödülün simgesi — yıldız rozetinin yanında soluk duruyor.
+    /// </summary>
+    /// <remarks>
+    /// Rozet uzun süre yalnızca bir sayıydı ve dokunulabilir olduğu hiçbir
+    /// yerde görünmüyordu. Yanına konan soluk avatar iki işi birden yapıyor:
+    /// rozeti bir düğmeye benzetiyor ve "yıldız ne işe yarıyor" sorusunu
+    /// ekranın kendisinde cevaplıyor. Koleksiyon bittiyse boş kalıyor.
+    /// </remarks>
+    [ObservableProperty]
+    public partial string NextRewardAvatar { get; set; } = string.Empty;
+
+    /// <summary>
     /// Filiz bandında öğretici oyun yok; başlığı boş bir bölümün üstünde
     /// göstermemek için.
     /// </summary>
@@ -105,6 +117,11 @@ public sealed partial class HomeViewModel(
         ChildName = profile.DisplayName;
         ChildAvatar = profile.AvatarId;
         TotalStars = await repository.TotalStarsAsync(profile.Id);
+
+        var rewards = AvatarCatalog.Progress(TotalStars);
+        NextRewardAvatar = rewards.IsComplete
+            ? string.Empty
+            : AvatarCatalog.UnlockOrder[rewards.Unlocked];
 
         var band = state.ActiveBand;
         var progress = await repository.ProgressForAsync(profile.Id);
@@ -194,6 +211,14 @@ public sealed partial class HomeViewModel(
 
         var profiles = await repository.ListProfilesAsync();
         return profiles.Count >= 2;
+    }
+
+    /// <summary>Yıldız rozetine dokununca koleksiyon açılıyor.</summary>
+    [RelayCommand]
+    private async Task OpenCollectionAsync()
+    {
+        await feedback.PlayAsync(FeedbackCue.Tap);
+        await Shell.Current.GoToAsync("collection");
     }
 
     [RelayCommand]

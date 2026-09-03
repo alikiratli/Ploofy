@@ -484,4 +484,28 @@
   <data name="CommonNotYet" xml:space="preserve">
     <value>Bu bölüm henüz hazır değil.</value>
   </data>
+  <data name="CollectionTitle" xml:space="preserve">
+    <value>Arkadaşlarım</value>
+  </data>
+  <data name="CollectionCount" xml:space="preserve">
+    <value>{0} / {1} arkadaş</value>
+  </data>
+  <data name="CollectionNext" xml:space="preserve">
+    <value>Yeni arkadaş için {0} yıldız</value>
+  </data>
+  <data name="CollectionNext.One" xml:space="preserve">
+    <value>Yeni arkadaş için 1 yıldız</value>
+  </data>
+  <data name="CollectionAllUnlocked" xml:space="preserve">
+    <value>Hepsini topladın!</value>
+  </data>
+  <data name="CollectionHint" xml:space="preserve">
+    <value>Takmak için bir arkadaşa dokun.</value>
+  </data>
+  <data name="RewardUnlockedOne" xml:space="preserve">
+    <value>Yeni bir arkadaş!</value>
+  </data>
+  <data name="RewardUnlockedMany" xml:space="preserve">
+    <value>Yeni arkadaşlar!</value>
+  </data>
 </root>

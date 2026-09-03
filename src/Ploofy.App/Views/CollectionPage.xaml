@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Koleksiyon: yıldızın karşılığı.
+
+    Kilitli avatarlar gizlenmiyor, soluk duruyor ve altlarında gereken yıldız
+    yazılı. Görünmeyen ödül ödül değil — çocuk neyi kazanacağını görmeden
+    yıldız toplamıyor.
+
+    Açılmış bir avatara dokunmak onu doğrudan profile takıyor. Ebeveyn kilidi
+    yok: kazandığı simgeyi kullanmak için ebeveyn çağırmak zorunda kalan
+    çocuk ödülün yarısını kaybediyor.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:ui="clr-namespace:Ploofy.Ui.Controls;assembly=Ploofy.Ui"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.CollectionPage"
+             x:Name="Page"
+             x:DataType="vm:CollectionViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="{StaticResource PagePadding}" RowSpacing="14">
+
+        <!-- Üst şerit: kim, kaç yıldız, kaç arkadaş -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Padding="14,10">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                <ui:AvatarBadgeView Grid.Column="0"
+                                    Avatar="{Binding ChildAvatar}"
+                                    Size="54" />
+
+                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                    <Label Text="{Binding ChildName}"
+                           FontSize="20"
+                           FontAttributes="Bold" />
+                    <Label Text="{Binding CountText}" Style="{StaticResource HintLabel}" />
+                </VerticalStackLayout>
+
+                <Border Grid.Column="2"
+                        Padding="12,6"
+                        StrokeThickness="0"
+                        Background="{StaticResource Card1Brush}"
+                        StrokeShape="RoundRectangle 18"
+                        VerticalOptions="Center">
+                    <Label Text="{Binding TotalStars, Converter={StaticResource FormatWith}, ConverterParameter=TotalStars}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Ink}" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16">
+
+                <Label Text="{loc:Translate CollectionTitle}" Style="{StaticResource TitleLabel}" />
+
+                <!-- Sıradaki ödül: kim geliyor ve ne kadar kaldı.
+                     Çubuk iki eşiğin arasını ölçüyor, sıfırdan değil — yoksa
+                     hep neredeyse dolu görünürdü (bkz. RewardProgress). -->
+                <Border Style="{StaticResource CardBorder}" Padding="14,12">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                        <Border Grid.Column="0"
+                                WidthRequest="62"
+                                HeightRequest="62"
+                                Padding="0"
+                                StrokeThickness="0"
+                                BackgroundColor="{StaticResource SurfaceMuted}"
+                                StrokeShape="RoundRectangle 31"
+                                VerticalOptions="Center">
+                            <Grid>
+                                <!-- Kilitli olduğu için rozet değil soluk emoji:
+                                     rozet "senin" demek, bu henüz senin değil. -->
+                                <Label Text="{Binding NextAvatar}"
+                                       FontSize="30"
+                                       Opacity="0.45"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                                <Label Text="🔒"
+                                       FontSize="16"
+                                       IsVisible="{Binding HasNext}"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="End" />
+                            </Grid>
+                        </Border>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                            <Label Text="{Binding NextText}"
+                                   FontSize="16"
+                                   FontAttributes="Bold" />
+                            <ProgressBar Progress="{Binding NextProgress}"
+                                         ProgressColor="{StaticResource Sun}"
+                                         HeightRequest="10" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Gruplar: otuz iki simge tek ızgarada aranamıyor. -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Groups}" Spacing="14">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CollectedGroup">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="{Binding Name}" Style="{StaticResource SectionLabel}" />
+
+                                <FlexLayout BindableLayout.ItemsSource="{Binding Avatars}"
+                                            Wrap="Wrap"
+                                            JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:CollectedAvatar">
+                                            <VerticalStackLayout Margin="0,0,10,10"
+                                                                 Spacing="2"
+                                                                 WidthRequest="72">
+                                                <VerticalStackLayout.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={x:Reference Page}, Path=BindingContext.ChooseCommand, x:DataType=ContentPage}"
+                                                        CommandParameter="{Binding .}" />
+                                                </VerticalStackLayout.GestureRecognizers>
+
+                                                <Grid HorizontalOptions="Center" Opacity="{Binding Opacity}">
+                                                    <ui:AvatarBadgeView Avatar="{Binding Emoji}"
+                                                                        IsSelected="{Binding IsSelected}"
+                                                                        Size="64" />
+
+                                                    <Label Text="🔒"
+                                                           FontSize="20"
+                                                           IsVisible="{Binding IsLocked}"
+                                                           HorizontalOptions="End"
+                                                           VerticalOptions="End" />
+                                                </Grid>
+
+                                                <!-- Kilitli olanın altında gereken yıldız sayısı.
+                                                     Okuma bilmeyen çocuk da o sayıyı sayabiliyor. -->
+                                                <Label Text="{Binding RequirementText}"
+                                                       FontSize="12"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{StaticResource InkMuted}"
+                                                       IsVisible="{Binding IsLocked}"
+                                                       HorizontalTextAlignment="Center" />
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Label Text="{loc:Translate CollectionHint}"
+                       Style="{StaticResource HintLabel}"
+                       HorizontalTextAlignment="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Grid.Row="2"
+                Text="{loc:Translate CommonClose}"
+                Style="{StaticResource QuietButton}"
+                Command="{Binding BackCommand}" />
+
+    </Grid>
+</ContentPage>

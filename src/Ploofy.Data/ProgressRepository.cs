@@ -36,6 +36,18 @@ public static class SettingKeys
     /// var, erişim kararına girmiyor.
     /// </summary>
     public const string SubscriptionPeriodEnd = "subscription_period_end";
+
+    /// <summary>
+    /// Ödül kutlamasının en son hangi yıldız sayısında yapıldığı, profil başına.
+    /// </summary>
+    /// <remarks>
+    /// Açılmış avatarın kendisi saklanmıyor — o her zaman toplam yıldızdan
+    /// türetiliyor. Saklanan tek şey <b>gösterilen</b> sınır: tur sonu ekranı
+    /// bu işaretle o anki toplamı karşılaştırıp aradaki ödülleri kutluyor,
+    /// sonra işareti ileri alıyor. Böylece uygulama kutlama anında kapansa
+    /// bile ödül kaybolmuyor, ikinci kez de kutlanmıyor.
+    /// </remarks>
+    public static string RewardsSeen(int profileId) => $"rewards_seen:{profileId}";
 }
 
 /// <summary>
@@ -110,6 +122,14 @@ public sealed class ProgressRepository(ProgressDatabase database)
             .DeleteAsync(r => r.ProfileId == id);
         await _database.Connection.Table<ChildProfileRow>()
             .DeleteAsync(r => r.Id == id);
+
+        // Ödül işareti ayarlar tablosunda, profil başına bir anahtar. Silinmese
+        // aynı id'yi alan bir sonraki profil, hiç oynamadan "kutlanmış" başlardı.
+        // Anahtar önce değişkene alınıyor: sqlite-net sorgu ağacında metot
+        // çağrısı çeviremiyor, yakalanmış bir yereli sabit olarak alıyor.
+        var rewardKey = SettingKeys.RewardsSeen(id);
+        await _database.Connection.Table<AppSettingRow>()
+            .DeleteAsync(r => r.Key == rewardKey);
     }
 
     /// <summary>Profili oyun oturumunda kullanılan oyuncuya çevirir.</summary>
@@ -240,6 +260,39 @@ public sealed class ProgressRepository(ProgressDatabase database)
         return await _database.Connection.Table<BadgeUnlockRow>()
             .Where(r => r.ProfileId == profileId)
             .ToListAsync();
+    }
+
+    /// <summary>
+    /// Bu profil için en son kutlanan yıldız sayısı.
+    /// </summary>
+    /// <param name="currentTotal">
+    /// O anki toplam. İşaret hiç yazılmamışsa buraya kurulup geri dönüyor —
+    /// yani zaten yıldız biriktirmiş <b>eski</b> bir profil, güncellemeden
+    /// sonra on üç kutlamayı arka arkaya görmüyor.
+    /// </param>
+    public async Task<int> RewardWatermarkAsync(int profileId, int currentTotal)
+    {
+        var raw = await GetSettingAsync(SettingKeys.RewardsSeen(profileId));
+        if (raw is not null && int.TryParse(raw, out var seen))
+        {
+            return seen;
+        }
+
+        await SetRewardWatermarkAsync(profileId, currentTotal);
+        return currentTotal;
+    }
+
+    /// <summary>İşareti ileri alır. Geri alınmıyor: kutlanan kutlanmış sayılır.</summary>
+    public async Task SetRewardWatermarkAsync(int profileId, int stars)
+    {
+        var key = SettingKeys.RewardsSeen(profileId);
+        var raw = await GetSettingAsync(key);
+        var current = raw is not null && int.TryParse(raw, out var seen) ? seen : 0;
+
+        if (stars > current || raw is null)
+        {
+            await SetSettingAsync(key, stars.ToString());
+        }
     }
 
     // --- Ayarlar ---

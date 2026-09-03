@@ -116,16 +116,31 @@
                        FontAttributes="Bold"
                        VerticalOptions="Center" />
 
+                <!-- Yıldız rozeti koleksiyonu açıyor. Yanındaki soluk avatar
+                     sıradaki ödül: rozeti bir düğmeye benzetiyor ve yıldızın
+                     ne işe yaradığını ekranın kendisinde söylüyor. -->
                 <Border Grid.Column="2"
                         Padding="12,6"
                         StrokeThickness="0"
                         Background="{StaticResource Card1Brush}"
                         StrokeShape="RoundRectangle 18"
                         VerticalOptions="Center">
-                    <Label Text="{Binding TotalStars, Converter={StaticResource FormatWith}, ConverterParameter=TotalStars}"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource Ink}" />
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenCollectionCommand}" />
+                    </Border.GestureRecognizers>
+
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="{Binding TotalStars, Converter={StaticResource FormatWith}, ConverterParameter=TotalStars}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Ink}"
+                               VerticalOptions="Center" />
+
+                        <Label Text="{Binding NextRewardAvatar}"
+                               FontSize="18"
+                               Opacity="0.5"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
                 </Border>
             </Grid>
         </Border>

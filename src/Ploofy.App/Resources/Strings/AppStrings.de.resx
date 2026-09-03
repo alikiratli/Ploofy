@@ -484,4 +484,28 @@
   <data name="CommonNotYet" xml:space="preserve">
     <value>Dieser Teil ist noch nicht fertig.</value>
   </data>
+  <data name="CollectionTitle" xml:space="preserve">
+    <value>Meine Freunde</value>
+  </data>
+  <data name="CollectionCount" xml:space="preserve">
+    <value>{0} / {1} Freunde</value>
+  </data>
+  <data name="CollectionNext" xml:space="preserve">
+    <value>Noch {0} Sterne für einen neuen Freund</value>
+  </data>
+  <data name="CollectionNext.One" xml:space="preserve">
+    <value>Noch 1 Stern für einen neuen Freund</value>
+  </data>
+  <data name="CollectionAllUnlocked" xml:space="preserve">
+    <value>Du hast alle gesammelt!</value>
+  </data>
+  <data name="CollectionHint" xml:space="preserve">
+    <value>Tippe auf einen Freund, um ihn zu tragen.</value>
+  </data>
+  <data name="RewardUnlockedOne" xml:space="preserve">
+    <value>Ein neuer Freund!</value>
+  </data>
+  <data name="RewardUnlockedMany" xml:space="preserve">
+    <value>Neue Freunde!</value>
+  </data>
 </root>

@@ -62,6 +62,35 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
+                <!-- Yeni açılan avatar. Şerit yalnızca bir eşik geçildiğinde
+                     görünüyor; dokununca koleksiyona gidiyor, yani ödül
+                     kutlandığı yerde kullanılabiliyor. -->
+                <Border IsVisible="{Binding HasUnlock}"
+                        Style="{StaticResource CardBorder}"
+                        Padding="16,12"
+                        HorizontalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenCollectionCommand}" />
+                    </Border.GestureRecognizers>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="{Binding UnlockText}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" />
+
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding UnlockedAvatars}"
+                                               Spacing="8"
+                                               HorizontalOptions="Center">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <ui:AvatarBadgeView Avatar="{Binding .}" Size="56" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
             </VerticalStackLayout>
 
             <VerticalStackLayout Grid.Row="1" Spacing="10">

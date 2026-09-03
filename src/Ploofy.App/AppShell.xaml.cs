@@ -26,6 +26,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("paywall", typeof(PaywallPage));
         Routing.RegisterRoute("subscription", typeof(SubscriptionPage));
         Routing.RegisterRoute("report", typeof(ReportPage));
+        Routing.RegisterRoute("collection", typeof(CollectionPage));
 
         // Mini oyunlar
         Routing.RegisterRoute("memorymatch", typeof(MemoryMatchPage));

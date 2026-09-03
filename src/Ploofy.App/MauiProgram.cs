@@ -132,6 +132,9 @@ public static class MauiProgram
         services.AddTransient<SubscriptionPage>();
         services.AddTransient<SubscriptionViewModel>();
 
+        services.AddTransient<CollectionPage>();
+        services.AddTransient<CollectionViewModel>();
+
         services.AddTransient<ReportPage>();
         services.AddTransient<ReportViewModel>();
     }

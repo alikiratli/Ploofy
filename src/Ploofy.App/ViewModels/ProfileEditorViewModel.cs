@@ -38,12 +38,31 @@ public sealed class BandOption(AgeBand band)
 }
 
 /// <summary>Seçilebilir tek avatar.</summary>
-public sealed partial class AvatarChoice(string emoji) : ObservableObject
+/// <remarks>
+/// Kilit durumu değişebiliyor: ızgara ekran açılırken kuruluyor, çocuğun
+/// yıldızı ise profil okunduktan sonra biliniyor.
+/// </remarks>
+public sealed partial class AvatarChoice(string emoji, int requiredStars) : ObservableObject
 {
     public string Emoji { get; } = emoji;
 
+    /// <summary>Açılması için gereken toplam yıldız; başlangıçtan açıksa sıfır.</summary>
+    public int RequiredStars { get; } = requiredStars;
+
     [ObservableProperty]
     public partial bool IsSelected { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLocked))]
+    [NotifyPropertyChangedFor(nameof(Opacity))]
+    public partial bool IsUnlocked { get; set; }
+
+    public bool IsLocked => !IsUnlocked;
+
+    /// <summary>Kilitli avatarın altındaki "5 yıldız" etiketi.</summary>
+    public string RequirementText => $"{RequiredStars} ★";
+
+    public double Opacity => IsUnlocked ? 1.0 : 0.4;
 }
 
 /// <summary>Ekrandaki tek avatar grubu — başlığı ve seçenekleriyle.</summary>
@@ -108,13 +127,19 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
         SelectedAvatar = AvatarCatalog.Default;
         HeaderText = LocalizationService.Instance["AddProfile"];
 
+        // Izgara kilitli hâliyle kuruluyor: yeni profilin yıldızı yok, yani
+        // yalnızca başlangıçtan açık olanlar seçilebilir. Düzenleme açıldığında
+        // LoadAsync o çocuğun yıldızına göre kilitleri kaldırıyor.
         AvatarGroups =
         [
             .. AvatarCatalog.Groups.Select(group => new AvatarGroupVm(
                 group.NameKey,
-                [.. group.Avatars.Select(emoji => new AvatarChoice(emoji)
+                [.. group.Avatars.Select(emoji => new AvatarChoice(
+                    emoji,
+                    AvatarCatalog.RequiredStars(emoji))
                 {
                     IsSelected = emoji == AvatarCatalog.Default,
+                    IsUnlocked = AvatarCatalog.IsUnlocked(emoji, 0),
                 })])),
         ];
     }
@@ -191,6 +216,17 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
         HeaderText = LocalizationService.Instance["EditProfile"];
         DisplayName = existing.DisplayName;
 
+        // Kazanılmış avatarların kilidi açılıyor. Çocuğun o an takındığı
+        // avatar her koşulda açık: katalog sırası ileride değişirse bile
+        // ebeveyn, çocuğun simgesini "kilitli" görüp değiştirmek zorunda
+        // kalmamalı.
+        var totalStars = await _repository.TotalStarsAsync(existing.Id);
+        foreach (var option in AvatarGroups.SelectMany(g => g.Choices))
+        {
+            option.IsUnlocked = AvatarCatalog.IsUnlocked(option.Emoji, totalStars)
+                || option.Emoji == existing.AvatarId;
+        }
+
         var band = AgeBandExtensions.FromId(existing.AgeBandId);
         SelectedBand = Bands.First(b => b.Band == band);
 
@@ -217,7 +253,10 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
     [RelayCommand]
     private void SelectAvatar(AvatarChoice? choice)
     {
-        if (choice is null)
+        // Kilitli avatara dokunmak sessizce yok sayılıyor. Gereken yıldız
+        // zaten simgenin altında yazılı; ayrıca bir uyarı çıkarmak ebeveyni
+        // kapatması gereken bir kutuyla karşılamak olurdu.
+        if (choice is null || choice.IsLocked)
         {
             return;
         }
