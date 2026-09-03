@@ -168,3 +168,10 @@ ScreenTimeUnlimited	No limit	Sınırsız	Kein Limit
 ScreenTimeMinutes	{0} min a day	Günde {0} dk	{0} Min. pro Tag
 ProfileScreenTimeLabel	Daily play time	Günlük oyun süresi	Tägliche Spielzeit
 ScreenTimeHint	Only time inside a game counts. A game is never cut off in the middle — the limit is checked between games.	Yalnızca oyun içinde geçen süre sayılıyor. Oyun ortada kesilmiyor; sınır oyunlar arasında bakılıyor.	Gezählt wird nur die Zeit im Spiel. Ein Spiel wird nie mittendrin beendet — das Limit wird zwischen den Spielen geprüft.
+GameCategorySort	Which Group?	Hangi Küme?	Welche Gruppe?
+CategoryAnimals	Animals	Hayvanlar	Tiere
+CategoryVehicles	Vehicles	Araçlar	Fahrzeuge
+CategoryFood	Food	Yiyecekler	Essen
+CategoryClothes	Clothes	Giysiler	Kleidung
+CategoryFruit	Fruit	Meyveler	Obst
+CategoryVegetables	Vegetables	Sebzeler	Gemüse

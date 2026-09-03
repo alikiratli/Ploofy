@@ -13,14 +13,14 @@ public class GameCatalogTests
     }
 
     [Fact]
-    public void The_library_is_seven_fun_games_and_seven_learning_games()
+    public void The_library_is_seven_fun_games_and_eight_learning_games()
     {
-        // 1.0 yedi + üç ile çıktı; Harf Yazma, Örüntü, Sırala ve Noktaları
-        // Birleştir sürümden sonra eklendi ve öğretici tarafı yediye çıkardı.
-        // Sayı burada duruyor ki kütüphaneye bir oyun sessizce girmesin:
-        // yeni oyun bilinçli bir karar.
-        Assert.Equal(14, GameCatalog.Games.Count);
-        Assert.Equal(7, GameCatalog.Educational.Count);
+        // 1.0 yedi + üç ile çıktı. Sürümden sonra Harf Yazma, Örüntü, Sırala,
+        // Noktaları Birleştir ve Kategori Ayırma eklendi; öğretici taraf
+        // sekize çıktı. Sayı burada duruyor ki kütüphaneye bir oyun sessizce
+        // girmesin: yeni oyun bilinçli bir karar.
+        Assert.Equal(15, GameCatalog.Games.Count);
+        Assert.Equal(8, GameCatalog.Educational.Count);
         Assert.Equal(7, GameCatalog.Games.Count(g => !g.IsEducational));
     }
 
@@ -45,7 +45,8 @@ public class GameCatalogTests
     {
         // Kural harfe ve sayıya bakıyor, "öğretici" etiketine değil: iki
         // yaşındaki çocuğa A'yı göstermenin karşılığı yok.
-        string[] withoutSymbols = [GameCatalog.Pattern, GameCatalog.LineUp];
+        string[] withoutSymbols =
+            [GameCatalog.Pattern, GameCatalog.LineUp, GameCatalog.CategorySort];
 
         var withSymbols = GameCatalog.Educational
             .Where(g => !withoutSymbols.Contains(g.Id));
@@ -56,10 +57,11 @@ public class GameCatalogTests
     [Fact]
     public void The_learning_games_without_letters_or_numbers_start_earlier()
     {
-        // İkisi de sayılardan önce gelen becerileri çalıştırıyor: Örüntü
-        // "bir şey tekrar ediyor", Sırala "bu daha büyük". Filiz bandında
-        // ikisinde de ne harf var ne rakam.
-        foreach (var id in new[] { GameCatalog.Pattern, GameCatalog.LineUp })
+        // Üçü de sayılardan önce gelen becerileri çalıştırıyor: Örüntü
+        // "bir şey tekrar ediyor", Sırala "bu daha büyük", Kategori Ayırma
+        // "bunlar aynı kümeden". Filiz bandında üçünde de ne harf var ne rakam.
+        foreach (var id in new[]
+                 { GameCatalog.Pattern, GameCatalog.LineUp, GameCatalog.CategorySort })
         {
             var game = GameCatalog.ById(id);
 

@@ -568,4 +568,25 @@
   <data name="ScreenTimeHint" xml:space="preserve">
     <value>Only time inside a game counts. A game is never cut off in the middle — the limit is checked between games.</value>
   </data>
+  <data name="GameCategorySort" xml:space="preserve">
+    <value>Which Group?</value>
+  </data>
+  <data name="CategoryAnimals" xml:space="preserve">
+    <value>Animals</value>
+  </data>
+  <data name="CategoryVehicles" xml:space="preserve">
+    <value>Vehicles</value>
+  </data>
+  <data name="CategoryFood" xml:space="preserve">
+    <value>Food</value>
+  </data>
+  <data name="CategoryClothes" xml:space="preserve">
+    <value>Clothes</value>
+  </data>
+  <data name="CategoryFruit" xml:space="preserve">
+    <value>Fruit</value>
+  </data>
+  <data name="CategoryVegetables" xml:space="preserve">
+    <value>Vegetables</value>
+  </data>
 </root>

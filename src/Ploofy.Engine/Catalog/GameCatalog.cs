@@ -26,6 +26,7 @@ public static class GameCatalog
     public const string Pattern = "pattern";
     public const string LineUp = "line_up";
     public const string DotToDot = "dot_to_dot";
+    public const string CategorySort = "category_sort";
 
     public static readonly ReadOnlyCollection<MiniGameDescriptor> Games = new([
 
@@ -170,6 +171,23 @@ public static class GameCatalog
             AgeBand.Fidan,
             RenderKind.Canvas,
             IsEducational: true),
+
+        // Kategori ayırma. Şekil Ayırma algısal bir ayrım istiyor (üçgen mi
+        // kare mi); burası anlamsal: kedi hayvan mı araç mı. Sınıflandırma
+        // dilden önce gelen bir beceri ve okumaya hazırlığın parçası, o
+        // yüzden öğretici tarafta.
+        //
+        // Dokunma, sürükleme değil: ekranda tek parça duruyor ve çocuk
+        // kutuya dokunuyor. Sorulan tek şey kararın kendisi, parmağın
+        // hassasiyeti değil.
+        new MiniGameDescriptor(
+            CategorySort,
+            InteractionKind.Tap,
+            GameTier.Subscription,
+            AgeBand.Filiz,
+            RenderKind.Layout,
+            IsEducational: true,
+            SupportsPassAndPlay: true),
     ]);
 
     public static MiniGameDescriptor ById(string id) =>

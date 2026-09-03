@@ -28,6 +28,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("report", typeof(ReportPage));
         Routing.RegisterRoute("collection", typeof(CollectionPage));
         Routing.RegisterRoute("dottodot", typeof(DotToDotPage));
+        Routing.RegisterRoute("categorysort", typeof(CategorySortPage));
 
         // Mini oyunlar
         Routing.RegisterRoute("memorymatch", typeof(MemoryMatchPage));

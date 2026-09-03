@@ -568,4 +568,25 @@
   <data name="ScreenTimeHint" xml:space="preserve">
     <value>Yalnızca oyun içinde geçen süre sayılıyor. Oyun ortada kesilmiyor; sınır oyunlar arasında bakılıyor.</value>
   </data>
+  <data name="GameCategorySort" xml:space="preserve">
+    <value>Hangi Küme?</value>
+  </data>
+  <data name="CategoryAnimals" xml:space="preserve">
+    <value>Hayvanlar</value>
+  </data>
+  <data name="CategoryVehicles" xml:space="preserve">
+    <value>Araçlar</value>
+  </data>
+  <data name="CategoryFood" xml:space="preserve">
+    <value>Yiyecekler</value>
+  </data>
+  <data name="CategoryClothes" xml:space="preserve">
+    <value>Giysiler</value>
+  </data>
+  <data name="CategoryFruit" xml:space="preserve">
+    <value>Meyveler</value>
+  </data>
+  <data name="CategoryVegetables" xml:space="preserve">
+    <value>Sebzeler</value>
+  </data>
 </root>
