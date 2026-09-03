@@ -1,3 +1,4 @@
+using System.Globalization;
 using Ploofy.Engine.Games;
 using Ploofy.Ui.Painting;
 using SkiaSharp;
@@ -21,6 +22,21 @@ namespace Ploofy.Ui.Controls;
 /// olduğu hâlde "çıktın" demek olurdu. Aynı kural Yolu Bul'da da geçerli.
 /// </para>
 /// <para>
+/// Her darbenin yanında <b>sırasının rakamı</b>, ucunda da <b>yön oku</b>
+/// duruyor — yazı defterlerindeki gösterimin aynısı. Motor sırayı zaten
+/// dayatıyordu ama ekran onu yalnızca renkle söylüyordu: sıradaki beyaz,
+/// ötekiler soluk. Rakam bunu <b>adlandırılabilir</b> yapıyor; çocuk "bir,
+/// iki, üç" diyerek yazıyor ve aynı sırayı kâğıtta da kuruyor. Ok ise
+/// sıranın söylemediğini söylüyor: aynı çizgi iki yönde de çizilebilir ve
+/// yanlış yönde yazmayı öğrenen çocuk bunu sonradan zor bırakıyor.
+/// </para>
+/// <para>
+/// Rakam darbenin <b>başına</b> değil, biraz içine ve dışa doğru kaçırılarak
+/// konuyor. Sebebi A: iki darbesi de tepe noktasından başlıyor, yani başa
+/// konan iki rakam üst üste binerdi. Yüzde on beş içeriden bakınca darbeler
+/// ayrılmış oluyor.
+/// </para>
+/// <para>
 /// Aksan işaretleri (Ç'nin kuyruğu, İ'nin noktası) hiç takip edilmiyor, baştan
 /// dolu çiziliyor: bir noktanın yönü yok, dolayısıyla takip edilecek bir şeyi
 /// de yok.
@@ -34,6 +50,13 @@ public sealed class LetterTraceSurface : SKCanvasView
     /// tamamladığı harfi hiç görmüyor — ve bitirmenin ödülü tam olarak o.
     /// </remarks>
     private const float CelebrationDuration = 0.95f;
+
+    /// <summary>Rakamın kaçış yönünde "berabere" sayılan eşik.</summary>
+    /// <remarks>
+    /// Birim karede ölçülüyor. Bundan küçük bir eğilim, ekranda görülebilir
+    /// bir yön farkı üretmiyor — bkz. <see cref="OutwardNormal"/>.
+    /// </remarks>
+    private const float Tie = 0.02f;
 
     private static readonly SKColor GuideColor = new(0xFF, 0xFF, 0xFF);
     private static readonly SKColor SlipColor = new(0xFF, 0x8C, 0x42);
@@ -51,6 +74,8 @@ public sealed class LetterTraceSurface : SKCanvasView
     };
 
     private readonly SKPaint _marker = new() { IsAntialias = true, Style = SKPaintStyle.Fill };
+    private readonly SKPaint _number = new() { IsAntialias = true };
+    private readonly SKFont _numberFont = new(SKTypeface.Default) { Embolden = true };
 
     private IDispatcherTimer? _ticker;
     private DateTime _lastFrame;
@@ -233,6 +258,10 @@ public sealed class LetterTraceSurface : SKCanvasView
 
         _drawnGlyph = round.Current;
 
+        var center = CenterOf(round.Current);
+
+        // Şeritler önce, rakamlar sonra: bir rakam, sonraki darbenin
+        // şeridinin altında kalmamalı — harfin üstünde durmalı.
         for (var i = 0; i < round.Strokes.Count; i++)
         {
             var path = round.Strokes[i];
@@ -251,17 +280,56 @@ public sealed class LetterTraceSurface : SKCanvasView
                 // Sıradaki değil: soluk dursun ki hangisinin çizileceği
                 // tereddütsüz belli olsun.
                 DrawGuide(canvas, points, band, isOffPath: false, isDim: true);
+                DrawArrow(canvas, points, band, isDim: true);
                 continue;
             }
 
             DrawGuide(canvas, points, band, path.IsOffPath, isDim: false);
             DrawInked(canvas, points, path.Progress * (points.Count - 1), path.Head, band);
-            DrawStart(canvas, points[0], band);
+            DrawArrow(canvas, points, band, isDim: false);
             DrawHead(canvas, path, band);
+        }
+
+        for (var i = 0; i < round.Strokes.Count; i++)
+        {
+            DrawStrokeNumber(
+                canvas,
+                round.Strokes[i].Points,
+                i + 1,
+                band,
+                center,
+                isDone: i < round.StrokeIndex,
+                isActive: i == round.StrokeIndex);
         }
 
         DrawMarks(canvas, round.Current, band);
         _particles.Draw(canvas);
+    }
+
+    /// <summary>
+    /// İşaretin ağırlık merkezi, birim karede.
+    /// </summary>
+    /// <remarks>
+    /// Rakamların hangi yöne kaçırılacağı buradan çıkıyor: merkezden uzağa,
+    /// yani harfin dışına. Sabit bir yön (hep sola, hep yukarı) bazı
+    /// harflerde rakamı gövdenin üstüne düşürüyordu.
+    /// </remarks>
+    private static (float X, float Y) CenterOf(Glyph glyph)
+    {
+        float sumX = 0, sumY = 0;
+        var count = 0;
+
+        foreach (var stroke in glyph.Strokes)
+        {
+            foreach (var point in stroke)
+            {
+                sumX += point.X;
+                sumY += point.Y;
+                count++;
+            }
+        }
+
+        return count == 0 ? (0.5f, 0.5f) : (sumX / count, sumY / count);
     }
 
     /// <summary>
@@ -367,10 +435,206 @@ public sealed class LetterTraceSurface : SKCanvasView
         }
     }
 
-    private void DrawStart(SKCanvas canvas, PathPoint start, float band)
+    /// <summary>
+    /// Darbenin sıra rakamı.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Yazı defterlerindeki gösterim. Darbenin başında değil yüzde on beş
+    /// içinde duruyor ve gövdenin dışına kaçırılıyor: A harfinin iki darbesi
+    /// de tepeden başlıyor, başa konan iki rakam üst üste binerdi.
+    /// </para>
+    /// <para>
+    /// Bitmiş darbenin rakamı da duruyor ama sönük: çocuk kaçıncı darbede
+    /// olduğunu ancak öncekileri de görerek sayabiliyor.
+    /// </para>
+    /// </remarks>
+    private void DrawStrokeNumber(
+        SKCanvas canvas,
+        IReadOnlyList<PathPoint> points,
+        int number,
+        float band,
+        (float X, float Y) center,
+        bool isDone,
+        bool isActive)
     {
-        _marker.Color = PloofyPalette.Ink.WithAlpha(60);
-        canvas.DrawCircle(ToScreen(start), band * 0.30f, _marker);
+        if (points.Count < 2)
+        {
+            return;
+        }
+
+        var head = Math.Min(points.Count - 1, (int)(points.Count * 0.15f));
+        var anchor = points[head];
+
+        var (nx, ny) = OutwardNormal(points, head, anchor, center);
+
+        // Yarıçap pikselde (daire onunla çiziliyor), kaçış payı ve kenar payı
+        // birim karede (rakamın yeri orada hesaplanıyor). İkisini karıştırmak
+        // rakamı her harfte ekranın kenarına yapıştırıyordu.
+        var radius = band * 0.34f;
+        var offset = band * 0.78f / _side;
+        var margin = radius / _side;
+
+        var badge = new PathPoint(
+            Math.Clamp(anchor.X + (nx * offset), margin, 1f - margin),
+            Math.Clamp(anchor.Y + (ny * offset), margin, 1f - margin));
+
+        var screen = ToScreen(badge);
+        var hue = isDone ? PloofyPalette.Lime : PloofyPalette.Grape;
+        var alpha = isActive ? (byte)255 : isDone ? (byte)120 : (byte)150;
+
+        _marker.Color = SKColors.White.WithAlpha(alpha);
+        canvas.DrawCircle(screen, radius, _marker);
+
+        _marker.Color = hue.Body.WithAlpha(alpha);
+        canvas.DrawCircle(screen, radius * 0.82f, _marker);
+
+        var text = number.ToString(CultureInfo.InvariantCulture);
+        _numberFont.Size = radius * 1.05f;
+
+        var metrics = _numberFont.Metrics;
+        var baseline = screen.Y - ((metrics.Ascent + metrics.Descent) / 2f);
+
+        _number.Color = SKColors.White.WithAlpha(alpha);
+        canvas.DrawText(text, screen.X, baseline, SKTextAlign.Center, _numberFont, _number);
+    }
+
+    /// <summary>
+    /// Rakamın kaçacağı yön: darbeye <b>dik</b>, gövdenin dışına doğru.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// İlk deneme yönü merkezden dışa doğru alıyordu ve A, B, E ile 4'te
+    /// rakamlar üst üste biniyordu: A'nın iki darbesi de tepeden başlıyor,
+    /// merkez de tam altlarında, yani ikisi de neredeyse dümdüz yukarı
+    /// kaçıyordu. Dik yön onları darbelerin <b>iki yanına</b> ayırıyor —
+    /// yazı defterlerindeki yerleşim de bu.
+    /// </para>
+    /// <para>
+    /// İki dikten hangisi: gövdeden uzaklaşan. Bu ölçü bazı harflerde
+    /// beraberliğe düşüyor ve beraberlik iki kademede bozuluyor:
+    /// </para>
+    /// <para>
+    /// Önce yatayda. X'in bir köşegeninin diki tam olarak öteki köşegen
+    /// olduğu için her iki dik de merkeze eşit uzaklıkta; ölçü karar
+    /// veremeyince iki rakam da ortaya kaçıp üst üste biniyordu. Darbenin
+    /// hangi yanda başladığına bakmak onları X'in iki dış yanına ayırıyor.
+    /// </para>
+    /// <para>
+    /// Yatay da karar vermezse (E'nin orta kolu: diki tam dikey, yani
+    /// yatayda hiçbir tarafa eğilimi yok) yukarısı seçiliyor — rakamın
+    /// altında kalan harf onu okunmaz yapıyor.
+    /// </para>
+    /// </remarks>
+    private static (float X, float Y) OutwardNormal(
+        IReadOnlyList<PathPoint> points, int at, PathPoint anchor, (float X, float Y) center)
+    {
+        // Yön kısa bir komşuluktan alınıyor; iki bitişik nokta örneklenmiş
+        // bir yayda neredeyse üst üste ve aradaki yön gürültüye açık.
+        var ahead = Math.Min(points.Count - 1, at + Math.Max(1, points.Count / 8));
+
+        var dx = points[ahead].X - anchor.X;
+        var dy = points[ahead].Y - anchor.Y;
+
+        if (MathF.Sqrt((dx * dx) + (dy * dy)) < 1e-4f)
+        {
+            // Komşuluk çöktü: darbenin tamamının yönüne düş.
+            dx = points[^1].X - points[0].X;
+            dy = points[^1].Y - points[0].Y;
+        }
+
+        var length = MathF.Sqrt((dx * dx) + (dy * dy));
+        if (length < 1e-4f)
+        {
+            return (0f, -1f);
+        }
+
+        var nx = -dy / length;
+        var ny = dx / length;
+
+        var awayX = anchor.X - center.X;
+        var awayY = anchor.Y - center.Y;
+        var dot = (nx * awayX) + (ny * awayY);
+
+        bool flip;
+        if (MathF.Abs(dot) >= Tie)
+        {
+            flip = dot < 0f;
+        }
+        else if (MathF.Abs(nx) >= Tie && MathF.Abs(awayX) >= Tie)
+        {
+            // Beraberlik, birinci kademe: darbe gövdenin hangi yanında
+            // başlıyorsa rakam o yana.
+            flip = (nx < 0f) != (awayX < 0f);
+        }
+        else
+        {
+            // Beraberlik, ikinci kademe: yukarısı.
+            flip = ny > 0f;
+        }
+
+        if (flip)
+        {
+            (nx, ny) = (-nx, -ny);
+        }
+
+        return (nx, ny);
+    }
+
+    /// <summary>
+    /// Darbenin ucundaki yön oku.
+    /// </summary>
+    /// <remarks>
+    /// Sıra tek başına yetmiyor: aynı çizgi iki yönde de çizilebilir ve
+    /// motorun kabul ettiği tek yön var. Ok o yönü söylüyor — yoksa çocuk
+    /// doğru çizgiye doğru sırayla dokunup neden ilerlemediğini anlamıyor.
+    /// </remarks>
+    private void DrawArrow(
+        SKCanvas canvas, IReadOnlyList<PathPoint> points, float band, bool isDim)
+    {
+        if (points.Count < 2)
+        {
+            return;
+        }
+
+        var tip = points[^1];
+
+        // Yön son iki noktadan değil, son beşte birden alınıyor: örneklenmiş
+        // bir yayın son iki noktası neredeyse üst üste ve aradaki yön
+        // gürültüye açık.
+        var from = points[Math.Max(0, points.Count - 1 - (points.Count / 5))];
+
+        var dx = tip.X - from.X;
+        var dy = tip.Y - from.Y;
+        var length = MathF.Sqrt((dx * dx) + (dy * dy));
+
+        if (length < 1e-4f)
+        {
+            return;
+        }
+
+        dx /= length;
+        dy /= length;
+
+        var size = band * 0.42f;
+        var head = ToScreen(tip);
+
+        // Uç şeridin tam sonuna değil biraz gerisine oturuyor: uçtaki bir ok,
+        // yuvarlak biten şeridin dışına taşıyor.
+        head = new SKPoint(head.X - (dx * size * 0.25f), head.Y - (dy * size * 0.25f));
+
+        var backX = head.X - (dx * size);
+        var backY = head.Y - (dy * size);
+        var wing = size * 0.55f;
+
+        using var arrow = new SKPath();
+        arrow.MoveTo(head);
+        arrow.LineTo(backX - (dy * wing), backY + (dx * wing));
+        arrow.LineTo(backX + (dy * wing), backY - (dx * wing));
+        arrow.Close();
+
+        _marker.Color = PloofyPalette.Grape.Body.WithAlpha(isDim ? (byte)70 : (byte)210);
+        canvas.DrawPath(arrow, _marker);
     }
 
     /// <summary>
@@ -421,5 +685,7 @@ public sealed class LetterTraceSurface : SKCanvasView
         _sky.Dispose();
         _stroke.Dispose();
         _marker.Dispose();
+        _number.Dispose();
+        _numberFont.Dispose();
     }
 }
