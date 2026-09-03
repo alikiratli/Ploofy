@@ -696,28 +696,36 @@ Yeni sınırla imzalı paket üretildi ve manifesti `aapt2 dump badging` ile
 doğrulandı: `io.ploofy.app`, versionName 1.0, minSdk 26, targetSdk 36,
 yatay kilit, `arm64-v8a` + `x86_64`, imza `CN=Ali Kiratli, O=Ploofy`.
 
-### versionCode 2
+### versionCode 1 ve bir geri adım
 
-O paket versionCode **1** taşıyordu ve o numara kullanılmayacak; internal
-testing'e gidecek paket için `ApplicationVersion` **2**'ye çıkarıldı.
+Sürüm numarası bir ara **2**'ye çıkarıldı, sonra **1**'e geri alındı. Olan
+şu: minSdk 21 ile üretilmiş ilk paketler versionCode 1 taşıyordu ve o
+numarayı boş bırakmak, elde kalan eski bir `.aab`'nin yanlışlıkla
+yüklenmesini imkânsız kılacaktı.
 
-Sebep: 1'i taşıyan ilk paketler minSdk 21 ile üretilmişti. Numaranın
-aralıksız artması gerekmiyor, yalnızca büyümesi — 1'i boş bırakmak, elde
-kalan eski bir `.aab`'nin yanlışlıkla yüklenmesini imkânsız kılıyor.
-Play'e bir kez yüklenen numara, o paket silinse bile geri alınamıyor.
+Gerekçe fazla temkinliydi. Play'e bugüne kadar **hiçbir şey yüklenmedi**,
+yani 1 serbest; eski paketler de zaten silinmişti, ortada karışacak dosya
+yoktu. İlk sürümün 1 olması doğal ve numara geri alındı.
+
+Kural bundan sonrası için geçerli: her yüklemede `ApplicationVersion`
+artacak. Aralıksız artması gerekmiyor, yalnızca büyümesi — ama Play'e bir
+kez yüklenen numara, o paket silinse bile geri alınamıyor.
 
 `ApplicationDisplayVersion` 1.0'da kalıyor: kullanıcının gördüğü sürüm bu
 ve internal testing bir yayın değil.
 
-versionCode 1'i taşıyan paketler **silindi** ve paket yeni numarayla
-yeniden üretilip doğrulandı: `io.ploofy.app`, versionCode **2**,
-versionName 1.0, minSdk 26, targetSdk 36, yatay kilit, `arm64-v8a` +
-`x86_64`, imza `CN=Ali Kiratli, O=Ploofy`
-(SHA-256 `f7549556…4d27`, önceki paketlerle aynı anahtar). Boyut 38 MB.
+Paket, kütüphane on yediye çıktıktan sonra (İ6 ve İ7 dahil) yeniden
+üretilip doğrulandı: `io.ploofy.app`, versionCode **1**, versionName 1.0,
+minSdk 26, targetSdk 36, yatay kilit, `arm64-v8a` + `x86_64`, imza
+`CN=Ali Kiratli, O=Ploofy` (SHA-256 `f7549556…4d27`, önceki paketlerle
+aynı anahtar).
 
 Yüklenecek dosya `io.ploofy.app-Signed.aab`. Aynı klasördeki
 `io.ploofy.app.aab` **imzasız** — Play onu kabul etmiyor. `.apk` yalnızca
 tablete USB'den kurmak için; Play yeni uygulamalarda APK almıyor.
+
+**Paketin içeriği koda bağlı, notta yazılana değil:** oyun eklendikçe
+paket eskiyor. Play'e yüklemeden önce her seferinde yeniden üretilmeli.
 
 ### Gizlilik politikası
 
@@ -771,21 +779,52 @@ ile `ploofy-web`'e taşındı.
 
 ## Nerede bırakıldı (03.09.2026, ikinci oturum)
 
-Son commit'ler: İ5 (koleksiyon), Noktaları Birleştir, darbe numaraları.
-Çalışma ağacı temiz ve `origin/main` ile eşit. Kütüphane 17 oyun,
-testler 416.
+Bu oturumda: İ5 (koleksiyon), Noktaları Birleştir, darbe numaraları,
+mağaza vitrini, minSdk 26, İ6 (oyun süresi sınırı) ve İ7 (Kategori Ayırma,
+Basit Toplama, Boyama). Çalışma ağacı temiz ve `origin/main` ile eşit.
+**Kütüphane 17 oyun, testler 416.** İçerik yol haritası İ1-İ7 kapandı.
 
-**Sıradaki iş, yazılım tarafında: İ8 — bant içi uyarlama.** İçerik yol
-haritasının kalan tek maddesi; çocuk üst üste başarıyorsa zorluğu bir
-kademe artırmak. `BandValue<T>` mimarisi buna hazır. Riski var: gizli
-zorluk değişimi ebeveyni şaşırtır, o yüzden görünür olmalı.
+### Yarın ilk iş: paketi üret ve Play'e yükle
+
+Uygulama Play Console'a **hiç yüklenmedi**; ilk paket versionCode `1` ile
+gidiyor ve kanal **internal testing** olacak (production'a değil — gerçek
+tablette hiç oynanmadı ve production'a giden bir versionCode geri
+alınamıyor).
+
+Sıra:
+
+**Paket hazır ve doğrulandı** (03.09.2026 23:41, on yedi oyunun tamamıyla):
+`io.ploofy.app`, versionCode **1**, versionName 1.0, minSdk 26, targetSdk 36,
+`arm64-v8a` + `x86_64`, imza `CN=Ali Kiratli, O=Ploofy`
+(SHA-256 `f7549556…4d27`). Manifest `aapt2 dump badging`, imza
+`apksigner verify` ile kontrol edildi.
+
+1. Yüklenecek dosya:
+   `src/Ploofy.App/bin/Release/net10.0-android/publish/io.ploofy.app-Signed.aab`
+   — aynı klasördeki `io.ploofy.app.aab` **imzasız**, Play kabul etmiyor.
+   `.apk` yalnızca tablete USB'den kurmak için
+2. Console'daki metinler `docs/store/listing.md` içinden kopyalanacak
+   (üç dil, Data safety cevapları, IARC anketi, hedef kitle beyanı)
+3. Koda dokunulduysa paketi **yeniden üret**: içeriği koda bağlı, notta
+   yazılana değil
+
+Ekran görüntüleri ve 1024×500 öne çıkan grafik hâlâ eksik ve ikisi de
+gerçek cihaz istiyor — internal testing bunları beklemeden yüklenebiliyor.
+
+### Yazılım tarafında sıradaki
+
+**İ8 — bant içi uyarlama.** İçerik yol haritasının kalan tek maddesi; çocuk
+üst üste başarıyorsa zorluğu bir kademe artırmak. `BandValue<T>` mimarisi
+buna hazır. Riski var: gizli zorluk değişimi ebeveyni şaşırtır, o yüzden
+görünür olmalı.
 
 **Ondan önce asıl bekleyen sesli yönerge** (5. bölümün sonu): dokuz
 öğretici oyunun yönergesi hâlâ tamamen görsel ve Filiz bandı okumuyor.
 
-**Ama asıl bekleyen hâlâ gerçek tablet ve artık liste iyice uzadı.**
+**Ama asıl bekleyen hâlâ gerçek tablet ve liste iyice uzadı.**
 Emülatör her şeyi gösterdi, iki şeyi ölçemiyor: parmağı ve hoparlörü.
-Son iki oturumda eklenen beş oyun ve üç ekran hiç dokunulmadan yazıldı.
+Son iki oturumda eklenen **yedi oyun** ve dört ekran hiç dokunulmadan
+yazıldı.
 Tableti USB'den tak, hata ayıklamayı aç,
 `dotnet build src/Ploofy.App/Ploofy.App.csproj -f net10.0-android -t:Run`.
 
@@ -809,6 +848,13 @@ Tableti USB'den tak, hata ayıklamayı aç,
 - **Koleksiyon ekranı yatay ekrana sığıyor mu.** Otuz iki avatar, 72 birim
   genişliğinde kutucuklarla sarmalanıyor; kaydırma gerekiyorsa sorun değil
   ama sıradaki ödül kartı ekranın üstünde kalmalı
+- **Boyama'da alanlara parmakla basılabiliyor mu.** En küçük alan balığın
+  gözü (yarıçap 0,045) — ekranın kısa kenarında yaklaşık 60 piksel çap.
+  Küçük gelirse gözü büyüt, `ColoringPictures.cs` içinde tek satır
+- **Kategori Ayırma'da kutular yatay ekrana sığıyor mu**, üç kutuda
+  dokunma hedefi 64 birimin altına düşüyor mu
+- **Toplama'da dokuz nesne yan yana sığıyor mu.** Meşe'de sağ küme dokuza
+  kadar çıkıyor; sarmalanma çirkin durursa nesne boyutu küçültülür
 - **Sırala'da Meşe'nin ardışık miktarları** gerçekten sayılabiliyor mu
 - **Örüntü'de dokuz kutucuk** yatay ekrana sığıyor mu, dokunma hedefi 64
   birimin altına düşüyor mu
@@ -925,7 +971,7 @@ tamam, gizlilik politikası yayımlandı.
 
 Kalan iki iş **gerçek cihaz istiyor**: sekiz ekran görüntüsü (liste ve
 çekim notları listing.md'de) ve 1024×500 öne çıkan grafik. Sürüm `1.0`,
-versionCode `2` — Play'e her yüklemede versionCode'un artması gerekiyor.
+versionCode `1` — Play'e her yüklemede versionCode'un artması gerekiyor.
 
 İlk yükleme **internal testing** kanalına yapılacak, production'a değil:
 uygulama henüz gerçek bir tablette hiç oynanmadı ve production'a giden bir

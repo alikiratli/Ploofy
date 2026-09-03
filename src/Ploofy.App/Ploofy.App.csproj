@@ -17,18 +17,22 @@
 		<!-- Kullanıcının gördüğü sürüm ve mağazanın saydığı yapı numarası.
 		     ApplicationVersion (Android'de versionCode) Play'e yüklenen her
 		     paket için artmak zorunda; aynı numarayla ikinci bir yükleme
-		     kabul edilmiyor. Numaranın aralıksız artması gerekmiyor, yalnızca
-		     büyümesi.
+		     kabul edilmiyor.
 
-		     2 = internal testing'e giden ilk paket. 1 hiç yüklenmedi ve
-		     kullanılmayacak: minSdk 21 ile üretilmiş bir paket o numarayı
-		     taşıyordu ve numarayı boş bırakmak, elde kalan eski bir .aab'nin
-		     yanlışlıkla yüklenmesini imkânsız kılıyor.
+		     1 = ilk paket. Play'e bugüne kadar hiçbir şey yüklenmedi, yani
+		     numara serbest ve ilk sürümün 1 olması doğal. Bir ara 2'ye
+		     çıkarılmıştı; gerekçe, o numarayı taşıyan eski minSdk 21
+		     paketlerinin yanlışlıkla yüklenmesiydi. Onlar silindi, ortada
+		     karışacak dosya kalmadı ve numara geri alındı.
+
+		     Bundan sonra her yüklemede artacak. Numaranın aralıksız artması
+		     gerekmiyor, yalnızca büyümesi — ama Play'e bir kez yüklenen
+		     numara, o paket silinse bile geri alınamıyor.
 
 		     ApplicationDisplayVersion 1.0'da kalıyor: kullanıcının gördüğü
 		     sürüm bu ve internal testing bir yayın değil. -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>2</ApplicationVersion>
+		<ApplicationVersion>1</ApplicationVersion>
 
 		<WindowsPackageType>None</WindowsPackageType>
 

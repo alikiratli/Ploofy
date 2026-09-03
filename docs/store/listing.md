@@ -5,7 +5,7 @@ değil. Metin değişirse önce burası değişir, çünkü Console'daki hâli
 sürüm geçmişinde izlenemiyor.
 
 Uygulama: **Ploofy** — `io.ploofy.app`
-Sürüm: `1.0`, versionCode `2`
+Sürüm: `1.0`, versionCode `1`
 Diller: Türkçe (tr-TR), İngilizce (en-US), Almanca (de-DE)
 
 Play Console'un varsayılan dili **en-US** olmalı: uygulamanın nötr dili de o
@@ -35,9 +35,9 @@ metadata politikasıyla reddediyor.
 
 | Dil | Metin | Uzunluk |
 | --- | --- | --- |
-| en-US | `14 calm games for ages 2-9. No ads, ever. Nothing leaves the tablet.` | 68 |
-| tr-TR | `2-9 yaş için 14 sakin oyun. Reklam yok. Hiçbir veri cihazdan çıkmıyor.` | 70 |
-| de-DE | `14 ruhige Spiele für 2-9 Jahre. Keine Werbung. Nichts verlässt das Gerät.` | 73 |
+| en-US | `17 calm games for ages 2-9. No ads, ever. Nothing leaves the tablet.` | 68 |
+| tr-TR | `2-9 yaş için 17 sakin oyun. Reklam yok. Hiçbir veri cihazdan çıkmıyor.` | 70 |
+| de-DE | `17 ruhige Spiele für 2-9 Jahre. Keine Werbung. Nichts verlässt das Gerät.` | 73 |
 
 Bu satır arama sonucunda başlığın altında görünen tek metin. Üç şey
 söylüyor ve üçü de ebeveynin ilk sorduğu şey: kaç oyun, hangi yaş,
@@ -56,7 +56,7 @@ No ads. No accounts. No data leaves the tablet. Ever — not even in the free ti
 
 WHAT IS INSIDE
 
-Fourteen games, grouped by what they ask of a child:
+Seventeen games, grouped by what they ask of a child:
 
 Play
 • Memory Match — turn the cards, find the pairs
@@ -66,6 +66,7 @@ Play
 • Jigsaw — put the picture back together
 • Repeat the Beat — watch the sequence, then play it back
 • Catch the Basket — move the basket, catch what falls
+• Colour It In — free play: no right answer, no wrong one, no timer
 
 Learn
 • Letter Hunt and Number Hunt — spot the letter or the number
@@ -75,6 +76,8 @@ Learn
 • Patterns — find the missing piece in a repeating sequence
 • Line Up — arrange by size, or by how many
 • Connect the Dots — follow the numbers and an animal appears
+• Which Group — does the cat belong with the animals or the vehicles?
+• Add It Up — three apples and two apples, counted together
 
 THREE AGE BANDS
 
@@ -123,7 +126,7 @@ Reklam yok. Hesap yok. Hiçbir veri cihazdan çıkmıyor — ücretsiz kullanım
 
 İÇİNDE NE VAR
 
-On dört oyun, çocuktan ne istediğine göre ikiye ayrılmış:
+On yedi oyun, çocuktan ne istediğine göre ikiye ayrılmış:
 
 Eğlence
 • Eşleştirme Kartları — kartları çevir, eşleri bul
@@ -133,6 +136,7 @@ Eğlence
 • Yapboz — resmi yeniden birleştir
 • Sırayı Tekrarla — diziyi izle, sonra sen çal
 • Sepeti Tut — sepeti kaydır, düşenleri yakala
+• Boya Bakalım — serbest oyun: doğru cevap yok, yanlış cevap yok, süre yok
 
 Öğrenme
 • Harf Avı ve Sayı Avı — aranan harfi ya da rakamı bul
@@ -142,6 +146,8 @@ Eğlence
 • Örüntü — tekrar eden dizide eksik parçayı bul
 • Sırala — boyuta ya da miktara göre diz
 • Noktaları Birleştir — rakamları takip et, bir hayvan ortaya çıksın
+• Hangi Küme? — kedi hayvanlara mı gider, araçlara mı?
+• Topla Bakalım — üç elma ve iki elma, hepsi birlikte kaç eder
 
 ÜÇ YAŞ BANDI
 
@@ -192,7 +198,7 @@ Keine Werbung. Kein Konto. Keine Daten verlassen das Gerät — auch nicht in de
 
 WAS DRIN IST
 
-Vierzehn Spiele, gruppiert danach, was sie vom Kind verlangen:
+Siebzehn Spiele, gruppiert danach, was sie vom Kind verlangen:
 
 Spielen
 • Memory — Karten umdrehen, Paare finden
@@ -202,6 +208,7 @@ Spielen
 • Puzzle — das Bild wieder zusammensetzen
 • Wiederhole die Folge — die Folge ansehen, dann nachspielen
 • Korb fangen — den Korb bewegen, das Fallende auffangen
+• Ausmalen — freies Spiel: keine richtige Antwort, keine falsche, keine Zeit
 
 Lernen
 • Buchstabenjagd und Zahlenjagd — den gesuchten Buchstaben oder die Zahl finden
@@ -211,6 +218,8 @@ Lernen
 • Muster — das fehlende Teil in einer sich wiederholenden Folge finden
 • Aufreihen — nach Größe oder nach Menge ordnen
 • Punkte verbinden — den Zahlen folgen, und ein Tier erscheint
+• Welche Gruppe — gehört die Katze zu den Tieren oder zu den Fahrzeugen?
+• Rechne zusammen — drei Äpfel und zwei Äpfel, zusammen gezählt
 
 DREI ALTERSSTUFEN
 
@@ -387,19 +396,19 @@ Ayrıca gereken grafikler:
 
 **en-US**
 ```
-The first release. Fourteen games for ages 2 to 9, in three age bands.
+The first release. Seventeen games for ages 2 to 9, in three age bands.
 No ads, no accounts, nothing leaves the tablet.
 ```
 
 **tr-TR**
 ```
-İlk sürüm. 2-9 yaş için üç yaş bandında on dört oyun.
+İlk sürüm. 2-9 yaş için üç yaş bandında on yedi oyun.
 Reklam yok, hesap yok, hiçbir veri cihazdan çıkmıyor.
 ```
 
 **de-DE**
 ```
-Die erste Version. Vierzehn Spiele für 2 bis 9 Jahre in drei Altersstufen.
+Die erste Version. Siebzehn Spiele für 2 bis 9 Jahre in drei Altersstufen.
 Keine Werbung, kein Konto, nichts verlässt das Gerät.
 ```
 
@@ -416,8 +425,9 @@ Keine Werbung, kein Konto, nichts verlässt das Gerät.
       okundu ve politikanın abonelik bölümü gözden geçirildi
 - [ ] Ekran görüntüleri gerçek cihazda çekildi
 - [ ] Bu dosyadaki metinler Console'a kopyalandı
-- [ ] versionCode `2` — sonraki her yüklemede artırılacak
+- [ ] versionCode `1` — ilk paket. Sonraki her yüklemede artırılacak
       (`ApplicationVersion`, `src/Ploofy.App/Ploofy.App.csproj`).
-      Numaranın aralıksız olması gerekmiyor, yalnızca büyümesi
+      Numaranın aralıksız olması gerekmiyor, yalnızca büyümesi; ama Play'e
+      bir kez yüklenen numara, o paket silinse bile geri alınamıyor
 - [ ] İlk yükleme **internal testing** kanalına; production'a ancak gerçek
       cihazda oynandıktan sonra
