@@ -31,6 +31,7 @@ public static class GamePresentation
         GameCatalog.LineUp => "GameLineUp",
         GameCatalog.DotToDot => "GameDotToDot",
         GameCatalog.CategorySort => "GameCategorySort",
+        GameCatalog.Addition => "GameAddition",
         _ => gameId,
     };
 
@@ -57,6 +58,7 @@ public static class GamePresentation
         GameCatalog.LineUp => "📏",
         GameCatalog.DotToDot => "🔗",
         GameCatalog.CategorySort => "🗂️",
+        GameCatalog.Addition => "➕",
         _ => "🎈",
     };
 
@@ -100,6 +102,7 @@ public static class GamePresentation
         GameCatalog.LineUp => "lineup",
         GameCatalog.DotToDot => "dottodot",
         GameCatalog.CategorySort => "categorysort",
+        GameCatalog.Addition => "addition",
         _ => null,
     };
 

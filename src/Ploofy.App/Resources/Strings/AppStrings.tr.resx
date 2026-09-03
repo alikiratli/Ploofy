@@ -589,4 +589,7 @@
   <data name="CategoryVegetables" xml:space="preserve">
     <value>Sebzeler</value>
   </data>
+  <data name="GameAddition" xml:space="preserve">
+    <value>Topla Bakalım</value>
+  </data>
 </root>

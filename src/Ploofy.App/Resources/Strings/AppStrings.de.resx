@@ -589,4 +589,7 @@
   <data name="CategoryVegetables" xml:space="preserve">
     <value>Gemüse</value>
   </data>
+  <data name="GameAddition" xml:space="preserve">
+    <value>Rechne zusammen</value>
+  </data>
 </root>

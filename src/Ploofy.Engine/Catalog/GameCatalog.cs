@@ -27,6 +27,7 @@ public static class GameCatalog
     public const string LineUp = "line_up";
     public const string DotToDot = "dot_to_dot";
     public const string CategorySort = "category_sort";
+    public const string Addition = "addition";
 
     public static readonly ReadOnlyCollection<MiniGameDescriptor> Games = new([
 
@@ -185,6 +186,21 @@ public static class GameCatalog
             InteractionKind.Tap,
             GameTier.Subscription,
             AgeBand.Filiz,
+            RenderKind.Layout,
+            IsEducational: true,
+            SupportsPassAndPlay: true),
+
+        // Basit toplama. Say ve Eşleştir'de miktar bir rakamla eşleniyordu,
+        // burada iki miktar birleşiyor; Noktaları Birleştir'in kurduğu sayı
+        // doğrusu fikri de tam altında duruyor.
+        //
+        // En küçük bant Fidan: 2-4 yaş toplamıyor, o yaşın karşılığı Say ve
+        // Eşleştir'in kendisi.
+        new MiniGameDescriptor(
+            Addition,
+            InteractionKind.Tap,
+            GameTier.Subscription,
+            AgeBand.Fidan,
             RenderKind.Layout,
             IsEducational: true,
             SupportsPassAndPlay: true),
