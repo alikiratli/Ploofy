@@ -32,6 +32,24 @@ public sealed partial class ProfileCard(ChildProfileRow row, int totalStars) : O
     }];
 
     public int TotalStars { get; } = totalStars;
+
+    /// <summary>
+    /// Bu çocuğun bugünkü oyun süresi doldu.
+    /// </summary>
+    /// <remarks>
+    /// Kart <b>seçilebilir kalıyor</b>, yalnızca solup yanına bir ay işareti
+    /// alıyor. Sebebi: profil seçmek ebeveyn kilidinin arkasında değil ve
+    /// kartı tıklanamaz yapmak, çocuğa kendi profiline giremediğini
+    /// söylerdi — oysa girebiliyor, orada dinlenme ekranı var.
+    ///
+    /// Asıl kazanç ebeveynde: kardeşine geçip oynamaya devam eden çocuk
+    /// artık görünür. Sınır profil başına, yani öteki kardeşin kendi
+    /// bütçesi işliyor; kapatan bir kural koymuyoruz çünkü tableti
+    /// paylaşan iki çocuğu birbirinin bütçesinden sorumlu tutmak yanlış.
+    /// </remarks>
+    public bool IsRestTime { get; init; }
+
+    public double CardOpacity => IsRestTime ? 0.55 : 1.0;
 }
 
 /// <summary>
@@ -70,7 +88,10 @@ public sealed partial class ProfilePickerViewModel(
 
             foreach (var row in await repository.ListProfilesAsync())
             {
-                Profiles.Add(new ProfileCard(row, await repository.TotalStarsAsync(row.Id)));
+                Profiles.Add(new ProfileCard(row, await repository.TotalStarsAsync(row.Id))
+                {
+                    IsRestTime = (await repository.ScreenTimeTodayAsync(row.Id)).IsSpent,
+                });
             }
 
             CanAddProfile = state.Entitlements.CanAddProfile(Profiles.Count);

@@ -180,15 +180,7 @@ public sealed partial class ReportViewModel(ProgressRepository repository) : Obs
 
         var history = await repository.HistorySinceAsync(profile.Id, since);
 
-        var rounds = history
-            .Select(row => new PlayedRound(
-                DateOnly.FromDateTime(row.PlayedAtLocal),
-                row.GameId,
-                AgeBandExtensions.FromId(row.AgeBandId),
-                row.Stars,
-                row.Mistakes,
-                TimeSpan.FromSeconds(row.DurationSeconds)))
-            .ToList();
+        var rounds = history.Select(ProgressRepository.ToPlayedRound).ToList();
 
         Show(PlayReport.Build(rounds, today, range.Days));
     }

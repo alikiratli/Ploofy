@@ -84,6 +84,18 @@ public sealed partial class HomeViewModel(
     public partial string NextRewardAvatar { get; set; } = string.Empty;
 
     /// <summary>
+    /// Bugünkü oyun süresi doldu — oyun listesi yerine dinlenme kartı duruyor.
+    /// </summary>
+    /// <remarks>
+    /// Kontrol burada, yani <b>oyunlar arasında</b>. Tur ortasında kesmek
+    /// yapbozun yarısında kilitlenen bir çocuk demek ve o his, sınırın
+    /// kendisinden çok daha kalıcı oluyor. Sınır zaten biraz aşılıyor: son
+    /// tur sonuna kadar oynanıyor.
+    /// </remarks>
+    [ObservableProperty]
+    public partial bool IsRestTime { get; set; }
+
+    /// <summary>
     /// Filiz bandında öğretici oyun yok; başlığı boş bir bölümün üstünde
     /// göstermemek için.
     /// </summary>
@@ -117,6 +129,9 @@ public sealed partial class HomeViewModel(
         ChildName = profile.DisplayName;
         ChildAvatar = profile.AvatarId;
         TotalStars = await repository.TotalStarsAsync(profile.Id);
+
+        // Oyun süresi bütçesi. Sınır konmamışsa sorgu geçmişe hiç gitmiyor.
+        IsRestTime = (await repository.ScreenTimeTodayAsync(profile.Id)).IsSpent;
 
         var rewards = AvatarCatalog.Progress(TotalStars);
         NextRewardAvatar = rewards.IsComplete
@@ -162,6 +177,14 @@ public sealed partial class HomeViewModel(
     {
         if (tile is null)
         {
+            return;
+        }
+
+        // Dinlenme vakti kutucukları zaten gizliyor; bu, ekran açıkken sürenin
+        // dolduğu durum için (kardeş oynarken bekleyen tablet gibi).
+        if (IsRestTime)
+        {
+            await feedback.PlayAsync(FeedbackCue.Locked);
             return;
         }
 

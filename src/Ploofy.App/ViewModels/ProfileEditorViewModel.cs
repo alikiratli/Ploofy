@@ -5,6 +5,7 @@ using Ploofy.App.Localization;
 using Ploofy.App.Services;
 using Ploofy.Data;
 using Ploofy.Engine;
+using Ploofy.Engine.Progress;
 
 namespace Ploofy.App.ViewModels;
 
@@ -63,6 +64,24 @@ public sealed partial class AvatarChoice(string emoji, int requiredStars) : Obse
     public string RequirementText => $"{RequiredStars} ★";
 
     public double Opacity => IsUnlocked ? 1.0 : 0.4;
+}
+
+/// <summary>
+/// Günlük oyun süresi seçeneği: bir dakika değeri ya da "sınırsız".
+/// </summary>
+public sealed partial class ScreenTimeOption(int minutes) : ObservableObject
+{
+    /// <summary>Dakika; sınırsızsa <see cref="ScreenTimeBudget.Unlimited"/>.</summary>
+    public int Minutes { get; } = minutes;
+
+    public bool IsUnlimited => Minutes <= ScreenTimeBudget.Unlimited;
+
+    public string Label => IsUnlimited
+        ? LocalizationService.Instance["ScreenTimeUnlimited"]
+        : LocalizationService.Instance.Format("ScreenTimeMinutes", Minutes);
+
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
 }
 
 /// <summary>Ekrandaki tek avatar grubu — başlığı ve seçenekleriyle.</summary>
@@ -127,6 +146,9 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
         SelectedAvatar = AvatarCatalog.Default;
         HeaderText = LocalizationService.Instance["AddProfile"];
 
+        ScreenTimeMinutes = ScreenTimeBudget.Unlimited;
+        ScreenTimeHint = LocalizationService.Instance["ScreenTimeHint"];
+
         // Izgara kilitli hâliyle kuruluyor: yeni profilin yıldızı yok, yani
         // yalnızca başlangıçtan açık olanlar seçilebilir. Düzenleme açıldığında
         // LoadAsync o çocuğun yıldızına göre kilitleri kaldırıyor.
@@ -156,9 +178,38 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
     [ObservableProperty]
     public partial bool CanSave { get; set; }
 
+    /// <summary>Seçili günlük sınır, dakika. Sıfır = sınırsız.</summary>
+    [ObservableProperty]
+    public partial int ScreenTimeMinutes { get; set; }
+
+    /// <summary>
+    /// Sınırın altındaki açıklama — neyin sayıldığını söylüyor.
+    /// </summary>
+    /// <remarks>
+    /// Ebeveynin "ekran süresi" beklediği yerde "oyun süresi" ölçülüyor:
+    /// ana ekranda ya da koleksiyonda geçen süre sayılmıyor. Bunu yazmamak,
+    /// raporla sınırın neden aynı sayıyı verdiğini de açıklamamak olurdu.
+    /// </remarks>
+    [ObservableProperty]
+    public partial string ScreenTimeHint { get; set; } = string.Empty;
+
     /// <summary>Ekranın başlığı — "Çocuk ekle" ya da "Çocuğu düzenle".</summary>
     [ObservableProperty]
     public partial string HeaderText { get; set; }
+
+    /// <summary>
+    /// Günlük oyun süresi seçenekleri; ilki "sınırsız".
+    /// </summary>
+    /// <remarks>
+    /// Sınırsız <b>başta</b> ve varsayılan olarak seçili. Sıralamanın sonuna
+    /// konsaydı sınır koymak varsayılan gibi görünürdü; oysa uygulamanın
+    /// duruşu, sınırın ebeveynin bilinçli bir kararı olması.
+    /// </remarks>
+    public IReadOnlyList<ScreenTimeOption> ScreenTimeOptions { get; } =
+    [
+        new(ScreenTimeBudget.Unlimited) { IsSelected = true },
+        .. ScreenTimeBudget.Choices.Select(m => new ScreenTimeOption(m)),
+    ];
 
     public ObservableCollection<BandOption> Bands { get; } =
         [.. Enum.GetValues<AgeBand>().Select(b => new BandOption(b))];
@@ -230,6 +281,9 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
         var band = AgeBandExtensions.FromId(existing.AgeBandId);
         SelectedBand = Bands.First(b => b.Band == band);
 
+        var limit = await _repository.ScreenTimeLimitAsync(existing.Id);
+        SelectScreenTime(ScreenTimeOptions.FirstOrDefault(o => o.Minutes == limit));
+
         // Avatar katalogdan çıkarılmışsa (eski bir profil) seçim varsayılanda
         // kalıyor; ekranın boş bir seçimle açılması daha kötü.
         var avatar = AvatarGroups
@@ -269,6 +323,30 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
         }
     }
 
+    /// <summary>
+    /// Günlük oyun süresi sınırını seçer.
+    /// </summary>
+    /// <remarks>
+    /// Kaydedilmiş bir sınır listede yoksa (seçenekler ileride değişirse)
+    /// seçim sınırsıza düşmüyor — ekranda hiçbir şey seçili görünmemesi,
+    /// yanlış bir sınırı doğru göstermekten dürüst.
+    /// </remarks>
+    [RelayCommand]
+    private void SelectScreenTime(ScreenTimeOption? choice)
+    {
+        if (choice is null)
+        {
+            return;
+        }
+
+        ScreenTimeMinutes = choice.Minutes;
+
+        foreach (var option in ScreenTimeOptions)
+        {
+            option.IsSelected = ReferenceEquals(option, choice);
+        }
+    }
+
     [RelayCommand]
     private async Task SaveAsync()
     {
@@ -283,6 +361,7 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
             row.AgeBandId = SelectedBand.Band.ToId();
             row.AvatarId = SelectedAvatar;
             await _repository.UpdateProfileAsync(row);
+            await _repository.SetScreenTimeLimitAsync(row.Id, ScreenTimeMinutes);
 
             // Düzenlenen çocuk o an oynayan çocuksa ana ekrandaki ad, avatar
             // ve bant hemen tazelenmeli: bant zorluğu belirliyor ve eski
@@ -300,6 +379,8 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
             DisplayName.Trim(),
             SelectedBand.Band,
             SelectedAvatar);
+
+        await _repository.SetScreenTimeLimitAsync(profile.Id, ScreenTimeMinutes);
 
         // Yeni eklenen çocuk doğrudan oynamaya başlasın: ebeveyn profili
         // oluşturduktan sonra bir de listeden seçmek zorunda kalmasın.

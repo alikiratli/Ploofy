@@ -129,6 +129,36 @@ Der Sammelbildschirm liegt **nicht** hinter der Elternsperre: ein Kind, das
 für seine verdiente Figur die Eltern rufen muss, verliert die Hälfte der
 Belohnung.
 
+## Spielzeit-Limit
+
+Eltern können pro Kind eine **tägliche Spielzeit** setzen. Ist sie
+aufgebraucht, zeigt die Startseite statt der Spieleliste einen Ruhe-Bildschirm;
+am nächsten Tag öffnet sie sich von selbst. So muss nicht jeden Abend neu
+verhandelt werden.
+
+Drei Regeln, die die Sache tragen:
+
+- **Standard ist aus.** Wäre das Limit voreingestellt, wären nach einem Update
+  plötzlich alle Kinder ausgesperrt, ohne dass jemand den Grund kennt. Beim
+  Einschalten schlägt die App einen Wert nach Altersstufe vor (15 / 20 / 30
+  Minuten) — ein Vorschlag, keine Vorgabe.
+- **Nie mitten im Spiel.** Geprüft wird nur *zwischen* den Runden. Ein Kind,
+  das mitten im Puzzle ausgesperrt wird, hält die App für ungerecht — und
+  dieses Gefühl bleibt länger als das Limit.
+- **Kein sichtbarer Countdown.** In diesem Alter erzeugt eine ablaufende Uhr
+  Druck. Stattdessen sagt der Ergebnisbildschirm einmal „noch ein Spiel“ und
+  danach „für heute ist Schluss“.
+
+Gezählt wird die Zeit **im Spiel**, nicht die Zeit im Menü: Quelle ist
+`round_history`, dieselbe Tabelle wie beim Elternbericht — zwei getrennte
+Zahlen würden sich früher oder später widersprechen. Die Rechnung liegt in
+`Engine/Progress/ScreenTimeBudget.cs`, das Limit pro Profil in den
+Einstellungen (`screen_time:<Profil-ID>`).
+
+Das Limit ist **nicht** ans Abo gebunden. Eine Schutzfunktion für Kinder
+hinter eine Bezahlschranke zu stellen, wäre in einer Kinder-App nicht zu
+rechtfertigen.
+
 ## Die Stufen
 
 | | Gratis | Abo |

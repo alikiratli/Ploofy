@@ -48,6 +48,16 @@ public static class SettingKeys
     /// bile ödül kaybolmuyor, ikinci kez de kutlanmıyor.
     /// </remarks>
     public static string RewardsSeen(int profileId) => $"rewards_seen:{profileId}";
+
+    /// <summary>
+    /// Günlük oyun süresi sınırı, dakika; profil başına.
+    /// </summary>
+    /// <remarks>
+    /// Anahtar yoksa sınır da yok. Varsayılanın "kapalı" olması şart:
+    /// açık gelseydi güncellemeden sonra bütün çocuklar birden kilitlenir ve
+    /// kimse sebebini bilmezdi. Bkz. <c>ScreenTimeBudget</c>.
+    /// </remarks>
+    public static string ScreenTimeLimit(int profileId) => $"screen_time:{profileId}";
 }
 
 /// <summary>
@@ -130,6 +140,10 @@ public sealed class ProgressRepository(ProgressDatabase database)
         var rewardKey = SettingKeys.RewardsSeen(id);
         await _database.Connection.Table<AppSettingRow>()
             .DeleteAsync(r => r.Key == rewardKey);
+
+        var screenTimeKey = SettingKeys.ScreenTimeLimit(id);
+        await _database.Connection.Table<AppSettingRow>()
+            .DeleteAsync(r => r.Key == screenTimeKey);
     }
 
     /// <summary>Profili oyun oturumunda kullanılan oyuncuya çevirir.</summary>
@@ -220,6 +234,62 @@ public sealed class ProgressRepository(ProgressDatabase database)
             .Where(r => r.ProfileId == profileId && r.PlayedAtLocal >= from)
             .OrderByDescending(r => r.PlayedAtLocal)
             .ToListAsync();
+    }
+
+    /// <summary>
+    /// Kayıt satırını motorun gördüğü tura çevirir.
+    /// </summary>
+    /// <remarks>
+    /// Motor SQLite bilmiyor. Dönüştürme burada, tek yerde: rapor ve oyun
+    /// süresi bütçesi aynı satırları okuyor ve iki ayrı dönüştürme, ebeveyne
+    /// birbirini tutmayan iki rakam gösterme riski demek.
+    /// </remarks>
+    public static PlayedRound ToPlayedRound(RoundHistoryRow row) => new(
+        DateOnly.FromDateTime(row.PlayedAtLocal),
+        row.GameId,
+        AgeBandExtensions.FromId(row.AgeBandId),
+        row.Stars,
+        row.Mistakes,
+        TimeSpan.FromSeconds(row.DurationSeconds));
+
+    // --- Oyun süresi sınırı ---
+
+    /// <summary>Profilin günlük sınırı, dakika. Sınır yoksa sıfır.</summary>
+    public async Task<int> ScreenTimeLimitAsync(int profileId)
+    {
+        var raw = await GetSettingAsync(SettingKeys.ScreenTimeLimit(profileId));
+        return raw is not null && int.TryParse(raw, out var minutes) && minutes > 0
+            ? minutes
+            : ScreenTimeBudget.Unlimited;
+    }
+
+    /// <summary>Sınırı yazar. <see cref="ScreenTimeBudget.Unlimited"/> sınırı kaldırır.</summary>
+    public Task SetScreenTimeLimitAsync(int profileId, int minutes) =>
+        SetSettingAsync(
+            SettingKeys.ScreenTimeLimit(profileId),
+            Math.Max(0, minutes).ToString());
+
+    /// <summary>
+    /// Profilin bugünkü bütçe durumu.
+    /// </summary>
+    /// <remarks>
+    /// Yalnızca bugünün satırları okunuyor. Gün <b>yerel</b> saatle dönüyor:
+    /// gece 22:00'de oynanan bir tur ebeveyn için bugün, UTC'de yarın olurdu.
+    /// </remarks>
+    public async Task<ScreenTimeStatus> ScreenTimeTodayAsync(int profileId)
+    {
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var limit = await ScreenTimeLimitAsync(profileId);
+
+        // Sınır yoksa geçmişi hiç okumuyoruz: her oyun açılışında yapılan bir
+        // sorgu, sınır kullanmayan ailelerde bedavaya çalışırdı.
+        if (limit <= ScreenTimeBudget.Unlimited)
+        {
+            return ScreenTimeBudget.Evaluate(ScreenTimeBudget.Unlimited, [], today);
+        }
+
+        var history = await HistorySinceAsync(profileId, today);
+        return ScreenTimeBudget.Evaluate(limit, history.Select(ToPlayedRound), today);
     }
 
     public async Task<IReadOnlyList<GameProgressRow>> ProgressForAsync(int profileId)

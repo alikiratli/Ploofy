@@ -145,7 +145,25 @@
             </Grid>
         </Border>
 
-        <ScrollView Grid.Row="1">
+        <!-- Dinlenme vakti: bugünkü oyun süresi doldu. Oyun listesinin yerine
+             geçiyor, üstüne binmiyor — kilitli kutucukları göstermek çocuğu
+             dokunmaya davet ederdi. Ebeveyn şeridi (profil, ayarlar) yerinde
+             kalıyor ki sınır oradan değiştirilebilsin. -->
+        <VerticalStackLayout Grid.Row="1"
+                             IsVisible="{Binding IsRestTime}"
+                             VerticalOptions="Center"
+                             Spacing="14"
+                             Padding="24">
+            <Label Text="🌙" FontSize="76" HorizontalOptions="Center" />
+            <Label Text="{loc:Translate RestTitle}"
+                   Style="{StaticResource TitleLabel}"
+                   HorizontalTextAlignment="Center" />
+            <Label Text="{loc:Translate RestHint}"
+                   Style="{StaticResource HintLabel}"
+                   HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+        <ScrollView Grid.Row="1" IsVisible="{Binding IsRestTime, Converter={StaticResource Not}}">
             <VerticalStackLayout Spacing="16">
 
                 <Label Text="{loc:Translate HomeTitle}" Style="{StaticResource TitleLabel}" />

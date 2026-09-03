@@ -115,6 +115,49 @@
                 </VerticalStackLayout>
             </VerticalStackLayout>
 
+            <!-- Günlük oyun süresi. Profilin kendi ayarı, tıpkı yaş bandı
+                 gibi: kardeşlerin bütçeleri ayrı. Varsayılan "sınırsız" ve
+                 listede ilk sırada — sınır koymak ebeveynin bilinçli kararı
+                 olmalı, varsayılan değil. -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="{loc:Translate ProfileScreenTimeLabel}"
+                       Style="{StaticResource SectionLabel}" />
+
+                <FlexLayout BindableLayout.ItemsSource="{Binding ScreenTimeOptions}"
+                            Wrap="Wrap"
+                            AlignItems="Center">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ScreenTimeOption">
+                            <Border Margin="0,0,8,8"
+                                    Padding="16,8"
+                                    StrokeShape="RoundRectangle 999"
+                                    Stroke="Transparent">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource Sky}" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="False">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceMuted}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectScreenTimeCommand, x:DataType=ContentPage}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+
+                                <Label Text="{Binding Label}"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Ink}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <Label Text="{Binding ScreenTimeHint}" Style="{StaticResource HintLabel}" />
+            </VerticalStackLayout>
+
             <Button Text="{loc:Translate ProfileSave}"
                     Style="{StaticResource BigButton}"
                     IsEnabled="{Binding CanSave}"

@@ -42,28 +42,42 @@
                 <DataTemplate x:DataType="vm:ProfileCard">
                     <!-- Sabit yükseklik yerine en az yükseklik: tablette ve
                          büyük yazı ölçeğinde alt satır kırpılıyordu. -->
-                    <Border Style="{StaticResource CardBorder}" MinimumHeightRequest="190">
+                    <Border Style="{StaticResource CardBorder}"
+                            MinimumHeightRequest="190"
+                            Opacity="{Binding CardOpacity}">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectCommand, x:DataType=ContentPage}"
                                 CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
 
-                        <VerticalStackLayout Spacing="6" VerticalOptions="Center">
-                            <ui:AvatarBadgeView Avatar="{Binding AvatarId}"
-                                                Size="86"
-                                                HorizontalOptions="Center" />
-                            <Label Text="{Binding DisplayName}"
+                        <Grid>
+                            <VerticalStackLayout Spacing="6" VerticalOptions="Center">
+                                <ui:AvatarBadgeView Avatar="{Binding AvatarId}"
+                                                    Size="86"
+                                                    HorizontalOptions="Center" />
+                                <Label Text="{Binding DisplayName}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center" />
+                                <Label Text="{Binding BandName}"
+                                       Style="{StaticResource HintLabel}"
+                                       HorizontalOptions="Center" />
+                                <Label Text="{Binding TotalStars, Converter={StaticResource FormatWith}, ConverterParameter=TotalStars}"
+                                       Style="{StaticResource HintLabel}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+
+                            <!-- Bugünkü oyun süresi dolmuş. Kart seçilebilir
+                                 kalıyor — içeride dinlenme ekranı var — ama
+                                 ebeveyn kardeşine geçen çocuğu buradan
+                                 görüyor. -->
+                            <Label Text="🌙"
                                    FontSize="22"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center" />
-                            <Label Text="{Binding BandName}"
-                                   Style="{StaticResource HintLabel}"
-                                   HorizontalOptions="Center" />
-                            <Label Text="{Binding TotalStars, Converter={StaticResource FormatWith}, ConverterParameter=TotalStars}"
-                                   Style="{StaticResource HintLabel}"
-                                   HorizontalOptions="Center" />
-                        </VerticalStackLayout>
+                                   IsVisible="{Binding IsRestTime}"
+                                   HorizontalOptions="End"
+                                   VerticalOptions="Start" />
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

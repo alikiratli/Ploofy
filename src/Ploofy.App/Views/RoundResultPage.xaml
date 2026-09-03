@@ -94,8 +94,25 @@
             </VerticalStackLayout>
 
             <VerticalStackLayout Grid.Row="1" Spacing="10">
+
+                <!-- Oyun süresi haberi: "son bir oyun kaldı" ya da "bugünlük
+                     bu kadar". Düğmelerin hemen üstünde, çünkü çocuğun bir
+                     sonraki hareketini belirleyen şey bu. -->
+                <Border IsVisible="{Binding HasScreenTimeNotice}"
+                        Padding="14,10"
+                        StrokeThickness="0"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 18">
+                    <Label Text="{Binding ScreenTimeText}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Ink}"
+                           HorizontalTextAlignment="Center" />
+                </Border>
+
                 <Button Text="{loc:Translate PlayAgain}"
                         Style="{StaticResource BigButton}"
+                        IsVisible="{Binding CanPlayAgain}"
                         Command="{Binding PlayAgainCommand}" />
                 <Button Text="{loc:Translate BackToGames}"
                         Style="{StaticResource QuietButton}"

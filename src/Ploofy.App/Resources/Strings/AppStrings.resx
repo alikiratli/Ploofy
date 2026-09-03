@@ -544,4 +544,28 @@
   <data name="DotElephant" xml:space="preserve">
     <value>Elephant</value>
   </data>
+  <data name="RestTitle" xml:space="preserve">
+    <value>That's it for today</value>
+  </data>
+  <data name="RestHint" xml:space="preserve">
+    <value>Tomorrow you can play again.</value>
+  </data>
+  <data name="ScreenTimeLastRound" xml:space="preserve">
+    <value>One more game for today.</value>
+  </data>
+  <data name="ScreenTimeDone" xml:space="preserve">
+    <value>That's it for today. See you tomorrow!</value>
+  </data>
+  <data name="ScreenTimeUnlimited" xml:space="preserve">
+    <value>No limit</value>
+  </data>
+  <data name="ScreenTimeMinutes" xml:space="preserve">
+    <value>{0} min a day</value>
+  </data>
+  <data name="ProfileScreenTimeLabel" xml:space="preserve">
+    <value>Daily play time</value>
+  </data>
+  <data name="ScreenTimeHint" xml:space="preserve">
+    <value>Only time inside a game counts. A game is never cut off in the middle — the limit is checked between games.</value>
+  </data>
 </root>

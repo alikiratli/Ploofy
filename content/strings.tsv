@@ -160,3 +160,11 @@ DotRabbit	Rabbit	Tavşan	Hase
 DotDog	Dog	Köpek	Hund
 DotWhale	Whale	Balina	Wal
 DotElephant	Elephant	Fil	Elefant
+RestTitle	That's it for today	Bugünlük bu kadar	Für heute ist Schluss
+RestHint	Tomorrow you can play again.	Yarın yeniden oynayabilirsin.	Morgen kannst du wieder spielen.
+ScreenTimeLastRound	One more game for today.	Bugün bir oyun daha var.	Heute noch ein Spiel.
+ScreenTimeDone	That's it for today. See you tomorrow!	Bugünlük bu kadar. Yarın görüşürüz!	Für heute ist Schluss. Bis morgen!
+ScreenTimeUnlimited	No limit	Sınırsız	Kein Limit
+ScreenTimeMinutes	{0} min a day	Günde {0} dk	{0} Min. pro Tag
+ProfileScreenTimeLabel	Daily play time	Günlük oyun süresi	Tägliche Spielzeit
+ScreenTimeHint	Only time inside a game counts. A game is never cut off in the middle — the limit is checked between games.	Yalnızca oyun içinde geçen süre sayılıyor. Oyun ortada kesilmiyor; sınır oyunlar arasında bakılıyor.	Gezählt wird nur die Zeit im Spiel. Ein Spiel wird nie mittendrin beendet — das Limit wird zwischen den Spielen geprüft.

@@ -20,14 +20,16 @@ geçerli zorunluluklarına taşımak ve ilk kez gerçek bir **sürüm (Release)*
 paketi üretip çalıştırmak oldu.
 
 **Son oturumda yapılan: yıldızların bir karşılığı oldu, on dördüncü oyun
-geldi, harf yazma defterdeki gibi numaralandı ve mağaza vitrini yazıldı.**
+geldi, harf yazma defterdeki gibi numaralandı, mağaza vitrini yazıldı ve
+oyun süresi sınırı eklendi (İ6).**
 Sırayla: **İ5 — koleksiyon ve açılan avatarlar** (yıldız artık avatar
 açıyor), **Noktaları Birleştir** (rakamları sırayla takip ederek hayvan
 çizme), **Harf Yazma'ya numaralı darbe sırası ve yön okları**, ve yayın
 tarafında **mağaza vitrini** (üç dilde metinler, Data safety ve içerik
 derecelendirme cevapları) ile **iki bilinen eksiğin kapanması** (minSdk 26,
 emoji). Ayrıntı aşağıda: "Yıldızların karşılığı", "Noktaları Birleştir",
-"Darbe numaraları", "Mağaza vitrini", "minSdk 26 ve emoji".
+"Darbe numaraları", "Oyun süresi sınırı", "Mağaza vitrini",
+"minSdk 26 ve emoji".
 
 **Bir önceki oturumda yapılan:** yayın anahtarı, gizlilik politikasının
 yayımlanması, abonelik yönetimi ve içerik yol haritasının ilk dördü
@@ -521,6 +523,63 @@ Bu üçü de emülatörde bile görülmezdi; motorun verisini konsoldan PNG'ye
 almak, cihaza gitmeden yerleşim kusuru bulmanın en ucuz yolu. Aynı yöntem
 Noktaları Birleştir'in resimlerinde de kullanıldı.
 
+### Oyun süresi sınırı (İ6)
+
+Ebeveyn bir çocuk için günlük oyun süresi koyuyor; süre dolduğunda ana ekran
+oyun listesi yerine dinlenme kartı gösteriyor ve ertesi gün kendiliğinden
+açılıyor. Amaç ebeveynin "yeter artık" pazarlığını her akşam yeniden
+yapmak zorunda kalmaması — sınırı uygulama söylüyor.
+
+Özelliği taşıyan dört karar:
+
+**Varsayılan kapalı.** Açık gelseydi güncellemeden sonra bütün çocuklar
+birden kilitlenir ve kimse sebebini bilmezdi. Ebeveyn açtığında bandına göre
+bir öneri geliyor (15 / 20 / 30 dk) ama son söz onun: bir ailenin tabletle
+ilişkisini uygulama bilemez ve yaşa göre dayatılan bir sınır küstahlık
+olurdu. Seçenekler hazır listeden (10, 15, 20, 30, 45, 60 ve sınırsız);
+serbest sayı girişi, ebeveyni "kaç dakika doğru" sorusunu cevaplamak zorunda
+bırakırdı.
+
+**Tur ortasında kesilmiyor.** Kontrol yalnızca oyunlar arasında. Yapbozun
+yarısında kilitlenen çocuk uygulamayı haksız buluyor ve bu his sınırın
+kendisinden çok daha kalıcı. Bunun bedeli sınırın her zaman biraz aşılması;
+kabul edilen bir bedel.
+
+**Görünür geri sayım yok.** Bu yaşta ekranda azalan bir saat kaygı üretiyor
+ve çocuğu oyunu bitirmeye değil acele etmeye itiyor — deponun kendi kuralına
+da ters (günlük seri: suçluluk mekaniği, bilerek yapılmıyor). Yerine tur
+sonu ekranında iki cümle: önce "bugün bir oyun daha var", sonra "bugünlük bu
+kadar". Süre bitince "tekrar oyna" düğmesi **kayboluyor**, dokunulduğunda
+reddeden bir düğme bırakılmıyor: reddedilmek cezalandırılmak gibi
+hissettiriyor, olmayan bir düğme ise tartışma açmıyor.
+
+**Abonelikten bağımsız, ücretsiz katmanda da açık.** Not bunu "abonelik
+tarafında somut bir değer" diye kaydetmişti; çocuk koruma özelliğini ödeme
+duvarının arkasına koymak bir çocuk uygulamasında savunulacak bir şey değil.
+
+Ölçülen şey **oyun süresi**, ekran süresi değil: kaynak `round_history`,
+yani raporun zaten okuduğu tablo. Ana ekranda ya da koleksiyonda geçen süre
+sayılmıyor. İki ayrı sayı tutmak, ebeveyne er geç birbirini tutmayan iki
+rakam göstermek olurdu — arayüzde de "oyun süresi" deniyor. Turlar raporun
+kırpmasıyla (15 dk) kırpılıyor: kronometre uygulama arka plandayken durmuyor
+ve bırakılmış tek bir tur, kırpma olmadan çocuğun bütün gününü yakardı.
+Gün **yerel** saatle dönüyor; `PlayedAtLocal` zaten tam bu yüzden yerel.
+
+Yeni tablo yok, sınır ayarlar tablosunda (`screen_time:<profil>`). Sınır yoksa
+geçmişe hiç sorgu gitmiyor — sınır kullanmayan ailelerde her açılışta bedava
+çalışan bir sorgu olurdu.
+
+**Bilinen açık:** süresi dolan çocuk profil değiştirip kardeşinin bütçesinden
+oynayabiliyor. Profil seçmek ebeveyn kilidinin arkasında değil (kardeşin
+sırası geldiğinde her seferinde ebeveyn çağırmak akışı kırıyor) ve bunu
+kapatmak o kararı geri almak demek. Kapatmak yerine **görünür** yapıldı:
+seçim ekranında süresi dolmuş çocuğun kartı soluyor ve yanında bir ay
+işareti duruyor. Sınır profil başına, yani kardeşin kendi bütçesi işlemeye
+devam ediyor; tableti paylaşan iki çocuğu birbirinin bütçesinden sorumlu
+tutmak yanlış olurdu.
+
+Motor tarafı `Engine/Progress/ScreenTimeBudget.cs`. 16 test.
+
 ### Mağaza vitrini
 
 `docs/store/listing.md` — Play Console'a girilecek her şeyin kaynağı.
@@ -649,13 +708,12 @@ ile `ploofy-web`'e taşındı.
 ## Nerede bırakıldı (03.09.2026, ikinci oturum)
 
 Son commit'ler: İ5 (koleksiyon), Noktaları Birleştir, darbe numaraları.
-Çalışma ağacı temiz, `main` üstünde ve **uzağa gönderilmedi**; ilk iş
-`git push` olabilir. Kütüphane 14 oyun, testler 356.
+Çalışma ağacı temiz ve `origin/main` ile eşit. Kütüphane 14 oyun,
+testler 374.
 
-**Sıradaki iş, yazılım tarafında: İ6 — ekran süresi sınırı.** "15 dakika
-sonra nazikçe bitir." Ebeveyn ekranına yakışıyor ve abonelik tarafında
-somut bir değer. Sonrası 5. bölümdeki sıra (İ7 kategori/toplama/boyama,
-İ8 bant içi uyarlama).
+**Sıradaki iş, yazılım tarafında: İ7 — kategori ayırma, basit toplama,
+boyama.** Toplama artık daha ucuz: Noktaları Birleştir sayı doğrusu fikrini
+kurdu, toplama onun üstüne biner. Sonrası İ8 (bant içi uyarlama).
 
 **Ama asıl bekleyen hâlâ gerçek tablet ve artık liste iyice uzadı.**
 Emülatör her şeyi gösterdi, iki şeyi ölçemiyor: parmağı ve hoparlörü.
@@ -717,6 +775,9 @@ Sürümü bloke edenler 4. bölümde, içerik yol haritası 5. bölümde.
 - Profil akışı: oluşturma, seçme, düzenleme, silme; ücretsiz katmanda tek
   profil sınırı. Ad, avatar ve yaş bandı sonradan değiştirilebiliyor
 - Ebeveyn kilidi: iki basamaklı aritmetik, yanlış cevapta soru değişiyor, beş dakika açık kalıyor
+- Günlük oyun süresi sınırı: profil başına, varsayılan kapalı, açılınca
+  banda göre öneri. Süre dolunca ana ekran dinlenme kartına dönüyor; tur
+  ortasında kesilmiyor, görünür geri sayım yok
 - Üç dil (tr/en/de), ayarlardan çalışırken değiştirilebiliyor
 - Ekran yatayda kilitli; ana ekran sütun sayısını genişliğe göre seçiyor
 - Üç yaş bandı (Filiz/Fidan/Meşe) her oyunun parametrelerini gerçekten ölçekliyor
@@ -833,8 +894,9 @@ bölümde, "Yıldızların karşılığı" başlığı.
 **Sıradışı — Noktaları Birleştir. ✅ Bitti (03.09.2026).** Yol haritasında
 yoktu, doğrudan istendi. Ayrıntı 1. bölümde.
 
-**İ6 — Ekran süresi sınırı.** "15 dakika sonra nazikçe bitir." Ebeveyn
-ekranına yakışıyor ve abonelik tarafında somut bir değer.
+**İ6 — Ekran süresi sınırı. ✅ Bitti (03.09.2026).** Ayrıntı 1. bölümde,
+"Oyun süresi sınırı" başlığı. Not onu "abonelik tarafında somut bir değer"
+diye kaydetmişti; ücretsiz katmanda da açık yapıldı.
 
 **İ7 — Kategori ayırma, basit toplama, boyama.** Sırasıyla: hayvan/araç
 ayırma (Şekil Ayırma'nın motoru genelleşir), Meşe bandı için toplama (Say ve

@@ -51,6 +51,78 @@ public sealed class ProgressRepositoryTests : IAsyncLifetime
             mistakes,
             TimeSpan.FromSeconds(40));
 
+    // --- Oyun süresi sınırı ---
+
+    [Fact]
+    public async Task A_new_profile_has_no_play_time_limit()
+    {
+        // Varsayılanın kapalı olması şart: açık gelseydi güncellemeden sonra
+        // bütün çocuklar birden kilitlenir ve kimse sebebini bilmezdi.
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+
+        Assert.Equal(ScreenTimeBudget.Unlimited, await _repository.ScreenTimeLimitAsync(profile.Id));
+        Assert.True((await _repository.ScreenTimeTodayAsync(profile.Id)).IsUnlimited);
+    }
+
+    [Fact]
+    public async Task A_play_time_limit_survives_a_round_trip()
+    {
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+
+        await _repository.SetScreenTimeLimitAsync(profile.Id, 20);
+
+        Assert.Equal(20, await _repository.ScreenTimeLimitAsync(profile.Id));
+
+        // Sıfır sınırı kaldırıyor — ayrı bir bayrak yok.
+        await _repository.SetScreenTimeLimitAsync(profile.Id, ScreenTimeBudget.Unlimited);
+
+        Assert.Equal(ScreenTimeBudget.Unlimited, await _repository.ScreenTimeLimitAsync(profile.Id));
+    }
+
+    [Fact]
+    public async Task Todays_rounds_count_against_the_limit()
+    {
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+        await _repository.SetScreenTimeLimitAsync(profile.Id, 10);
+
+        await _repository.RecordRoundAsync(Outcome(profile.Id, AgeBand.Fidan));
+
+        var status = await _repository.ScreenTimeTodayAsync(profile.Id);
+
+        Assert.False(status.IsUnlimited);
+        Assert.Equal(TimeSpan.FromSeconds(40), status.Used);
+        Assert.False(status.IsSpent);
+    }
+
+    [Fact]
+    public async Task Each_child_has_their_own_budget()
+    {
+        // Kardeşlerin bütçeleri ayrı: biri süresini bitirince öteki
+        // etkilenmiyor.
+        var ada = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+        var efe = await _repository.CreateProfileAsync("Efe", AgeBand.Fidan, "bear");
+
+        await _repository.SetScreenTimeLimitAsync(ada.Id, 10);
+
+        Assert.Equal(10, await _repository.ScreenTimeLimitAsync(ada.Id));
+        Assert.Equal(ScreenTimeBudget.Unlimited, await _repository.ScreenTimeLimitAsync(efe.Id));
+    }
+
+    [Fact]
+    public async Task Deleting_a_profile_clears_its_limit()
+    {
+        // sqlite-net id'leri yeniden kullanabiliyor; kalan bir ayar, aynı
+        // numarayı alan yeni çocuğa devredilmiş bir sınır demek olurdu.
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+        await _repository.SetScreenTimeLimitAsync(profile.Id, 20);
+
+        await _repository.DeleteProfileAsync(profile.Id);
+
+        Assert.Equal(
+            ScreenTimeBudget.Unlimited,
+            await _repository.ScreenTimeLimitAsync(profile.Id));
+    }
+
     [Fact]
     public async Task A_created_profile_comes_back_with_its_band()
     {

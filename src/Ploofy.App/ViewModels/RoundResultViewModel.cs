@@ -42,6 +42,31 @@ public sealed partial class RoundResultViewModel(
     [ObservableProperty]
     public partial string UnlockText { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Oyun süresiyle ilgili haber; sınır yoksa ya da daha çok varsa boş.
+    /// </summary>
+    /// <remarks>
+    /// İki hâli var: "son bir oyun kaldı" ve "bugünlük bu kadar". İkisi de
+    /// tur <b>bittikten sonra</b> söyleniyor. Oyuna girerken söylemek çocuğu
+    /// acele ettirirdi; ekranda geri sayan bir saat ise bu yaşta doğrudan
+    /// kaygı üretiyor.
+    /// </remarks>
+    [ObservableProperty]
+    public partial string ScreenTimeText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool HasScreenTimeNotice { get; set; }
+
+    /// <summary>
+    /// Bugünlük bitti — "tekrar oyna" gizleniyor.
+    /// </summary>
+    /// <remarks>
+    /// Düğmeyi bırakıp dokunulduğunda reddetmek, çocuğa cezalandırılmış gibi
+    /// hissettiriyor. Yok olması "bugün burada bitti"yi tartışmasız yapıyor.
+    /// </remarks>
+    [ObservableProperty]
+    public partial bool CanPlayAgain { get; set; } = true;
+
     public ObservableCollection<PlayerResult> Players { get; } = [];
 
     public void Load()
@@ -105,6 +130,8 @@ public sealed partial class RoundResultViewModel(
             return;
         }
 
+        await LoadScreenTimeAsync(profile.Id);
+
         var total = await repository.TotalStarsAsync(profile.Id);
         var seen = await repository.RewardWatermarkAsync(profile.Id, total);
 
@@ -123,6 +150,28 @@ public sealed partial class RoundResultViewModel(
         HasUnlock = true;
         UnlockText = LocalizationService.Instance[
             UnlockedAvatars.Count == 1 ? "RewardUnlockedOne" : "RewardUnlockedMany"];
+    }
+
+    /// <summary>
+    /// Oyun süresi bütçesini okur ve haberi hazırlar.
+    /// </summary>
+    /// <remarks>
+    /// Sıralı oyunda da o an seçili çocuğun bütçesine bakılıyor: bütçe profil
+    /// başına ve kardeşin süresi kardeşin sırası geldiğinde ölçülüyor.
+    /// </remarks>
+    private async Task LoadScreenTimeAsync(int profileId)
+    {
+        var status = await repository.ScreenTimeTodayAsync(profileId);
+        var l = LocalizationService.Instance;
+
+        CanPlayAgain = !status.IsSpent;
+        HasScreenTimeNotice = status.IsSpent || status.IsLastRound;
+
+        ScreenTimeText = status.IsSpent
+            ? l["ScreenTimeDone"]
+            : status.IsLastRound
+                ? l["ScreenTimeLastRound"]
+                : string.Empty;
     }
 
     /// <summary>Kutlama şeridine dokununca koleksiyon açılıyor.</summary>
