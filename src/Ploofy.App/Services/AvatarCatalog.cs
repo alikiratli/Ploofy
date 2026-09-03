@@ -44,8 +44,15 @@ public static class AvatarCatalog
 
         // Masal kahramanları: çocuğun "ben bu olayım" dediği grup. Hepsi
         // sahipsiz karakterler — bkz. sınıf açıklaması.
+        //
+        // Altıncı sırada bir zamanlar süper kahraman vardı; Unicode 11 ile
+        // geldiği için ancak Android 9.0'da çiziliyor, uygulamanın alt sınırı
+        // ise 8.0. Bir avatarın boş kutu çıkması ödülün kendisini bozuyor,
+        // o yüzden yerini Unicode 9 olan T-Rex aldı. Değişiklik yayından
+        // önce yapıldı: sonrasında olsaydı süper kahramanı seçmiş bir
+        // çocuğun profili bozulurdu (bkz. sınıf açıklaması).
         new("AvatarGroupHeroes",
-            ["🦄", "🐉", "🧚", "🧙", "🧜", "🦸", "🤖", "👽", "👻", "🦕"]),
+            ["🦄", "🐉", "🧚", "🧙", "🧜", "🦖", "🤖", "👽", "👻", "🦕"]),
     ];
 
     /// <summary>Bütün avatarlar, gruplardaki sırayla.</summary>

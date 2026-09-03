@@ -31,7 +31,16 @@
 		<LangVersion>preview</LangVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<!-- Android 8.0. Alt sinir emojiden geliyor, API'den degil: avatarlarin
+		     bir kismi (peri, buyucu, deniz kizi) Unicode 10 ile geldi ve o
+		     karakterler ancak 8.0'in sistem yazi tipinde var. Daha dusuk bir
+		     sinirda cocuk, koleksiyon ve profil ekranlarinda bos kutular
+		     goruyordu - yani odul sisteminin tamami kirikti.
+
+		     21 (Android 5.0) beyani zaten oldugundan genisti: pakette yalnizca
+		     arm64-v8a ve x86_64 var, o cagin 32 bit ARM cihazlari kuramiyordu.
+		     26, beyani gerceklige esitliyor. -->
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>

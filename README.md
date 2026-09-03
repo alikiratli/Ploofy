@@ -70,10 +70,11 @@ Sperre, Altersfilter, Sterneerfassung und Elternbereich funktionieren von selbst
 **Spaßspiele (7):** Memory · Blasen platzen · Formen sortieren ·
 Wiederhole die Folge · Fang den Korb · Finde den Weg · Puzzle
 
-**Lernspiele (6):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen ·
-Buchstaben schreiben · Was kommt als Nächstes · Der Reihe nach
+**Lernspiele (7):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen ·
+Buchstaben schreiben · Was kommt als Nächstes · Der Reihe nach ·
+Punkte verbinden
 
-Alle dreizehn sind spielbar.
+Alle vierzehn sind spielbar.
 
 Sie decken fünf verschiedene Interaktionsarten ab (Tippen, Ziehen, einer Linie
 folgen, Gedächtnis, Reihenfolge) — dieses Maß löst das Problem "alles fühlt sich
@@ -110,11 +111,29 @@ Die Blase selbst besteht aus vier Schichten: weicher Schatten, Körperverlauf mi
 Licht von links oben, feiner Randring und zwei Glanzflecken. Das Glasgefühl
 kommt allein von den letzten beiden.
 
+## Sterne und die Sammlung
+
+Sterne sammelten sich lange an, ohne etwas zu bewirken. Jetzt schaltet die
+**Gesamtzahl** neue Avatare frei — alle drei Sterne einen, zwanzig Stück
+insgesamt. Der erste kommt nach einer perfekten Runde, damit die Regel ohne
+Erklärung sichtbar wird.
+
+Die Leiter liegt in `Engine/Progress/RewardLadder.cs`, die Reihenfolge der
+Avatare in `App/Services/AvatarCatalog.cs`. Es gibt **keine neue Tabelle**:
+was freigeschaltet ist, wird immer aus der Gesamtzahl abgeleitet. Gespeichert
+wird nur, wo die Feier zuletzt stand (`rewards_seen:<Profil-ID>` in den
+Einstellungen) — so geht keine Belohnung verloren und keine wird zweimal
+gefeiert.
+
+Der Sammelbildschirm liegt **nicht** hinter der Elternsperre: ein Kind, das
+für seine verdiente Figur die Eltern rufen muss, verliert die Hälfte der
+Belohnung.
+
 ## Die Stufen
 
 | | Gratis | Abo |
 |---|---|---|
-| Spiele | 2 (Memory, Blasen platzen) | 13 + alles später Hinzukommende |
+| Spiele | 2 (Memory, Blasen platzen) | 14 + alles später Hinzukommende |
 | Kinderprofile | 1 | 4 |
 | Werbung | **Keine** | **Keine** |
 | Offline | Ja | Ja + Inhaltspakete |
@@ -300,6 +319,8 @@ python tools/build_progress_note.py
   der Datenerhebung, Kopplung im lokalen Netz.
 - **Phase 4 — Feinschliff und Veröffentlichung.** App-Symbol und
   Startbildschirm ✅ · Datenschutzerklärung und Impressum veröffentlicht ✅ ·
-  Veröffentlichungsschlüssel erzeugt, Release-Paket damit signiert ✅ · Test auf
-  echtem Gerät, echter Kauf (Plugin.InAppBilling), iOS, Theme-Pakete,
-  Store-Grafiken, Altersangabe, Veröffentlichung ⏳
+  Veröffentlichungsschlüssel erzeugt, Release-Paket damit signiert ✅ ·
+  Store-Texte, Data-safety- und Altersfreigabe-Antworten in
+  `docs/store/listing.md` ✅ · Test auf echtem Gerät, echter Kauf
+  (Plugin.InAppBilling), iOS, Theme-Pakete, Store-Grafiken,
+  Veröffentlichung ⏳

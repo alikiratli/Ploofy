@@ -224,6 +224,9 @@
   .group { display: flex; flex-direction: column; gap: 8px; }
   .stack { display: flex; flex-direction: column; gap: 16px; }
 
+  /* Bir listenin altındaki açıklama: neyin ne için tutulduğunu söylüyor. */
+  .note { color: var(--muted); font-size: .95rem; margin: 2px 0 0; }
+
   code {
     font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, monospace;
     font-size: .86em;
@@ -341,6 +344,18 @@
             <li>Kaç kez oynandığı ve en son ne zaman oynandığı</li>
             <li>Kazanılan rozetler</li>
           </ul>
+        </div>
+        <div class="group">
+          <h3>Oyun geçmişi</h3>
+          <ul>
+            <li>Oynanan her tur için: hangi oyun, hangi yaş bandı, kaç yıldız,
+              kaç hata, ne kadar sürdü</li>
+            <li>Turun bittiği tarih ve saat (cihazın yerel saatiyle)</li>
+          </ul>
+          <p class="note">Bu kayıtlar ebeveyn kilidinin arkasındaki
+            <strong>ebeveyn raporunu</strong> besler: hangi gün ne kadar
+            oynandığını ve hangi oyunların çalışıldığını yalnızca siz, yalnızca
+            bu cihazda görürsünüz. Rapor cihazdan çıkmaz.</p>
         </div>
         <div class="group">
           <h3>Uygulama ayarları</h3>
@@ -512,6 +527,18 @@
           </ul>
         </div>
         <div class="group">
+          <h3>Play history</h3>
+          <ul>
+            <li>For every round played: which game, which age band, how many
+              stars, how many mistakes, how long it took</li>
+            <li>The date and time the round ended (in the device’s local time)</li>
+          </ul>
+          <p class="note">These records feed the <strong>parent report</strong>
+            behind the parental gate: how much was played on which day, and
+            which games were practised. Only you can see it, only on this
+            device. The report never leaves the device.</p>
+        </div>
+        <div class="group">
           <h3>App settings</h3>
           <ul>
             <li>Selected profile, interface language, sound and vibration preferences</li>
@@ -681,6 +708,18 @@
             <li>Wie oft gespielt wurde und wann zuletzt</li>
             <li>Erworbene Abzeichen</li>
           </ul>
+        </div>
+        <div class="group">
+          <h3>Spielverlauf</h3>
+          <ul>
+            <li>Zu jeder gespielten Runde: welches Spiel, welche Altersstufe,
+              wie viele Sterne, wie viele Fehler, wie lange sie gedauert hat</li>
+            <li>Datum und Uhrzeit des Rundenendes (in der lokalen Zeit des Geräts)</li>
+          </ul>
+          <p class="note">Diese Einträge speisen den
+            <strong>Elternbericht</strong> hinter der Elternsperre: an welchem
+            Tag wie viel gespielt und welche Spiele geübt wurden. Nur Sie sehen
+            ihn, und nur auf diesem Gerät. Der Bericht verlässt das Gerät nicht.</p>
         </div>
         <div class="group">
           <h3>App-Einstellungen</h3>

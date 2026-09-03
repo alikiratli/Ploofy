@@ -6,8 +6,9 @@ Web: https://alikiratli.github.io/ploofy-web/ (gizlilik politikası + Impressum)
 
 ## 1. Nerede kaldık
 
-**Faz 2 bitti: on üçün on üçü de oynanabilir.** (Faz 2 onla kapandı; Harf
-Yazma, Örüntü ve Sırala sürümden sonra eklendi.) Uygulama Android tablette
+**Faz 2 bitti: on dördün on dördü de oynanabilir.** (Faz 2 onla kapandı;
+Harf Yazma, Örüntü, Sırala ve Noktaları Birleştir sürümden sonra eklendi.)
+Uygulama Android tablette
 uçtan uca çalışıyor — çocuk profili oluşturuluyor, oyun seçiliyor,
 oynanıyor, yıldız kazanılıyor ve kayıt cihazda tutuluyor. Katalogda artık
 "yakında" olarak duran hiçbir oyun yok ve kütüphane beş etkileşim türünün
@@ -18,16 +19,21 @@ yeni özellik yok denecek kadar az; yapılan iş uygulamayı mağazanın bugün
 geçerli zorunluluklarına taşımak ve ilk kez gerçek bir **sürüm (Release)**
 paketi üretip çalıştırmak oldu.
 
-**Son oturumda yapılan: iki mağaza engeli kalktı, abonelik yönetimi yazıldı,
-sonra içerik yol haritasının ilk maddesi.** Yayın anahtarı üretildi ve
-gizlilik politikası yayımlandı — ikisi de kod işi değildi, ikisi de sürümü
-bloke ediyordu. Ardından aboneliğin ekran tarafı tamamlandı, en son da
-**Harf Yazma**, **Örüntü**, **ebeveyn raporu** ve **Sırala** eklendi (yol
-haritası maddeleri İ1-İ4). Ayrıntı aşağıda: "Yayın imzası", "Gizlilik
-politikası", "Abonelik yönetimi", "Harf Yazma", "Örüntü", "Ebeveyn raporu",
-"Sırala".
+**Son oturumda yapılan: yıldızların bir karşılığı oldu, on dördüncü oyun
+geldi, harf yazma defterdeki gibi numaralandı ve mağaza vitrini yazıldı.**
+Sırayla: **İ5 — koleksiyon ve açılan avatarlar** (yıldız artık avatar
+açıyor), **Noktaları Birleştir** (rakamları sırayla takip ederek hayvan
+çizme), **Harf Yazma'ya numaralı darbe sırası ve yön okları**, ve yayın
+tarafında **mağaza vitrini** (üç dilde metinler, Data safety ve içerik
+derecelendirme cevapları) ile **iki bilinen eksiğin kapanması** (minSdk 26,
+emoji). Ayrıntı aşağıda: "Yıldızların karşılığı", "Noktaları Birleştir",
+"Darbe numaraları", "Mağaza vitrini", "minSdk 26 ve emoji".
 
-**Bir önceki oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
+**Bir önceki oturumda yapılan:** yayın anahtarı, gizlilik politikasının
+yayımlanması, abonelik yönetimi ve içerik yol haritasının ilk dördü
+(İ1 Harf Yazma, İ2 Örüntü, İ3 Ebeveyn raporu, İ4 Sırala).
+
+**Ondan önceki oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
 korunması, MAUI 10'un kaldırdığı çağrılar, SQLite'ta bir güvenlik açığı ve
 yanlış paketlenmiş bir yerel kütüphane. Sırayla:
 
@@ -380,6 +386,193 @@ PNG'ye alındı. Beş sahne bakılınca iki kusur çıktı:
 
 **26 yeni test, toplam 329.**
 
+### Yıldızların karşılığı (İ5)
+
+Yıldızlar uzun süre birikti ve hiçbir şey açmadı; ana ekranda bir sayı
+olarak durdular. Artık **toplam yıldız avatar açıyor**: üç yıldızda bir,
+yirmi avatar.
+
+Karara bağlanan tek şey kilidin neye bağlanacağıydı. Seçilen ölçü toplam
+yıldız — oyun başına değil, rozet üzerinden değil. Sebebi yaş: dört
+yaşındaki bir çocuğun takip edebileceği tek kural "yıldız topla, yeni
+arkadaş gelsin". Oyun başına kilit her oyunu ayrı ayrı üç yıldıza kadar
+zorlamayı gerektirirdi; rozet ise araya ikinci bir katman koyup kuralı
+"rozet kazan, rozet avatarı açsın" hâline getirirdi.
+
+Toplam yıldızın ikinci faydası mimari: `ProgressRepository.TotalStarsAsync`
+onu zaten hesaplıyor ve bantlar arası koruyor, yani **yeni tablo yok**.
+Açılmış ödül her zaman toplamdan türetiliyor; saklanan bir kilit listesi
+olmadığı için bozulamıyor da.
+
+İlk ödül üç yıldızda, yani bir turdan alınabilecek en yüksek puanda: çocuk
+kuralı anlatılmadan, ilk oyununda görüyor. Aralık ikiye indirilse ödüller
+iki günde biterdi, dörde çıkarılsa ilk ödül ikinci turu beklerdi ve bağ
+kurulmazdı.
+
+**Açılma sırası dönüşümlü**: deniz ve masal grupları sırayla. Grup grup
+olsaydı masal kahramanları — çocuğun asıl istediği grup — en sona düşerdi
+ve ilk otuz yıldız boyunca ödül olarak hep bir deniz hayvanı gelirdi. Sıra
+tek boynuzlu atla başlıyor.
+
+**Koleksiyon ekranı** (`collection`): sıradaki ödül, dolan çubuk, kilitli
+avatarların altında gereken yıldız. Çubuk iki eşiğin *arasını* ölçüyor,
+sıfırdan değil — sıfırdan ölçülseydi otuzuncu yıldızda otuz üçe giden çubuk
+%91 dolu görünürdü ve çocuk hiç ilerlemediğini sanırdı.
+
+Ekran **ebeveyn kilidinin arkasında değil** ve açılmış bir avatara dokunmak
+onu doğrudan profile takıyor. Kilit geri alınamayan ya da para harcatan
+işler için; kazandığı simgeyi kullanmak için ebeveyn çağırmak zorunda kalan
+çocuk ödülün yarısını kaybediyor.
+
+**Kutlama bir su işaretiyle yürüyor.** Tur sonu ekranı, kaydedilmiş "en son
+hangi yıldız sayısında kutlandı" değeriyle o anki toplamı karşılaştırıp
+aradaki ödülleri gösteriyor, sonra işareti ileri alıyor
+(`rewards_seen:<profil>`, ayarlar tablosunda). Böylece uygulama kutlama
+anında kapansa bile ödül kaybolmuyor, ikinci kez de kutlanmıyor — ve on üç
+oyun görünüm modelinin hiçbirine dokunmak gerekmedi. Zaten yıldız biriktirmiş
+eski bir profil de güncellemeden sonra on üç kutlamayı arka arkaya görmüyor:
+işaret ilk okunuşta o anki toplama kuruluyor.
+
+Kutlama **o an seçili çocuk** için yapılıyor. Sıralı oyunda kardeşin
+kazandığı ödül orada görünmüyor ama kaybolmuyor: onun işareti yerinde
+duruyor ve kendi sırası geldiğinde kutlanıyor.
+
+Profil düzenleyicide kilitli avatarlar soluk ve seçilemiyor. Çocuğun o an
+takındığı avatar her koşulda açık sayılıyor: katalog sırası ileride
+değişirse bile ebeveyn, çocuğun simgesini "kilitli" görüp değiştirmek
+zorunda kalmamalı.
+
+Motor tarafı `Engine/Progress/RewardLadder.cs`, sıra
+`App/Services/AvatarCatalog.cs`. 13 test.
+
+### Noktaları Birleştir
+
+Kütüphanenin on dördüncü oyunu ve yedinci öğretici oyunu. Yol haritasında
+yoktu; doğrudan istendi ve boşluğu gerçekti.
+
+Sayı Avı bir rakamı **tanımayı**, Say ve Eşleştir miktarla rakamı
+**eşlemeyi** çalıştırıyordu. Burada çalışılan şey **sıra**: birden sonra iki
+gelir, ondan sonra üç. Sayı doğrusu fikrinin kendisi bu ve bir sonraki adım
+(toplama) onun üstüne kuruluyor.
+
+Ödülü de kendine ait: sıra doğru takip edilince ekranda bir hayvan
+beliriyor. Yıldızdan farklı olarak bu ödül **çizimin kendisi** — çocuk onu
+yaptığını görüyor.
+
+**On bir resim**, hepsi kapalı tek hat. Fidan (6-10 nokta): balık, yıldız,
+kedi, ördek, kaplumbağa. Meşe (11-18): kuş, balina, tavşan, köpek, fil,
+kelebek.
+
+Nokta sayısı **resmin** özelliği, bandın değil; bandı hangi resimleri
+göreceği ayırıyor. Aynı resmi banda göre seyreltmek denendi ve bırakıldı:
+balığın kuyruğunu ya da kedinin kulağını atan bir seyreltme hayvanı tanınmaz
+yapıyor — noktaların hepsi taşıyıcı.
+
+Fidan'da sıradaki nokta nabız gibi atıyor, Meşe'de atmıyor: 4-6 yaş
+rakamları tanıyor ama sırayı ekranda aramak ayrı bir iş, Meşe'de ise oyun
+gerçekten rakam okumak. Boşluğa dokunmak hata değil (parmak ekranda
+geziniyor); yalnızca **başka bir noktaya** dokunmak yanlış sayılıyor, o da
+yalnızca Meşe'de. Son noktada hat kendiliğinden kapanıyor — "şimdi tekrar
+1'e dön" kuralı bu yaşta oyunun geri kalanından zor.
+
+**Resimler koordinat koordinat yazıldı, sonra PNG'ye dökülüp gözle
+bakıldı** — ve iyi ki. İlk turda altısı okunmuyordu: kelebeğin kanatları
+papyona dönüyordu, köpeğin sarkık sandığım kulakları yukarı bakıyor ve
+resmi kediden ayırt edilemez yapıyordu, filin ayakları birer dikendi,
+ördekle kuş şekilsiz birer yumruydu. Yengeç tamamen düştü — bir kıskaç tek
+kapalı hatla çizilmiyor; yerine balina ve fil geldi. Fil de yandan
+çizilemedi, önden çizilince (iki kulak + hortum) bir anda okunur oldu.
+
+İki değişmez teste bağlandı: noktalar güvenli kutunun içinde, ve **iki nokta
+arası en az 0,12**. İkincisi keyfi değil — en dar bandın dokunma yarıçapı
+0,06, yani daha yakın iki noktanın hedefleri çakışıyor ve çocuk doğru
+bastığı hâlde yanlış nokta seçiliyor. Test bunu kuşta yakaladı.
+
+`Engine/Games/DotToDotRound.cs`, resimler
+`Engine/Games/Dots/DotPictures.cs`, çizim
+`Ui/Controls/DotToDotSurface.cs`. 19 test.
+
+### Darbe numaraları (Harf Yazma)
+
+Motor darbe sırasını zaten dayatıyordu ama ekran onu yalnızca renkle
+söylüyordu: sıradaki darbe beyaz, ötekiler soluk. Artık her darbenin yanında
+**sırasının rakamı**, ucunda da **yön oku** duruyor — yazı defterlerindeki
+gösterimin aynısı.
+
+Rakam sırayı *adlandırılabilir* yapıyor: çocuk "bir, iki, üç" diyerek
+yazıyor ve aynı sırayı kâğıtta da kuruyor. Ok ise sıranın söylemediğini
+söylüyor: aynı çizgi iki yönde de çizilebilir ve motorun kabul ettiği tek
+yön var. Onsuz çocuk doğru çizgiye doğru sırayla dokunup neden
+ilerlemediğini anlamıyordu.
+
+Yerleşim, harflerin verisi PNG'ye dökülüp gözle bakılarak oturtuldu; üç
+sorun ancak orada göründü:
+
+- Kaçış payı **piksel** cinsinden hesaplanıp **birim** koordinata
+  ekleniyordu, yani rakam her harfte ekranın kenarına yapışıyordu
+- Yön merkezden dışa alınınca A, B, E ve 4'te rakamlar üst üste biniyordu.
+  Darbeye **dik** yerleştirmek onları darbelerin iki yanına ayırdı
+- X'te dik ölçüsü beraberliğe düşüyor — bir köşegenin diki tam olarak öteki
+  köşegen — ve iki rakam da ortaya kaçıyordu. Beraberlik artık iki kademede
+  bozuluyor: önce darbenin gövdenin hangi yanında başladığına, o da karar
+  vermezse yukarıya
+
+Bu üçü de emülatörde bile görülmezdi; motorun verisini konsoldan PNG'ye
+almak, cihaza gitmeden yerleşim kusuru bulmanın en ucuz yolu. Aynı yöntem
+Noktaları Birleştir'in resimlerinde de kullanıldı.
+
+### Mağaza vitrini
+
+`docs/store/listing.md` — Play Console'a girilecek her şeyin kaynağı.
+Console'daki hâli sürüm geçmişinde izlenemediği için metin önce burada
+değişiyor.
+
+İçinde: üç dilde uygulama adı, kısa açıklama ve tam açıklama; kategori ve
+iletişim bilgileri; **Data safety formunun cevapları** ve neden öyle
+cevaplandığı; **içerik derecelendirme (IARC) anketinin cevapları**; hedef
+kitle beyanı ve Families politikası; çekilecek sekiz ekran görüntüsünün
+listesi ve çekim notları; sürüm notları; yüklemeden önceki kontrol listesi.
+
+Data safety cevabı "**hiçbir veri toplanmıyor**" — Play'in tanımında
+"collect" veriyi cihazdan dışarı taşımak demek ve Ploofy'nin sunucusu,
+analitiği, çökme raporlaması, reklam SDK'sı yok. **Ama bu cevap gerçek
+billing bağlandıktan sonra yeniden okunmalı:** Play Billing satın alma
+jetonunu Google'a gönderiyor ve Play bunu "Purchase history" başlığı altında
+beyan ettirebiliyor.
+
+Vitrini yazarken gizlilik politikasında bir eksik çıktı ve düzeltildi:
+**tur geçmişi** (`round_history`, ebeveyn raporunun kaynağı) politikanın
+"cihazda tutulan bilgiler" bölümünde hiç geçmiyordu. Rapor 02.09'da
+eklenmiş, politika aynı gün yayımlanmıştı ve tablo listeye girmemişti. Üç
+dile de eklendi. Bu bir biçim kusuru değil: Data safety formu politikayla
+uyuşmak zorunda ve uyuşmazlık tek başına ret sebebi.
+
+### minSdk 26 ve emoji
+
+İki bilinen eksik aynı noktada birleşiyordu ve ikisi de kapandı.
+
+Manifest `minSdk 21` (Android 5.0) diyordu ama pakette yalnızca `arm64-v8a`
+ve `x86_64` var — o çağın 32 bit ARM cihazları paketi kuramıyordu, yani
+beyan olduğundan genişti. Ayrıca avatarların bir kısmı (peri, büyücü, deniz
+kızı) Unicode 10 ile geldi ve o karakterler ancak Android 8.0'ın sistem
+yazı tipinde var: daha eski sürümlerde profil ve koleksiyon ekranlarında
+**boş kutu** çıkıyorlardı — yani bu oturumda kurulan ödül sisteminin tamamı
+o cihazlarda kırıktı.
+
+Alt sınır **26**'ya (Android 8.0) çıkarıldı. Sınırı belirleyen API değil
+emoji: 26, boş kutu bırakmayan en düşük sürüm. Karşılığında Android 5.0-7.1
+cihazlar düşüyor; 2026'da bu, etkin cihazların yüzde birkaçı ve o cihazlar
+SkiaSharp'lı bir MAUI uygulamasını zaten zor çalıştırıyor.
+
+Bir emoji hâlâ dışarıda kalıyordu: **süper kahraman** Unicode 11 ile geldi
+ve Android 9.0 istiyor. Yerini T-Rex aldı (Unicode 9). Değişiklik yayından
+**önce** yapıldı; sonrasında olsaydı süper kahramanı seçmiş bir çocuğun
+profili bozulurdu — kayıtlı profiller avatarı metin olarak tutuyor.
+
+Yeni sınırla imzalı paket yeniden üretildi ve doğrulandı: `io.ploofy.app`,
+versionCode 1, versionName 1.0, minSdk 26, targetSdk 36, yatay kilit,
+`arm64-v8a` + `x86_64`.
+
 ### Gizlilik politikası
 
 Üç dil tek bir sayfada toplandı ve **ayrı bir depoya** kondu — diğer
@@ -430,42 +623,44 @@ ile `ploofy-web`'e taşındı.
 **Sayılar:** 329 test geçiyor · 13 oyun tanımlı, 13'ü oynanabilir ·
 13 ses dosyası · AAB 40 MB · targetSdk 36 · sürüm 1.0.
 
-## Nerede bırakıldı (03.09.2026)
+## Nerede bırakıldı (03.09.2026, ikinci oturum)
 
-Son commit: `a63b3ce` — Sırala. Çalışma ağacı temiz, `main` üstünde ve
-**uzağa gönderilmedi**; ilk iş `git push` olabilir.
+Son commit'ler: İ5 (koleksiyon), Noktaları Birleştir, darbe numaraları.
+Çalışma ağacı temiz, `main` üstünde ve **uzağa gönderilmedi**; ilk iş
+`git push` olabilir. Kütüphane 14 oyun, testler 356.
 
-Bu oturumda kapanan dört madde: yayın anahtarı, gizlilik politikasının
-yayımlanması, abonelik yönetimi, ve içerik yol haritasının ilk dördü
-(İ1 Harf Yazma, İ2 Örüntü, İ3 Ebeveyn raporu, İ4 Sırala). Kütüphane 13
-oyun, testler 329.
+**Sıradaki iş, yazılım tarafında: İ6 — ekran süresi sınırı.** "15 dakika
+sonra nazikçe bitir." Ebeveyn ekranına yakışıyor ve abonelik tarafında
+somut bir değer. Sonrası 5. bölümdeki sıra (İ7 kategori/toplama/boyama,
+İ8 bant içi uyarlama).
 
-**Sıradaki iş: İ5 — yıldızların bir karşılığı.** Şu an yıldız birikiyor ve
-hiçbir şey açmıyor; motivasyon döngüsü kapanmıyor. 32 emoji avatar zaten
-var (üç tematik grup), yani yıldızla açılan avatar/çıkartma küçük bir iş.
-Karar verilecek tek şey, kilidin neye bağlanacağı: toplam yıldız mı, oyun
-başına yıldız mı, yoksa rozetler mi. Sonrası 5. bölümdeki sıra (İ6 ekran
-süresi, İ7 kategori/toplama/boyama, İ8 bant içi uyarlama).
-
-**Ama asıl bekleyen hâlâ gerçek tablet.** Emülatör her şeyi gösterdi, iki
-şeyi ölçemiyor: parmağı ve hoparlörü. Yeni dört oyun da hiç dokunulmadan
-yazıldı; bu liste onlarla birlikte büyüdü. Tableti USB'den tak, hata
-ayıklamayı aç,
+**Ama asıl bekleyen hâlâ gerçek tablet ve artık liste iyice uzadı.**
+Emülatör her şeyi gösterdi, iki şeyi ölçemiyor: parmağı ve hoparlörü.
+Son iki oturumda eklenen beş oyun ve üç ekran hiç dokunulmadan yazıldı.
+Tableti USB'den tak, hata ayıklamayı aç,
 `dotnet build src/Ploofy.App/Ploofy.App.csproj -f net10.0-android -t:Run`.
-Bakılacaklar:
+
+Öncelik sırasıyla bakılacaklar:
 
 - **Sesler.** Hiçbiri henüz kulakla duyulmadı. Ses seviyeleri birbirine
   göre dengeli mi (dokunuş sesi tekrar tekrar çalıyor, en alçağı o olmalı),
   tuş notaları ezgi gibi mi duyuluyor, tablet hoparlöründe tiz sesler
   (yıldız) cırlıyor mu. Ayarlardaki "Sesleri dene" düğmesi tam bunun için
-- Yolu Bul'da Meşe toleransı (0,055) parmak ucuyla tutturulabiliyor mu —
-  bunların en riskli olanı bu
-- **Harf Yazma'da harflerin estetiği.** Sayısal olarak sağlamlar ama S'nin
-  kıvrımı, 6'nın halkası ve 2'nin kuyruğu hiçbir ekranda görülmedi. Nokta
-  listeleri `GlyphShapes.cs` içinde tek satırlık işler; kötü duran bir harf
-  orada elle ayarlanır
-- **Sırala'da Meşe'nin ardışık miktarları** gerçekten sayılabiliyor mu, yoksa
-  11 ile 12 ayırt edilemeyecek kadar mı yakın duruyor
+- **Yolu Bul'da Meşe toleransı** (0,055) parmak ucuyla tutturulabiliyor mu —
+  bunların en riskli olanı hâlâ bu
+- **Noktaları Birleştir'de dokunma isabeti.** En dar tolerans 0,06, yani
+  yedi yüz piksellik kenarda 84 piksel çap. Kâğıt üstünde yeterli; parmakla
+  öyle mi. Özellikle en yoğun resim olan kelebekte (14 nokta)
+- **Harf Yazma'da rakamlar ve oklar okunuyor mu.** Yerleşim PNG'de
+  doğrulandı ama gerçek yazı tipiyle, gerçek ekran yoğunluğunda değil.
+  Rakam dairesinin çapı `band * 0.34` — küçük gelirse orası büyütülür
+- **Harf Yazma'da harflerin estetiği.** S'nin kıvrımı, 6'nın halkası ve
+  2'nin kuyruğu hiçbir ekranda görülmedi. Nokta listeleri `GlyphShapes.cs`
+  içinde tek satırlık işler
+- **Koleksiyon ekranı yatay ekrana sığıyor mu.** Otuz iki avatar, 72 birim
+  genişliğinde kutucuklarla sarmalanıyor; kaydırma gerekiyorsa sorun değil
+  ama sıradaki ödül kartı ekranın üstünde kalmalı
+- **Sırala'da Meşe'nin ardışık miktarları** gerçekten sayılabiliyor mu
 - **Örüntü'de dokuz kutucuk** yatay ekrana sığıyor mu, dokunma hedefi 64
   birimin altına düşüyor mu
 - Sepeti Tut'ta düşme hızı Fidan bandında adil mi, sepet parmağı
@@ -484,6 +679,8 @@ Sürümü bloke edenler 4. bölümde, içerik yol haritası 5. bölümde.
 - **src/Ploofy.Ui/Painting/TrendPainter.cs**, **LineUpPainter.cs** — rapordaki
   grafiğin ve Sırala'nın çizimi; MAUI'den bağımsız, bu yüzden konsoldan PNG'ye
   alınıp gözle bakılabiliyor
+- **docs/store/listing.md** — mağaza vitrininin kaynağı: üç dilde metinler,
+  Data safety ve içerik derecelendirme cevapları, ekran görüntüsü listesi
 - **src/Ploofy.App** — MAUI uygulaması (Android + iOS; Windows sadece geliştirme için)
 - **tests/Ploofy.Engine.Tests** — xUnit, motor + depo
 - **content/strings.tsv** — üç dilin metinleri, tek kaynak
@@ -514,18 +711,25 @@ Sürümü bloke edenler 4. bölümde, içerik yol haritası 5. bölümde.
   sayısı banda göre değişiyor
 - Yapboz: tohumdan üretilen resim, geçmeli tırnaklı kesim; hayalet ve parça
   sırası banda göre değişiyor
-- Harf Yazma: harfin darbeleri öğretilen sırayla parmakla çiziliyor; Fidan
-  kolay işaretleri, Meşe alfabenin tamamını görüyor
+- Harf Yazma: harfin darbeleri öğretilen sırayla parmakla çiziliyor; her
+  darbenin yanında sırasının rakamı, ucunda yön oku — defterdeki gibi.
+  Fidan kolay işaretleri, Meşe alfabenin tamamını görüyor
 - Örüntü: tekrar eden dizide eksik parçayı bulma; birim, boşluğun yeri ve
   seçenek sayısı banda göre değişiyor
 - Ebeveyn raporu: dönem seçici, günlük süre grafiği, özet sayılar ve oyun
   listesi; kaynağı her turun kaydedildiği `round_history` tablosu
 - Sırala: parçaları boyuta (Filiz) ya da miktara (Fidan/Meşe) göre dizme;
   Meşe'de miktarlar ardışık ve yön değişebiliyor
+- Noktaları Birleştir: rakamları sırayla takip ederek hayvan çizme; on bir
+  resim, Fidan'da sıradaki nokta belirtiliyor, Meşe'de belirtilmiyor
 - Avatarlar: 32 emoji, üç tematik grup, her yerde renkli rozet olarak
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
-- Yıldız ve rozet kaydı; bant değişince eski yıldızlar korunuyor
+- Yıldız kaydı; bant değişince eski yıldızlar korunuyor
+- Koleksiyon: toplam yıldız avatar açıyor (üç yıldızda bir, yirmi avatar).
+  Sıradaki ödül, dolan çubuk, kilitli avatarların altında gereken yıldız.
+  Açılmış avatara dokunmak onu profile takıyor; tur sonu ekranı yeni açılanı
+  kutluyor
 - Ses ve titreşim: yedi geri bildirim sesi, altı tuş notası; ayarlardan
   ikisi de kapatılabiliyor
 - Uygulama ikonu ve açılış ekranı: gülen mavi kabarcık, sarı zemin
@@ -555,12 +759,17 @@ onlar olmadan yazılacak kod denenemez, o yüzden mağaza hesabı ilk adım.
 
 **Öncelik 3 — iOS.** Hiç denenmedi. Mac gerektiriyor.
 
-**Öncelik 4 — Mağaza vitrini.** Play Console yaş beyanı, App Store Kids
-kategorisi, Data safety formu, içerik derecelendirme anketi, ekran
-görüntüleri ve üç dilde tanıtım metinleri. İkon ve açılış ekranı tamam.
-Gizlilik politikası URL'i hazır (1. bölüm); Play Console'a
-`privacy-policy.html` doğrudan girilecek. Sürüm `1.0`, versionCode `1` —
-Play'e her yüklemede versionCode'un artması gerekiyor.
+**Öncelik 4 — Mağaza vitrini. Metin tarafı bitti, görsel tarafı duruyor.**
+Play Console'a girilecek her şeyin metni `docs/store/listing.md` içinde:
+üç dilde ad, kısa ve tam açıklama, kategori, Data safety cevapları, IARC
+anketi cevapları, hedef kitle beyanı, sürüm notları. İkon ve açılış ekranı
+tamam, gizlilik politikası yayımlandı.
+
+Kalan iki iş **gerçek cihaz istiyor**: sekiz ekran görüntüsü (liste ve
+çekim notları listing.md'de) ve 1024×500 öne çıkan grafik. Sürüm `1.0`,
+versionCode `1` — Play'e her yüklemede versionCode'un artması gerekiyor.
+
+App Store Kids kategorisi Öncelik 3 ile birlikte, Mac geldiğinde.
 
 İki uyarı politikanın metniyle ilgili: 4. bölümü (abonelik) gerçek billing
 bağlanmadan tam doğru değil, çünkü satın almanın Play üzerinden yürüdüğünü
@@ -568,10 +777,15 @@ anlatıyor — Öncelik 2 ile birlikte gözden geçirilmeli. Ve metnin bir
 hukukçuya okutulması yerinde olur; iddialar koda dayanıyor ama yasal biçim
 ayrı bir iş.
 
+Aynı sebeple **Data safety formu da Öncelik 2 ile birlikte yeniden
+okunmalı**: bugünkü "hiçbir veri toplanmıyor" cevabı `LocalSubscriptionService`
+ile doğru, ama Play Billing satın alma jetonunu Google'a gönderiyor ve Play
+bunu "Purchase history" başlığı altında beyan ettirebiliyor.
+
 ## 5. İçerik yol haritası — sürümden sonra
 
 Oyun kütüphanesi 1.0 için yeterliydi (10 oyun, beş etkileşim türü) ve şu an
-13'te. Buradakiler kütüphaneyi derinleştiriyor, sürümü bloke etmiyor. Sıra
+14'te. Buradakiler kütüphaneyi derinleştiriyor, sürümü bloke etmiyor. Sıra
 kasıtlı: önce boşluğu büyük olup teknik olarak ucuz olanlar.
 
 **İ1 — Harf ve rakam yazma. ✅ Bitti (02.09.2026).** Ayrıntı 1. bölümde,
@@ -586,9 +800,11 @@ kasıtlı: önce boşluğu büyük olup teknik olarak ucuz olanlar.
 **İ4 — Sıralama ve karşılaştırma. ✅ Bitti (03.09.2026).** Ayrıntı 1. bölümde,
 "Sırala" başlığı.
 
-**İ5 — Yıldızların bir karşılığı.** Şu an yıldız birikiyor ve hiçbir şey
-açmıyor. 32 emoji avatar zaten var; yıldızla açılan avatarlar/çıkartmalar
-küçük bir iş, motivasyon döngüsünü kapatıyor.
+**İ5 — Yıldızların bir karşılığı. ✅ Bitti (03.09.2026).** Ayrıntı 1.
+bölümde, "Yıldızların karşılığı" başlığı.
+
+**Sıradışı — Noktaları Birleştir. ✅ Bitti (03.09.2026).** Yol haritasında
+yoktu, doğrudan istendi. Ayrıntı 1. bölümde.
 
 **İ6 — Ekran süresi sınırı.** "15 dakika sonra nazikçe bitir." Ebeveyn
 ekranına yakışıyor ve abonelik tarafında somut bir değer.
@@ -596,7 +812,8 @@ ekranına yakışıyor ve abonelik tarafında somut bir değer.
 **İ7 — Kategori ayırma, basit toplama, boyama.** Sırasıyla: hayvan/araç
 ayırma (Şekil Ayırma'nın motoru genelleşir), Meşe bandı için toplama (Say ve
 Eşleştir'in devamı), ve Filiz için boyama — kaybetmenin olmadığı serbest oyun,
-bu yaşta Sago Mini'nin bütün işi o.
+bu yaşta Sago Mini'nin bütün işi o. Toplama artık daha ucuz: Noktaları
+Birleştir sayı doğrusu fikrini kurdu, toplama onun üstüne biner.
 
 **İ8 — Bant içi uyarlama.** Üç bant kaba; çocuk üst üste başarıyorsa zorluğu
 bir kademe artırmak. `BandValue<T>` mimarisi buna hazır. Riski var: gizli
@@ -619,10 +836,13 @@ karmaşıklığı değmiyor.
   yerel — ekranlar hazır, arkasına Plugin.InAppBilling takılacak
 - Yayın anahtarının makine dışında yedeği yok; `ploofy-release.keystore`
   ve `Ploofy.local.props` yalnızca bu bilgisayarda duruyor
-- Mağaza vitrini (görseller, tanıtım metinleri, formlar) hiç başlamadı
-- Pakette yalnızca `arm64-v8a` ve `x86_64` var. Gerçek tabletlerin hepsi
-  arm64 olduğu için sorun değil, ama manifest `minSdk 21` diyor ve o
-  çağın 32 bit ARM cihazları bu paketi kuramaz — beyan olduğundan geniş
+- Mağaza vitrininin **görselleri** yok: sekiz ekran görüntüsü ve 1024×500
+  öne çıkan grafik. İkisi de gerçek cihaz istiyor. Metin tarafı bitti
+  (`docs/store/listing.md`)
+- Pakette yalnızca `arm64-v8a` ve `x86_64` var. Beyan artık buna uygun
+  (minSdk 26); Play, AAB'yi eşleşmeyen ABI'ye zaten sunmuyor. 32 bit ARM
+  cihazlara ulaşmak istenirse `armeabi-v7a` eklenir — indirme boyutunu
+  cihaz başına değiştirmez, Play paketi ABI'ye göre bölüyor
 - Yerel ağ eşleşmesi ve aile bağlantısı yok (arayüzde "yakında" olarak duruyor)
 - iOS derlenmedi
 - Öğretici oyunlarda sesli yönerge yok; şu an yönerge tamamen görsel (avda
@@ -630,13 +850,20 @@ karmaşıklığı değmiyor.
   ekranda duruyor). Bunun için sentez yetmiyor: üç dilde insan kaydı gerekiyor.
   Üçü de sessiz hâliyle tam çalışıyor
 - Gerçek tablette hiç denenmedi; şimdiye kadar yalnızca emülatör. Parmak
-  isabeti emülatörde ölçülemiyor (özellikle Yolu Bul'un Meşe toleransı)
+  isabeti emülatörde ölçülemiyor (özellikle Yolu Bul'un Meşe toleransı ve
+  Noktaları Birleştir'in 0,06'lık dokunma yarıçapı)
+- Ödül merdiveninin ucu ölçülmedi: yirmi avatarın sonuncusu 60 yıldız
+  istiyor. Bir bantta en fazla 42 yıldız var (14 oyun × 3), yani koleksiyonu
+  bitirmek bant değiştirmeyi gerektiriyor. Kasıtlı — ödül yıllara yayılıyor —
+  ama gerçek bir çocukta hızın nasıl hissettirdiği bilinmiyor. Aralık tek
+  sabit: `RewardLadder.StarsPerUnlock`
 - Uygulama yalnızca **yatay** çalışıyor. Dikey desteklenmiyor ve
   desteklenecekse her oyun için ikinci bir yerleşim gerekiyor
-- Masal grubundaki bazı emojiler (peri, büyücü, deniz kızı, süper kahraman)
-  Unicode 11 ile geldi; çok eski Android sürümlerinde boş kutu görünebilir.
-  Uygulamanın alt sınırı API 21 ama depoda zaten 🦕 vardı ve tablette
-  sorunsuz çıkıyordu. Gerçek cihaz testinde bakılacak
+- Emoji kapsamı **kapandı**: alt sınır 26 (Android 8.0) ve Unicode 11
+  isteyen tek avatar (süper kahraman) T-Rex ile değiştirildi. Yine de
+  gerçek cihazda bir kez gözle bakılmalı — üretici yazı tipleri farklı
+  çiziyor. Kural şu: **kataloğa Unicode 10'dan yeni bir emoji girmeyecek**,
+  yoksa aynı boş kutu geri gelir
 - Sesler hiçbir hoparlörde duyulmadı. Sayısal olarak doğrulandılar ve
   emülatörde çalındıkları günlükten görüldü, ama seviyelerinin birbirine
   göre dengesi ancak kulakla anlaşılır
@@ -728,6 +955,23 @@ okunmuyor:
   Responding: com.android.systemui" görünüyorsa sorun bizde değil, emülatörü
   yeniden başlat. Bir kez var olmayan bir kilitlenmeyi kovalamaya yol açtı.
 
+### Ekranda duran şeyi cihaza gitmeden gör
+
+Motorun verisi saf sayı olduğu için konsoldan PNG'ye alınabiliyor ve
+yerleşim kusurları orada çıkıyor. Bu oturumda üç kusur **yalnızca** böyle
+göründü: Harf Yazma'nın rakamları harflerin kenarına yapışıyordu (piksel
+payı birim koordinata ekleniyordu), A/B/E/4'te üst üste biniyorlardı, ve
+Noktaları Birleştir'in on bir resminin altısı hayvana benzemiyordu.
+
+Yöntem: motorun geometrisini bir konsol programından JSON'a dök, Python +
+Pillow ile çiz, resme bak. Emülatörü açmaktan hızlı ve emülatörün
+göstermediğini gösteriyor — çünkü sorun çalışma zamanında değil veride.
+
+Kural: **bir ekranda "neyin nereye düştüğü" bir soruysa, o hesabı MAUI'siz
+bir yere koy.** `TrendPainter` ve `LineUpPainter` zaten öyle; darbe
+numaralarının yerleşimi `LetterTraceSurface` içinde kaldı ama hesabı saf
+(`OutwardNormal`), yani taklit edilip çizilebiliyor.
+
 ## 9. Yeni mini oyun ekleme
 
 1. `Engine/Catalog/GameCatalog.cs` içine bir satır: id, etkileşim türü,
@@ -749,7 +993,10 @@ okunmuyor:
    sürükle-bırak tanıyıcıları değil doğrudan dokunma olayları kullanılıyor:
    platformun sürükleme eşiği küçük çocuğun yavaş hareketinde aşılmıyor ve
    parça hiç kıpırdamıyor
-7. Oyun kendi başına bir şey oynatıyorsa (Sırayı Tekrarla gibi) zamanlama
+7. Oyunun içeriği dile bağlıysa (ad, simge) eşlemeyi uygulama katmanına al,
+   motora değil: `HuntContent`, `LetterTraceContent`, `DotContent` böyle.
+   Motor geometriyi ve kuralı bilir, adı bilmez
+8. Oyun kendi başına bir şey oynatıyorsa (Sırayı Tekrarla gibi) zamanlama
    görünüm modelinde durur, motorda değil — motor "nerede kalındı"yı bilir,
    "ne zaman"ı bilmez. Bu durumda **her bekleme iptal edilebilir olmalı**:
    görünüm modelinde bir ömür `CancellationTokenSource` tut, `Dispose` ve
