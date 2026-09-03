@@ -5,7 +5,7 @@ değil. Metin değişirse önce burası değişir, çünkü Console'daki hâli
 sürüm geçmişinde izlenemiyor.
 
 Uygulama: **Ploofy** — `io.ploofy.app`
-Sürüm: `1.0`, versionCode `1`
+Sürüm: `1.0`, versionCode `2`
 Diller: Türkçe (tr-TR), İngilizce (en-US), Almanca (de-DE)
 
 Play Console'un varsayılan dili **en-US** olmalı: uygulamanın nötr dili de o
@@ -416,4 +416,8 @@ Keine Werbung, kein Konto, nichts verlässt das Gerät.
       okundu ve politikanın abonelik bölümü gözden geçirildi
 - [ ] Ekran görüntüleri gerçek cihazda çekildi
 - [ ] Bu dosyadaki metinler Console'a kopyalandı
-- [ ] versionCode `1` — sonraki her yüklemede artırılacak
+- [ ] versionCode `2` — sonraki her yüklemede artırılacak
+      (`ApplicationVersion`, `src/Ploofy.App/Ploofy.App.csproj`).
+      Numaranın aralıksız olması gerekmiyor, yalnızca büyümesi
+- [ ] İlk yükleme **internal testing** kanalına; production'a ancak gerçek
+      cihazda oynandıktan sonra

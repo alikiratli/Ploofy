@@ -569,9 +569,22 @@ ve Android 9.0 istiyor. Yerini T-Rex aldı (Unicode 9). Değişiklik yayından
 **önce** yapıldı; sonrasında olsaydı süper kahramanı seçmiş bir çocuğun
 profili bozulurdu — kayıtlı profiller avatarı metin olarak tutuyor.
 
-Yeni sınırla imzalı paket yeniden üretildi ve doğrulandı: `io.ploofy.app`,
-versionCode 1, versionName 1.0, minSdk 26, targetSdk 36, yatay kilit,
-`arm64-v8a` + `x86_64`.
+Yeni sınırla imzalı paket üretildi ve manifesti `aapt2 dump badging` ile
+doğrulandı: `io.ploofy.app`, versionName 1.0, minSdk 26, targetSdk 36,
+yatay kilit, `arm64-v8a` + `x86_64`, imza `CN=Ali Kiratli, O=Ploofy`.
+
+### versionCode 2
+
+O paket versionCode **1** taşıyordu ve o numara kullanılmayacak; internal
+testing'e gidecek paket için `ApplicationVersion` **2**'ye çıkarıldı.
+
+Sebep: 1'i taşıyan ilk paketler minSdk 21 ile üretilmişti. Numaranın
+aralıksız artması gerekmiyor, yalnızca büyümesi — 1'i boş bırakmak, elde
+kalan eski bir `.aab`'nin yanlışlıkla yüklenmesini imkânsız kılıyor.
+Play'e bir kez yüklenen numara, o paket silinse bile geri alınamıyor.
+
+`ApplicationDisplayVersion` 1.0'da kalıyor: kullanıcının gördüğü sürüm bu
+ve internal testing bir yayın değil.
 
 ### Gizlilik politikası
 
@@ -767,7 +780,11 @@ tamam, gizlilik politikası yayımlandı.
 
 Kalan iki iş **gerçek cihaz istiyor**: sekiz ekran görüntüsü (liste ve
 çekim notları listing.md'de) ve 1024×500 öne çıkan grafik. Sürüm `1.0`,
-versionCode `1` — Play'e her yüklemede versionCode'un artması gerekiyor.
+versionCode `2` — Play'e her yüklemede versionCode'un artması gerekiyor.
+
+İlk yükleme **internal testing** kanalına yapılacak, production'a değil:
+uygulama henüz gerçek bir tablette hiç oynanmadı ve production'a giden bir
+versionCode geri alınamıyor.
 
 App Store Kids kategorisi Öncelik 3 ile birlikte, Mac geldiğinde.
 
