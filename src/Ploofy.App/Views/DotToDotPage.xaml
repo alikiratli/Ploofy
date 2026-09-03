@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Noktaları Birleştir.
+
+    Şeritte üç şey var: ne çizildiği (simge + ad) ve sıradaki rakam. Rakamın
+    büyük hâli orada duruyor çünkü dört yaşındaki çocuk "sıradaki kaç"
+    sorusunu akılda tutmakla ekranda aramayı aynı anda yapamıyor.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Ploofy.App.Localization"
+             xmlns:ui="clr-namespace:Ploofy.Ui.Controls;assembly=Ploofy.Ui"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.DotToDotPage"
+             x:Name="Page"
+             x:DataType="vm:DotToDotViewModel">
+
+    <Grid>
+        <!-- Oyun yüzeyi bütün sayfayı kaplıyor; resim ortadaki kare alanda
+             yaşıyor ve bilgi şeridi onun üstünde yüzüyor. -->
+        <ui:DotToDotSurface x:Name="Surface" />
+
+        <Border VerticalOptions="Start"
+                Margin="14,14,14,0"
+                Padding="14,10"
+                StrokeShape="RoundRectangle 26"
+                Stroke="Transparent"
+                BackgroundColor="#F2FFFFFF">
+            <Border.Shadow>
+                <Shadow Brush="#40000000" Offset="0,4" Radius="12" Opacity="0.5" />
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto" ColumnSpacing="10">
+
+                <Label Grid.Column="0"
+                       Text="{Binding PlayerAvatar}"
+                       FontSize="26"
+                       VerticalOptions="Center" />
+
+                <!-- Çizilen hayvan: simge her bantta, adı yalnızca okuyanda. -->
+                <Label Grid.Column="1"
+                       Text="{Binding PictureGlyph}"
+                       FontSize="30"
+                       VerticalOptions="Center" />
+
+                <Label Grid.Column="2"
+                       Text="{Binding PictureName}"
+                       FontSize="19"
+                       FontAttributes="Bold"
+                       IsVisible="{Binding ShowsProgressCounter}"
+                       VerticalOptions="Center" />
+
+                <!-- Sıradaki rakam: şeridin ortasında, en büyük öğe. -->
+                <Border Grid.Column="3"
+                        Padding="16,4"
+                        StrokeThickness="0"
+                        BackgroundColor="{StaticResource Card3}"
+                        StrokeShape="RoundRectangle 20"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Label Text="{Binding NextNumber}"
+                           FontSize="30"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Ink}"
+                           HorizontalOptions="Center" />
+                </Border>
+
+                <FlexLayout Grid.Column="4"
+                            BindableLayout.ItemsSource="{Binding Pips}"
+                            Wrap="Wrap"
+                            JustifyContent="Center"
+                            AlignItems="Center"
+                            VerticalOptions="Center">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ProgressPip">
+                            <Label Text="●"
+                                   FontSize="15"
+                                   Margin="2,0"
+                                   TextColor="{Binding Fill}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <Button Grid.Column="5"
+                        Text="✕"
+                        Style="{StaticResource RoundIconButton}"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        CornerRadius="24"
+                        FontSize="18"
+                        Command="{Binding QuitCommand}" />
+            </Grid>
+        </Border>
+
+        <!-- Devir katmanı -->
+        <Grid IsVisible="{Binding ShowsHandoff}">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#FFC845" Offset="0.0" />
+                    <GradientStop Color="#FF8C42" Offset="1.0" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ConfirmHandoffCommand}" />
+            </Grid.GestureRecognizers>
+
+            <VerticalStackLayout VerticalOptions="Center" Spacing="16" Padding="32">
+                <Label Text="👋" FontSize="76" HorizontalOptions="Center" />
+                <Label Text="{Binding HandoffText}"
+                       Style="{StaticResource TitleLabel}"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="{loc:Translate HandoffHint}"
+                       FontSize="17"
+                       TextColor="#F0FFFFFF"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

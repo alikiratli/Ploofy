@@ -508,4 +508,40 @@
   <data name="RewardUnlockedMany" xml:space="preserve">
     <value>Neue Freunde!</value>
   </data>
+  <data name="GameDotToDot" xml:space="preserve">
+    <value>Punkte verbinden</value>
+  </data>
+  <data name="DotFish" xml:space="preserve">
+    <value>Fisch</value>
+  </data>
+  <data name="DotDuck" xml:space="preserve">
+    <value>Ente</value>
+  </data>
+  <data name="DotStar" xml:space="preserve">
+    <value>Stern</value>
+  </data>
+  <data name="DotCat" xml:space="preserve">
+    <value>Katze</value>
+  </data>
+  <data name="DotTurtle" xml:space="preserve">
+    <value>Schildkröte</value>
+  </data>
+  <data name="DotBird" xml:space="preserve">
+    <value>Vogel</value>
+  </data>
+  <data name="DotButterfly" xml:space="preserve">
+    <value>Schmetterling</value>
+  </data>
+  <data name="DotRabbit" xml:space="preserve">
+    <value>Hase</value>
+  </data>
+  <data name="DotDog" xml:space="preserve">
+    <value>Hund</value>
+  </data>
+  <data name="DotWhale" xml:space="preserve">
+    <value>Wal</value>
+  </data>
+  <data name="DotElephant" xml:space="preserve">
+    <value>Elefant</value>
+  </data>
 </root>

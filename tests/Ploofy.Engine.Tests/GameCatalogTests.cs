@@ -13,14 +13,14 @@ public class GameCatalogTests
     }
 
     [Fact]
-    public void The_library_is_seven_fun_games_and_six_learning_games()
+    public void The_library_is_seven_fun_games_and_seven_learning_games()
     {
-        // 1.0 yedi + üç ile çıktı; Harf Yazma, Örüntü ve Sırala sürümden
-        // sonra eklendi ve öğretici tarafı altıya çıkardı. Sayı burada
-        // duruyor ki kütüphaneye bir oyun sessizce girmesin: yeni oyun
-        // bilinçli bir karar.
-        Assert.Equal(13, GameCatalog.Games.Count);
-        Assert.Equal(6, GameCatalog.Educational.Count);
+        // 1.0 yedi + üç ile çıktı; Harf Yazma, Örüntü, Sırala ve Noktaları
+        // Birleştir sürümden sonra eklendi ve öğretici tarafı yediye çıkardı.
+        // Sayı burada duruyor ki kütüphaneye bir oyun sessizce girmesin:
+        // yeni oyun bilinçli bir karar.
+        Assert.Equal(14, GameCatalog.Games.Count);
+        Assert.Equal(7, GameCatalog.Educational.Count);
         Assert.Equal(7, GameCatalog.Games.Count(g => !g.IsEducational));
     }
 

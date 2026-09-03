@@ -25,6 +25,7 @@ public static class GameCatalog
     public const string LetterTrace = "letter_trace";
     public const string Pattern = "pattern";
     public const string LineUp = "line_up";
+    public const string DotToDot = "dot_to_dot";
 
     public static readonly ReadOnlyCollection<MiniGameDescriptor> Games = new([
 
@@ -155,6 +156,20 @@ public static class GameCatalog
             RenderKind.Canvas,
             IsEducational: true,
             SupportsPassAndPlay: true),
+
+        // Noktaları birleştirme. Sayı Avı rakamı tanıtıyor, Say ve Eşleştir
+        // miktarla eşliyor; burada çalışılan şey sıra — birden sonra iki
+        // gelir. En küçük bant Fidan: 2-4 yaş rakam sırası takip etmiyor.
+        //
+        // Sıralı oyunu desteklemiyor: bir resim baştan sona tek bir çizim ve
+        // yarısında cihazı elden ele vermek çizimi ikiye bölerdi.
+        new MiniGameDescriptor(
+            DotToDot,
+            InteractionKind.Tap,
+            GameTier.Subscription,
+            AgeBand.Fidan,
+            RenderKind.Canvas,
+            IsEducational: true),
     ]);
 
     public static MiniGameDescriptor ById(string id) =>

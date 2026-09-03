@@ -508,4 +508,40 @@
   <data name="RewardUnlockedMany" xml:space="preserve">
     <value>Yeni arkadaşlar!</value>
   </data>
+  <data name="GameDotToDot" xml:space="preserve">
+    <value>Noktaları Birleştir</value>
+  </data>
+  <data name="DotFish" xml:space="preserve">
+    <value>Balık</value>
+  </data>
+  <data name="DotDuck" xml:space="preserve">
+    <value>Ördek</value>
+  </data>
+  <data name="DotStar" xml:space="preserve">
+    <value>Yıldız</value>
+  </data>
+  <data name="DotCat" xml:space="preserve">
+    <value>Kedi</value>
+  </data>
+  <data name="DotTurtle" xml:space="preserve">
+    <value>Kaplumbağa</value>
+  </data>
+  <data name="DotBird" xml:space="preserve">
+    <value>Kuş</value>
+  </data>
+  <data name="DotButterfly" xml:space="preserve">
+    <value>Kelebek</value>
+  </data>
+  <data name="DotRabbit" xml:space="preserve">
+    <value>Tavşan</value>
+  </data>
+  <data name="DotDog" xml:space="preserve">
+    <value>Köpek</value>
+  </data>
+  <data name="DotWhale" xml:space="preserve">
+    <value>Balina</value>
+  </data>
+  <data name="DotElephant" xml:space="preserve">
+    <value>Fil</value>
+  </data>
 </root>

@@ -29,6 +29,7 @@ public static class GamePresentation
         GameCatalog.LetterTrace => "GameLetterTrace",
         GameCatalog.Pattern => "GamePattern",
         GameCatalog.LineUp => "GameLineUp",
+        GameCatalog.DotToDot => "GameDotToDot",
         _ => gameId,
     };
 
@@ -53,6 +54,7 @@ public static class GamePresentation
         GameCatalog.LetterTrace => "✏️",
         GameCatalog.Pattern => "🔁",
         GameCatalog.LineUp => "📏",
+        GameCatalog.DotToDot => "🔗",
         _ => "🎈",
     };
 
@@ -94,6 +96,7 @@ public static class GamePresentation
         GameCatalog.LetterTrace => "lettertrace",
         GameCatalog.Pattern => "pattern",
         GameCatalog.LineUp => "lineup",
+        GameCatalog.DotToDot => "dottodot",
         _ => null,
     };
 
