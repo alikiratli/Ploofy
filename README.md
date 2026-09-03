@@ -67,14 +67,19 @@ Sperre, Altersfilter, Sterneerfassung und Elternbereich funktionieren von selbst
 
 ## Die Spielesammlung
 
-**Spaßspiele (7):** Memory · Blasen platzen · Formen sortieren ·
-Wiederhole die Folge · Fang den Korb · Finde den Weg · Puzzle
+**Spaßspiele (8):** Memory · Blasen platzen · Formen sortieren ·
+Wiederhole die Folge · Fang den Korb · Finde den Weg · Puzzle · Ausmalen
 
-**Lernspiele (7):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen ·
+**Lernspiele (9):** Buchstabenjagd · Zahlenjagd · Zählen und Zuordnen ·
 Buchstaben schreiben · Was kommt als Nächstes · Der Reihe nach ·
-Punkte verbinden
+Punkte verbinden · Welche Gruppe · Rechne zusammen
 
-Alle vierzehn sind spielbar.
+Alle siebzehn sind spielbar.
+
+**Ausmalen** ist das einzige freie Spiel: keine richtige Antwort, keine
+falsche, keine Zeit. Ein Kind, das eine Fläche in seiner Wunschfarbe
+ausmalt, macht nie etwas falsch. In diesem Alter — besonders in der
+Stufe Spross — ist genau das die Aufgabe des Spiels.
 
 Sie decken fünf verschiedene Interaktionsarten ab (Tippen, Ziehen, einer Linie
 folgen, Gedächtnis, Reihenfolge) — dieses Maß löst das Problem "alles fühlt sich
@@ -163,7 +168,7 @@ rechtfertigen.
 
 | | Gratis | Abo |
 |---|---|---|
-| Spiele | 2 (Memory, Blasen platzen) | 14 + alles später Hinzukommende |
+| Spiele | 2 (Memory, Blasen platzen) | 17 + alles später Hinzukommende |
 | Kinderprofile | 1 | 4 |
 | Werbung | **Keine** | **Keine** |
 | Offline | Ja | Ja + Inhaltspakete |

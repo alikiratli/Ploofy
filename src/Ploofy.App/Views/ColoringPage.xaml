@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Boyama.
+
+    Ekranda üç şey var: resim, palet ve çıkış. Sayaç yok, süre yok, hata
+    göstergesi yok — serbest oyunun üstüne konan her ölçüm onu serbest
+    olmaktan çıkarır. Alttaki noktalar yalnızca kaç resim kaldığını
+    söylüyor, bir başarı ölçüsü değil.
+
+    Devir katmanı da yok: oyun sıralı oynanmıyor, bir resmi boyamak baştan
+    sona tek bir iş.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ui="clr-namespace:Ploofy.Ui.Controls;assembly=Ploofy.Ui"
+             xmlns:vm="clr-namespace:Ploofy.App.ViewModels"
+             x:Class="Ploofy.App.Views.ColoringPage"
+             x:Name="Page"
+             x:DataType="vm:ColoringViewModel">
+
+    <Grid>
+        <!-- Boyama yüzeyi bütün sayfayı kaplıyor; şerit ve palet üstünde
+             yüzüyor. -->
+        <ui:ColoringSurface x:Name="Surface" />
+
+        <Border VerticalOptions="Start"
+                Margin="14,14,14,0"
+                Padding="14,10"
+                StrokeShape="RoundRectangle 26"
+                Stroke="Transparent"
+                BackgroundColor="#F2FFFFFF">
+            <Border.Shadow>
+                <Shadow Brush="#40000000" Offset="0,4" Radius="12" Opacity="0.5" />
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="10">
+                <Label Grid.Column="0"
+                       Text="{Binding PlayerAvatar}"
+                       FontSize="26"
+                       VerticalOptions="Center" />
+
+                <Label Grid.Column="1"
+                       Text="{Binding PlayerName}"
+                       FontSize="19"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+
+                <FlexLayout Grid.Column="2"
+                            BindableLayout.ItemsSource="{Binding Pips}"
+                            Wrap="Wrap"
+                            JustifyContent="Center"
+                            AlignItems="Center"
+                            VerticalOptions="Center">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ProgressPip">
+                            <Label Text="●" FontSize="15" Margin="2,0" TextColor="{Binding Fill}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <Button Grid.Column="3"
+                        Text="✕"
+                        Style="{StaticResource RoundIconButton}"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        CornerRadius="24"
+                        FontSize="18"
+                        Command="{Binding QuitCommand}" />
+            </Grid>
+        </Border>
+
+        <!-- Palet: altta, sağa dayalı bir sütun. Yatay ekranda resmin
+             yanında duruyor ve parmağın resmi kapatmasını engelliyor. -->
+        <Border VerticalOptions="Center"
+                HorizontalOptions="End"
+                Margin="0,0,12,0"
+                Padding="8"
+                StrokeShape="RoundRectangle 30"
+                Stroke="Transparent"
+                BackgroundColor="#F2FFFFFF">
+            <Border.Shadow>
+                <Shadow Brush="#40000000" Offset="0,4" Radius="12" Opacity="0.5" />
+            </Border.Shadow>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Palette}" Spacing="8">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PaintColor">
+                        <Border WidthRequest="54"
+                                HeightRequest="54"
+                                Padding="0"
+                                StrokeThickness="3"
+                                StrokeShape="RoundRectangle 27"
+                                BackgroundColor="{Binding Swatch}"
+                                Scale="{Binding Scale}">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Stroke" Value="{StaticResource Ink}" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="False">
+                                    <Setter Property="Stroke" Value="Transparent" />
+                                </DataTrigger>
+                            </Border.Triggers>
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference Page}, Path=BindingContext.PickColorCommand, x:DataType=ContentPage}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -592,4 +592,7 @@
   <data name="GameAddition" xml:space="preserve">
     <value>Topla Bakalım</value>
   </data>
+  <data name="GameColoring" xml:space="preserve">
+    <value>Boya Bakalım</value>
+  </data>
 </root>

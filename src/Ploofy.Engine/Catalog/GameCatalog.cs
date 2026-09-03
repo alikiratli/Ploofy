@@ -28,6 +28,7 @@ public static class GameCatalog
     public const string DotToDot = "dot_to_dot";
     public const string CategorySort = "category_sort";
     public const string Addition = "addition";
+    public const string Coloring = "coloring";
 
     public static readonly ReadOnlyCollection<MiniGameDescriptor> Games = new([
 
@@ -204,6 +205,20 @@ public static class GameCatalog
             RenderKind.Layout,
             IsEducational: true,
             SupportsPassAndPlay: true),
+
+        // Boyama. Kütüphanedeki tek serbest oyun: doğru cevap yok, yanlış
+        // cevap yok, süre yok. Öğretici sayılmıyor çünkü bir şey öğretmiyor;
+        // bu yaşta kaybetme ihtimalinin hiç olmadığı bir alan olmasının
+        // kendisi yeterli sebep.
+        //
+        // Sıralı oyunu desteklemiyor: bir resmi boyamak baştan sona tek bir
+        // iş ve yarısında cihazı elden ele vermek çocuğun resmini bölerdi.
+        new MiniGameDescriptor(
+            Coloring,
+            InteractionKind.Tap,
+            GameTier.Subscription,
+            AgeBand.Filiz,
+            RenderKind.Canvas),
     ]);
 
     public static MiniGameDescriptor ById(string id) =>

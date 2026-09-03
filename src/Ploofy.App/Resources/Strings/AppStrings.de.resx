@@ -592,4 +592,7 @@
   <data name="GameAddition" xml:space="preserve">
     <value>Rechne zusammen</value>
   </data>
+  <data name="GameColoring" xml:space="preserve">
+    <value>Ausmalen</value>
+  </data>
 </root>

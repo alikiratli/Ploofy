@@ -19,17 +19,18 @@ yeni özellik yok denecek kadar az; yapılan iş uygulamayı mağazanın bugün
 geçerli zorunluluklarına taşımak ve ilk kez gerçek bir **sürüm (Release)**
 paketi üretip çalıştırmak oldu.
 
-**Son oturumda yapılan: yıldızların bir karşılığı oldu, on dördüncü oyun
-geldi, harf yazma defterdeki gibi numaralandı, mağaza vitrini yazıldı ve
-oyun süresi sınırı eklendi (İ6).**
+**Son oturumda yapılan: yıldızların bir karşılığı oldu, kütüphane on
+dörtten on yediye çıktı, harf yazma defterdeki gibi numaralandı, mağaza
+vitrini yazıldı, oyun süresi sınırı (İ6) ve içerik yol haritasının son
+maddesi (İ7) eklendi.**
 Sırayla: **İ5 — koleksiyon ve açılan avatarlar** (yıldız artık avatar
 açıyor), **Noktaları Birleştir** (rakamları sırayla takip ederek hayvan
 çizme), **Harf Yazma'ya numaralı darbe sırası ve yön okları**, ve yayın
 tarafında **mağaza vitrini** (üç dilde metinler, Data safety ve içerik
 derecelendirme cevapları) ile **iki bilinen eksiğin kapanması** (minSdk 26,
 emoji). Ayrıntı aşağıda: "Yıldızların karşılığı", "Noktaları Birleştir",
-"Darbe numaraları", "Oyun süresi sınırı", "Mağaza vitrini",
-"minSdk 26 ve emoji".
+"Darbe numaraları", "Oyun süresi sınırı", "İ7: üç oyun birden",
+"Mağaza vitrini", "minSdk 26 ve emoji".
 
 **Bir önceki oturumda yapılan:** yayın anahtarı, gizlilik politikasının
 yayımlanması, abonelik yönetimi ve içerik yol haritasının ilk dördü
@@ -580,6 +581,69 @@ tutmak yanlış olurdu.
 
 Motor tarafı `Engine/Progress/ScreenTimeBudget.cs`. 16 test.
 
+### İ7: üç oyun birden
+
+Yol haritasının son maddesi üç oyundu ve üçü de eklendi. Kütüphane on
+yedide: sekiz eğlendirici, dokuz öğretici.
+
+**Kategori Ayırma.** Şekil Ayırma <b>algısal</b> bir ayrım istiyor (üçgen
+mi kare mi); burası <b>anlamsal</b>: kedi hayvan mı araç mı. Sınıflandırma
+dilden önce gelen bir beceri ve okumaya hazırlığın parçası.
+
+Not "Şekil Ayırma'nın motoru genelleşir" diyordu; genelleşmedi, ikinci bir
+sınıf yazıldı. Sebep: iki oyunun bant ekseni farklı. Şekil Ayırma'da
+zorluk rengin şekille birlikte gidip gitmemesinden geliyor, Kategori
+Ayırma'da kategorilerin inceliğinden — Meşe'de her turda en az bir "ince"
+kategori garanti (meyve/sebze), yani aynı üst kümenin içinde ayrım. Ortak
+bir soyutlama iki ekseni de bulanıklaştırırdı. Dördüncü kutu eklenmedi:
+yatay ekranda dokunma hedefini küçültüyor.
+
+**Basit Toplama.** Bandın asıl farkı sayı aralığında değil yerleşimde.
+Fidan iki kümeyi de nesne olarak görüyor ("üç elma ve iki elma", hepsini
+baştan say); Meşe birinci toplananı <b>rakam</b> olarak görüyor,
+ikincisini nesne olarak — "üçten devam et, dört beş". Saymanın bir sonraki
+adımı tam olarak bu. Nesneler Meşe'de de tamamen kaldırılmadı: kaldırmak
+oyunu ezberlenmiş toplama tablosuna çevirirdi.
+
+Çeldiriciler komşu sayılar, rastgele değil: uzak bir çeldirici (7 için 2)
+toplamayı gerektirmeden eleniyor.
+
+Not "Meşe bandı için toplama" diyordu; Fidan'dan itibaren açıldı, çünkü
+görsel destek tam olduğunda 4-6 yaş beşe kadar topluyor. Filiz görmüyor.
+
+**Boyama.** Kütüphanedeki tek <b>serbest</b> oyun: doğru cevap yok, yanlış
+cevap yok, süre yok, hata sayacı yok. Ekranda sayaç bile yok — serbest
+oyunun üstüne konan her ölçüm onu serbest olmaktan çıkarıyor.
+
+Beş sayfa (ev, balık, çiçek, araba, kelebek), her biri kapalı çokgen
+alanlardan. Dokunma bir <b>nokta içeride mi</b> sorusuna iniyor (ışın
+atma), yani boyama emoji ya da hazır görsel olmadan motorun içinde
+çözülüyor. Alanlar arkadan öne sıralı: evin kapısı duvarın üstünde ve
+duvara dokunmak kapıyı boyamıyor.
+
+Bitmek yine de var: bütün alanlar bir kez boyanınca resim tamamlanıyor.
+Bitişi olmayan bir oyun tur sonu ekranına bağlanamazdı ve çocuğun emeği
+karşılıksız kalırdı. Yıldız her zaman üç çıkıyor ama bu bir yıldız
+çiftliği değil: kayıt oyun ve bant başına <b>en iyi</b> yıldızı tutuyor,
+yani boyama toplama en fazla üç ekliyor.
+
+Öğretici sayılmıyor: bir şey öğretmiyor. Bu yaşta kaybetme ihtimalinin
+hiç olmadığı bir alan olmasının kendisi yeterli sebep.
+
+**Bu oturumda öğrenilen bir kısıt:** depoda hiçbir Skia yüzeyi emoji
+çizmiyor — emoji her yerde MAUI etiketiyle geliyor (`AvatarBadgeView`,
+`GlyphTileView`). Skia'da renkli emoji platforma bağlı ve cihazda
+denenemiyor. Kategori Ayırma ile Toplama bu yüzden tamamen MAUI
+kontrolleriyle yazıldı ve ikisi de dokunmayla oynanıyor; Boyama'da ise
+emoji yok, o yüzden Skia serbest.
+
+Testler resimlerde iki gerçek hata yakaladı. Kategori içeriğinde soğan,
+sarımsak, marul, biber ve parmak arası terlik Unicode 11+ idi ve Android
+8.0'da boş kutu çıkarlardı. Boyama'da ise ilk test yanlış soruyu
+soruyordu: evin duvarının ortalama noktası kapının içine düşüyor, ama
+duvar yine de boyanabilir. Asıl kural "her alanın üstü açık bir yeri
+olmalı" ve test artık ızgara tarayarak onu ölçüyor.
+
 ### Mağaza vitrini
 
 `docs/store/listing.md` — Play Console'a girilecek her şeyin kaynağı.
@@ -708,12 +772,16 @@ ile `ploofy-web`'e taşındı.
 ## Nerede bırakıldı (03.09.2026, ikinci oturum)
 
 Son commit'ler: İ5 (koleksiyon), Noktaları Birleştir, darbe numaraları.
-Çalışma ağacı temiz ve `origin/main` ile eşit. Kütüphane 14 oyun,
-testler 374.
+Çalışma ağacı temiz ve `origin/main` ile eşit. Kütüphane 17 oyun,
+testler 416.
 
-**Sıradaki iş, yazılım tarafında: İ7 — kategori ayırma, basit toplama,
-boyama.** Toplama artık daha ucuz: Noktaları Birleştir sayı doğrusu fikrini
-kurdu, toplama onun üstüne biner. Sonrası İ8 (bant içi uyarlama).
+**Sıradaki iş, yazılım tarafında: İ8 — bant içi uyarlama.** İçerik yol
+haritasının kalan tek maddesi; çocuk üst üste başarıyorsa zorluğu bir
+kademe artırmak. `BandValue<T>` mimarisi buna hazır. Riski var: gizli
+zorluk değişimi ebeveyni şaşırtır, o yüzden görünür olmalı.
+
+**Ondan önce asıl bekleyen sesli yönerge** (5. bölümün sonu): dokuz
+öğretici oyunun yönergesi hâlâ tamamen görsel ve Filiz bandı okumuyor.
 
 **Ama asıl bekleyen hâlâ gerçek tablet ve artık liste iyice uzadı.**
 Emülatör her şeyi gösterdi, iki şeyi ölçemiyor: parmağı ve hoparlörü.
@@ -806,6 +874,12 @@ Sürümü bloke edenler 4. bölümde, içerik yol haritası 5. bölümde.
   Meşe'de miktarlar ardışık ve yön değişebiliyor
 - Noktaları Birleştir: rakamları sırayla takip ederek hayvan çizme; on bir
   resim, Fidan'da sıradaki nokta belirtiliyor, Meşe'de belirtilmiyor
+- Kategori Ayırma: parça hangi kümeye ait? Filiz iki kutu, Meşe üç ve her
+  turda en az bir ince kategori (meyve/sebze)
+- Basit Toplama: Fidan iki kümeyi de sayıyor, Meşe birinci sayıdan devam
+  ediyor; çeldiriciler komşu sayılar
+- Boyama: beş sayfa, altı renk, serbest oyun — doğru/yanlış yok, süre yok,
+  sayaç yok
 - Avatarlar: 32 emoji, üç tematik grup, her yerde renkli rozet olarak
 - Sıralı oyun (pass-and-play): devir katmanı, her çocuk kendi bandında
 - Sonuç ekranı: kupa animasyonu, yıldızlar, konfeti
@@ -898,11 +972,10 @@ yoktu, doğrudan istendi. Ayrıntı 1. bölümde.
 "Oyun süresi sınırı" başlığı. Not onu "abonelik tarafında somut bir değer"
 diye kaydetmişti; ücretsiz katmanda da açık yapıldı.
 
-**İ7 — Kategori ayırma, basit toplama, boyama.** Sırasıyla: hayvan/araç
-ayırma (Şekil Ayırma'nın motoru genelleşir), Meşe bandı için toplama (Say ve
-Eşleştir'in devamı), ve Filiz için boyama — kaybetmenin olmadığı serbest oyun,
-bu yaşta Sago Mini'nin bütün işi o. Toplama artık daha ucuz: Noktaları
-Birleştir sayı doğrusu fikrini kurdu, toplama onun üstüne biner.
+**İ7 — Kategori ayırma, basit toplama, boyama. ✅ Bitti (03.09.2026).**
+Ayrıntı 1. bölümde, "İ7: üç oyun birden" başlığı. İki yerde nottan
+ayrıldık: ortak motor genelleştirilmedi (bant eksenleri farklı) ve toplama
+Meşe yerine Fidan'dan itibaren açıldı.
 
 **İ8 — Bant içi uyarlama.** Üç bant kaba; çocuk üst üste başarıyorsa zorluğu
 bir kademe artırmak. `BandValue<T>` mimarisi buna hazır. Riski var: gizli
