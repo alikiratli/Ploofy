@@ -568,6 +568,18 @@
   <data name="ScreenTimeHint" xml:space="preserve">
     <value>Yalnızca oyun içinde geçen süre sayılıyor. Oyun ortada kesilmiyor; sınır oyunlar arasında bakılıyor.</value>
   </data>
+  <data name="GameStretchedBadge" xml:space="preserve">
+    <value>↑ Zorlu</value>
+  </data>
+  <data name="GameStretchedNotice" xml:space="preserve">
+    <value>Bunu iyi biliyorsun! {0} artık bir kademe zor.</value>
+  </data>
+  <data name="ProfileAdaptiveLabel" xml:space="preserve">
+    <value>Zorluğu uyarla</value>
+  </data>
+  <data name="AdaptiveHint" xml:space="preserve">
+    <value>Aynı oyun üst üste üç kez hatasız bitirilince yalnızca o oyun bir kademe zorlaşıyor ve ↑ ile işaretleniyor. Yaş bandı, yıldızlar ve ekranlar aynı kalıyor; zorlanılan ilk turda geri iniyor.</value>
+  </data>
   <data name="GameCategorySort" xml:space="preserve">
     <value>Hangi Küme?</value>
   </data>

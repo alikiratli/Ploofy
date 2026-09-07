@@ -114,7 +114,7 @@ public sealed partial class ColoringViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = ColoringRound.ForBand(player.Band);
+        var round = ColoringRound.ForBand(player.KnobBand);
         _round = round;
 
         // Palet seçimi tur değişince sıfırlanmıyor ama motor yeni turda

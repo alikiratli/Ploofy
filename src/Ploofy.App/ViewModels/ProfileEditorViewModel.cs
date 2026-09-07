@@ -149,6 +149,9 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
         ScreenTimeMinutes = ScreenTimeBudget.Unlimited;
         ScreenTimeHint = LocalizationService.Instance["ScreenTimeHint"];
 
+        AdaptiveEnabled = true;
+        AdaptiveHint = LocalizationService.Instance["AdaptiveHint"];
+
         // Izgara kilitli hâliyle kuruluyor: yeni profilin yıldızı yok, yani
         // yalnızca başlangıçtan açık olanlar seçilebilir. Düzenleme açıldığında
         // LoadAsync o çocuğun yıldızına göre kilitleri kaldırıyor.
@@ -192,6 +195,23 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
     /// </remarks>
     [ObservableProperty]
     public partial string ScreenTimeHint { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Bant içi uyarlama açık mı.
+    /// </summary>
+    /// <remarks>
+    /// Varsayılanı açık — oyun süresi sınırının tersine. Fark şurada: sınır
+    /// çocuğu kilitliyor, uyarlama ise yalnızca zaten ustalaşılmış tek bir
+    /// oyunu bir kademe zorlaştırıyor ve her yerde görünür duruyor. Anahtar
+    /// yine de burada, çünkü "çocuğum zorlanmasın" diyen ebeveynin kapatacak
+    /// bir yeri olmalı.
+    /// </remarks>
+    [ObservableProperty]
+    public partial bool AdaptiveEnabled { get; set; }
+
+    /// <summary>Anahtarın altındaki açıklama — neyin değiştiğini söylüyor.</summary>
+    [ObservableProperty]
+    public partial string AdaptiveHint { get; set; } = string.Empty;
 
     /// <summary>Ekranın başlığı — "Çocuk ekle" ya da "Çocuğu düzenle".</summary>
     [ObservableProperty]
@@ -284,6 +304,8 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
         var limit = await _repository.ScreenTimeLimitAsync(existing.Id);
         SelectScreenTime(ScreenTimeOptions.FirstOrDefault(o => o.Minutes == limit));
 
+        AdaptiveEnabled = await _repository.AdaptiveDifficultyEnabledAsync(existing.Id);
+
         // Avatar katalogdan çıkarılmışsa (eski bir profil) seçim varsayılanda
         // kalıyor; ekranın boş bir seçimle açılması daha kötü.
         var avatar = AvatarGroups
@@ -362,6 +384,7 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
             row.AvatarId = SelectedAvatar;
             await _repository.UpdateProfileAsync(row);
             await _repository.SetScreenTimeLimitAsync(row.Id, ScreenTimeMinutes);
+            await _repository.SetAdaptiveDifficultyAsync(row.Id, AdaptiveEnabled);
 
             // Düzenlenen çocuk o an oynayan çocuksa ana ekrandaki ad, avatar
             // ve bant hemen tazelenmeli: bant zorluğu belirliyor ve eski
@@ -381,6 +404,7 @@ public sealed partial class ProfileEditorViewModel : ObservableObject, IQueryAtt
             SelectedAvatar);
 
         await _repository.SetScreenTimeLimitAsync(profile.Id, ScreenTimeMinutes);
+        await _repository.SetAdaptiveDifficultyAsync(profile.Id, AdaptiveEnabled);
 
         // Yeni eklenen çocuk doğrudan oynamaya başlasın: ebeveyn profili
         // oluşturduktan sonra bir de listeden seçmek zorunda kalmasın.

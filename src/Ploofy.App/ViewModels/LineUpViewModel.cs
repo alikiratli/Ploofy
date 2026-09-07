@@ -129,7 +129,7 @@ public sealed partial class LineUpViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = LineUpRound.ForBand(player.Band);
+        var round = LineUpRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

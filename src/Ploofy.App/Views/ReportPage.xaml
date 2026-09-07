@@ -142,7 +142,20 @@
                                            VerticalOptions="Center" />
 
                                     <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                        <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+
+                                            <!-- Bir kademe zor. Ana ekranda çocuğun
+                                                 gördüğü işaretin ebeveyn tarafındaki
+                                                 karşılığı: rapordaki düşük yıldız,
+                                                 gerileme değil zorlaşma olabilir. -->
+                                            <Label Text="{loc:Translate GameStretchedBadge}"
+                                                   IsVisible="{Binding IsStretched}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Sky}"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
                                         <Label Style="{StaticResource HintLabel}">
                                             <Label.FormattedText>
                                                 <FormattedString>

@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using Ploofy.App.Localization;
 using Ploofy.App.Services;
 using Ploofy.Data;
+using Ploofy.Engine.Difficulty;
+using Ploofy.Engine.Sessions;
 
 namespace Ploofy.App.ViewModels;
 
@@ -56,6 +58,20 @@ public sealed partial class RoundResultViewModel(
 
     [ObservableProperty]
     public partial bool HasScreenTimeNotice { get; set; }
+
+    /// <summary>
+    /// Bu turla oyun bir kademe zorlaştı.
+    /// </summary>
+    /// <remarks>
+    /// Uyarlamanın görünür olduğu ilk yer burası ve tek söylendiği an bu.
+    /// Ana ekrandaki işaret kalıcı, bu cümle ise <b>olayın kendisini</b>
+    /// duyuruyor: sonraki tur neden zorlaştı sorusu, sorulmadan cevaplanıyor.
+    /// </remarks>
+    [ObservableProperty]
+    public partial bool HasStretchNotice { get; set; }
+
+    [ObservableProperty]
+    public partial string StretchText { get; set; } = string.Empty;
 
     /// <summary>
     /// Bugünlük bitti — "tekrar oyna" gizleniyor.
@@ -131,6 +147,7 @@ public sealed partial class RoundResultViewModel(
         }
 
         await LoadScreenTimeAsync(profile.Id);
+        await RefreshStepsAsync(profile.Id);
 
         var total = await repository.TotalStarsAsync(profile.Id);
         var seen = await repository.RewardWatermarkAsync(profile.Id, total);
@@ -172,6 +189,57 @@ public sealed partial class RoundResultViewModel(
             : status.IsLastRound
                 ? l["ScreenTimeLastRound"]
                 : string.Empty;
+    }
+
+    /// <summary>
+    /// Oturumun kademelerini bu turun sonucuna göre tazeler ve kademe
+    /// atlandıysa haberi hazırlar.
+    /// </summary>
+    /// <remarks>
+    /// Tazeleme şart: "tekrar oyna" bekleyen oturuma dönüyor, yani kademe
+    /// yenilenmeseydi üst üste oynayan çocuk ana ekrana dönene kadar hiç
+    /// yukarı çıkamazdı — tam da en çok oynayan çocuk.
+    ///
+    /// Haber yalnızca <b>o an seçili</b> çocuk için: sıralı oyunda kardeşin
+    /// kademesi de tazeleniyor ama duyurusu, kendi sırası geldiğinde
+    /// yapılıyor. Ödül kutlaması da aynı sebeple böyle.
+    /// </remarks>
+    private async Task RefreshStepsAsync(int activeProfileId)
+    {
+        HasStretchNotice = false;
+        StretchText = string.Empty;
+
+        if (flow.PendingSession is not { } session)
+        {
+            return;
+        }
+
+        var players = new List<Player>(session.Players.Count);
+        var promoted = false;
+
+        foreach (var played in session.Players)
+        {
+            var step = await repository.StepForAsync(
+                played.ProfileId, session.GameId, played.Band);
+
+            players.Add(played with { Step = step });
+
+            promoted |= played.ProfileId == activeProfileId
+                && played.Step == DifficultyStep.Base
+                && step == DifficultyStep.Stretch;
+        }
+
+        flow.PendingSession = new GameSession(
+            session.GameId, session.Mode, players, session.RoundsPerPlayer);
+
+        if (!promoted)
+        {
+            return;
+        }
+
+        HasStretchNotice = true;
+        StretchText = LocalizationService.Instance.Format(
+            "GameStretchedNotice", GamePresentation.Name(session.GameId));
     }
 
     /// <summary>Kutlama şeridine dokununca koleksiyon açılıyor.</summary>

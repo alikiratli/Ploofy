@@ -5,6 +5,7 @@ using Ploofy.App.Localization;
 using Ploofy.App.Services;
 using Ploofy.Data;
 using Ploofy.Engine;
+using Ploofy.Engine.Difficulty;
 using Ploofy.Engine.Progress;
 
 namespace Ploofy.App.ViewModels;
@@ -18,6 +19,9 @@ public sealed partial class ReportProfile : ObservableObject
 
     public required string AvatarId { get; init; }
 
+    /// <summary>Çocuğun bandı — kademe işaretleri buna göre okunuyor.</summary>
+    public required AgeBand Band { get; init; }
+
     [ObservableProperty]
     public partial bool IsSelected { get; set; }
 }
@@ -29,7 +33,8 @@ public sealed record ReportGameRow(
     string Rounds,
     string Duration,
     string BestStars,
-    string LastPlayed);
+    string LastPlayed,
+    bool IsStretched = false);
 
 /// <summary>Dönem seçeneği (7 / 14 / 30 gün).</summary>
 public sealed partial class ReportRange : ObservableObject
@@ -122,6 +127,7 @@ public sealed partial class ReportViewModel(ProgressRepository repository) : Obs
                     Id = row.Id,
                     DisplayName = row.DisplayName,
                     AvatarId = row.AvatarId,
+                    Band = AgeBandExtensions.FromId(row.AgeBandId),
                     IsSelected = Profiles.Count == 0,
                 });
             }
@@ -171,7 +177,9 @@ public sealed partial class ReportViewModel(ProgressRepository repository) : Obs
 
         if (profile is null || range is null)
         {
-            Show(PlayReport.Build([], DateOnly.FromDateTime(DateTime.Now), 14));
+            Show(
+                PlayReport.Build([], DateOnly.FromDateTime(DateTime.Now), 14),
+                new Dictionary<string, DifficultyStep>());
             return;
         }
 
@@ -182,10 +190,15 @@ public sealed partial class ReportViewModel(ProgressRepository repository) : Obs
 
         var rounds = history.Select(ProgressRepository.ToPlayedRound).ToList();
 
-        Show(PlayReport.Build(rounds, today, range.Days));
+        // Kademeler dönemden bağımsız: "şu an nerede" sorusunun cevabı, son
+        // yedi günün değil son turların içinde. Uyarlama kapalıysa boş dönüyor.
+        var steps = await repository.StepsForAsync(profile.Id, profile.Band);
+
+        Show(PlayReport.Build(rounds, today, range.Days), steps);
     }
 
-    private void Show(PlayReport report)
+    private void Show(
+        PlayReport report, IReadOnlyDictionary<string, DifficultyStep> steps)
     {
         var l = LocalizationService.Instance;
 
@@ -206,7 +219,8 @@ public sealed partial class ReportViewModel(ProgressRepository repository) : Obs
                 l.Format("ReportGameRounds", game.Rounds),
                 FormatDuration(game.Duration),
                 l.Format("ReportBestStars", game.BestStars),
-                game.LastPlayedOn.ToString("d MMMM", l.Culture)));
+                game.LastPlayedOn.ToString("d MMMM", l.Culture),
+                steps.ContainsKey(game.GameId)));
         }
     }
 

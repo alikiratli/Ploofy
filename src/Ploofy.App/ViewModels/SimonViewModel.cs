@@ -184,7 +184,7 @@ public sealed partial class SimonViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = SimonRound.ForBand(player.Band);
+        var round = SimonRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

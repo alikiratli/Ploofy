@@ -190,7 +190,7 @@ public sealed partial class CategorySortViewModel : ObservableObject, IDisposabl
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = CategorySortRound.ForBand(player.Band);
+        var round = CategorySortRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

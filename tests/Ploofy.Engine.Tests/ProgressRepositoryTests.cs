@@ -1,6 +1,7 @@
 using Ploofy.Data;
 using Ploofy.Engine;
 using Ploofy.Engine.Catalog;
+using Ploofy.Engine.Difficulty;
 using Ploofy.Engine.Progress;
 
 namespace Ploofy.Engine.Tests;
@@ -213,6 +214,130 @@ public sealed class ProgressRepositoryTests : IAsyncLifetime
         await _repository.UnlockBadgeAsync(profile.Id, "first_star");
 
         Assert.Single(await _repository.BadgesForAsync(profile.Id));
+    }
+
+    // --- Bant içi uyarlama ---
+
+    /// <summary>Aynı oyundan arka arkaya kusursuz turlar kaydeder.</summary>
+    private async Task PerfectRoundsAsync(int profileId, AgeBand band, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            await _repository.RecordRoundAsync(Outcome(profileId, band, mistakes: 0));
+        }
+    }
+
+    [Fact]
+    public async Task Adaptation_is_on_by_default()
+    {
+        // Sınırın tersine: uyarlama kimseyi kilitlemiyor, yalnızca zaten
+        // ustalaşılmış bir oyunu zorlaştırıyor ve her yerde görünür duruyor.
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+
+        Assert.True(await _repository.AdaptiveDifficultyEnabledAsync(profile.Id));
+    }
+
+    [Fact]
+    public async Task Three_perfect_rounds_move_that_one_game_up()
+    {
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+
+        await PerfectRoundsAsync(profile.Id, AgeBand.Fidan, 2);
+        Assert.Equal(
+            DifficultyStep.Base,
+            await _repository.StepForAsync(profile.Id, GameCatalog.MemoryMatch, AgeBand.Fidan));
+
+        await PerfectRoundsAsync(profile.Id, AgeBand.Fidan, 1);
+        Assert.Equal(
+            DifficultyStep.Stretch,
+            await _repository.StepForAsync(profile.Id, GameCatalog.MemoryMatch, AgeBand.Fidan));
+
+        // Yalnızca o oyun: yapbozda ustalaşmak Yolu Bul'u zorlaştırmıyor.
+        Assert.Equal(
+            DifficultyStep.Base,
+            await _repository.StepForAsync(profile.Id, GameCatalog.Jigsaw, AgeBand.Fidan));
+    }
+
+    [Fact]
+    public async Task A_round_with_a_mistake_brings_the_game_back_down()
+    {
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+
+        await PerfectRoundsAsync(profile.Id, AgeBand.Fidan, 3);
+        await _repository.RecordRoundAsync(Outcome(profile.Id, AgeBand.Fidan, mistakes: 4));
+
+        Assert.Equal(
+            DifficultyStep.Base,
+            await _repository.StepForAsync(profile.Id, GameCatalog.MemoryMatch, AgeBand.Fidan));
+    }
+
+    [Fact]
+    public async Task The_parent_can_switch_adaptation_off()
+    {
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+        await PerfectRoundsAsync(profile.Id, AgeBand.Fidan, 3);
+
+        await _repository.SetAdaptiveDifficultyAsync(profile.Id, false);
+
+        Assert.Equal(
+            DifficultyStep.Base,
+            await _repository.StepForAsync(profile.Id, GameCatalog.MemoryMatch, AgeBand.Fidan));
+        Assert.Empty(await _repository.StepsForAsync(profile.Id, AgeBand.Fidan));
+    }
+
+    [Fact]
+    public async Task Mastery_in_one_band_does_not_carry_into_the_next()
+    {
+        // Bant zaten bir kademe yukarısı; eski bandın ustalığı yeni bantta
+        // ikinci bir kademe olurdu.
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Filiz, "fox");
+        await PerfectRoundsAsync(profile.Id, AgeBand.Filiz, 3);
+
+        Assert.Equal(
+            DifficultyStep.Stretch,
+            await _repository.StepForAsync(profile.Id, GameCatalog.MemoryMatch, AgeBand.Filiz));
+        Assert.Equal(
+            DifficultyStep.Base,
+            await _repository.StepForAsync(profile.Id, GameCatalog.MemoryMatch, AgeBand.Fidan));
+    }
+
+    [Fact]
+    public async Task The_step_rides_along_with_the_player()
+    {
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+        await PerfectRoundsAsync(profile.Id, AgeBand.Fidan, 3);
+
+        var player = await _repository.ToPlayerAsync(profile, GameCatalog.MemoryMatch);
+
+        Assert.Equal(DifficultyStep.Stretch, player.Step);
+        Assert.Equal(AgeBand.Mese, player.KnobBand);
+        Assert.Equal(AgeBand.Fidan, player.Band);
+    }
+
+    [Fact]
+    public async Task Only_mastered_games_are_listed()
+    {
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+        await PerfectRoundsAsync(profile.Id, AgeBand.Fidan, 3);
+
+        var steps = await _repository.StepsForAsync(profile.Id, AgeBand.Fidan);
+
+        Assert.Equal([GameCatalog.MemoryMatch], steps.Keys);
+
+        // Meşe'nin üstünde gidilecek bir bant yok.
+        Assert.Empty(await _repository.StepsForAsync(profile.Id, AgeBand.Mese));
+    }
+
+    [Fact]
+    public async Task Deleting_a_profile_takes_its_adaptation_setting_with_it()
+    {
+        // Silinmese, aynı id'yi alan sonraki profil kapalı başlardı.
+        var profile = await _repository.CreateProfileAsync("Ada", AgeBand.Fidan, "fox");
+        await _repository.SetAdaptiveDifficultyAsync(profile.Id, false);
+
+        await _repository.DeleteProfileAsync(profile.Id);
+
+        Assert.True(await _repository.AdaptiveDifficultyEnabledAsync(profile.Id));
     }
 
     [Fact]

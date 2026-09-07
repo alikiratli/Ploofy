@@ -220,27 +220,32 @@ public sealed partial class PlaySetupViewModel(
 
         if (mode == SessionMode.PassAndPlay)
         {
-            var chosen = Players
-                .Where(p => p.IsSelected)
-                .Select(p => ProgressRepository.ToPlayer(p.Row))
-                .ToList();
-
-            if (chosen.Count < 2)
+            var selected = Players.Where(p => p.IsSelected).ToList();
+            if (selected.Count < 2)
             {
                 return;
+            }
+
+            // Kademe oyuncu başına: kardeşlerden biri bu oyunda ustalaşmışsa
+            // aynı turda o daha zorunu oynuyor, diğeri kendi bandını.
+            var chosen = new List<Player>(selected.Count);
+            foreach (var choice in selected)
+            {
+                chosen.Add(await repository.ToPlayerAsync(choice.Row, gameId));
             }
 
             flow.PendingSession = new GameSession(gameId, SessionMode.PassAndPlay, chosen);
         }
         else
         {
-            var player = state.ActivePlayer;
-            if (player is null)
+            var profile = state.ActiveProfile;
+            if (profile is null)
             {
                 return;
             }
 
-            flow.PendingSession = GameSession.Solo(gameId, player);
+            flow.PendingSession = GameSession.Solo(
+                gameId, await repository.ToPlayerAsync(profile, gameId));
         }
 
         await Shell.Current.GoToAsync(route);

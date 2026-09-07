@@ -146,7 +146,7 @@ public sealed partial class DotToDotViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = DotToDotRound.ForBand(player.Band);
+        var round = DotToDotRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

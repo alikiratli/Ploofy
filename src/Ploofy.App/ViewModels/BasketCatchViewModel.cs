@@ -124,7 +124,7 @@ public sealed partial class BasketCatchViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = BasketCatchRound.ForBand(player.Band);
+        var round = BasketCatchRound.ForBand(player.KnobBand);
         _round = round;
 
         Goal = round.Goal;

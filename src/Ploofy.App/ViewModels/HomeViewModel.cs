@@ -16,7 +16,8 @@ public sealed class GameTile(
     MiniGameDescriptor game,
     int stars,
     bool isLocked,
-    bool isPlayable)
+    bool isPlayable,
+    bool isStretched = false)
 {
     public MiniGameDescriptor Game { get; } = game;
 
@@ -39,6 +40,16 @@ public sealed class GameTile(
 
     /// <summary>Oyunun sayfası yazıldı mı? Yazılmadıysa kutucuk "yakında" diyor.</summary>
     public bool IsPlayable { get; } = isPlayable;
+
+    /// <summary>
+    /// Bu oyun şu an bir kademe zor.
+    /// </summary>
+    /// <remarks>
+    /// İşaret kutucuğun üstünde duruyor çünkü uyarlamanın görünür olması
+    /// şart: sessizce zorlaşan bir oyun ebeveyne bozulmuş gibi görünür.
+    /// Bkz. <c>AdaptiveDifficulty</c>.
+    /// </remarks>
+    public bool IsStretched { get; } = isStretched;
 
     public bool ShowsFreeBadge => Game.Tier == GameTier.Free;
 
@@ -142,6 +153,10 @@ public sealed partial class HomeViewModel(
         var progress = await repository.ProgressForAsync(profile.Id);
         var entitlements = state.Entitlements;
 
+        // Ustalaşılmış oyunlar. Uyarlama kapalıysa ya da bant Meşe'yse liste
+        // boş dönüyor ve geçmişe hiç gidilmiyor.
+        var steps = await repository.StepsForAsync(profile.Id, band);
+
         FunGames.Clear();
         EducationalGames.Clear();
 
@@ -157,7 +172,8 @@ public sealed partial class HomeViewModel(
                 game,
                 stars,
                 isLocked: !entitlements.CanPlay(game),
-                isPlayable: GamePresentation.IsPlayable(game.Id));
+                isPlayable: GamePresentation.IsPlayable(game.Id),
+                isStretched: steps.ContainsKey(game.Id));
 
             if (game.IsEducational)
             {
@@ -214,14 +230,17 @@ public sealed partial class HomeViewModel(
             return;
         }
 
-        var player = state.ActivePlayer;
+        var profile = state.ActiveProfile;
         var route = GamePresentation.Route(tile.GameId);
-        if (player is null || route is null)
+        if (profile is null || route is null)
         {
             return;
         }
 
-        flow.PendingSession = GameSession.Solo(tile.GameId, player);
+        // Oyuncu burada kuruluyor, kutucuk çizilirken değil: kademe oyuna
+        // girildiği anda geçerli olan turlara bakmalı.
+        flow.PendingSession = GameSession.Solo(
+            tile.GameId, await repository.ToPlayerAsync(profile, tile.GameId));
         await Shell.Current.GoToAsync(route);
     }
 

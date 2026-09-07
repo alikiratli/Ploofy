@@ -568,6 +568,18 @@
   <data name="ScreenTimeHint" xml:space="preserve">
     <value>Gezählt wird nur die Zeit im Spiel. Ein Spiel wird nie mittendrin beendet — das Limit wird zwischen den Spielen geprüft.</value>
   </data>
+  <data name="GameStretchedBadge" xml:space="preserve">
+    <value>↑ Schwerer</value>
+  </data>
+  <data name="GameStretchedNotice" xml:space="preserve">
+    <value>Das kannst du! {0} ist jetzt eine Stufe schwerer.</value>
+  </data>
+  <data name="ProfileAdaptiveLabel" xml:space="preserve">
+    <value>Schwierigkeit anpassen</value>
+  </data>
+  <data name="AdaptiveHint" xml:space="preserve">
+    <value>Wird dasselbe Spiel dreimal hintereinander fehlerfrei geschafft, wird nur dieses eine Spiel eine Stufe schwerer und mit ↑ markiert. Altersstufe, Sterne und Bildschirme bleiben gleich; eine schwierigere Runde bringt es zurück.</value>
+  </data>
   <data name="GameCategorySort" xml:space="preserve">
     <value>Welche Gruppe?</value>
   </data>

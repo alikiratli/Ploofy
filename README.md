@@ -34,9 +34,10 @@ eigene App mit Vorschulmathematik) darauf aufbauen, ohne die Engine anzufassen.
 
 | Begriff | Datei | Was er tut |
 |---|---|---|
-| `AgeBand` | `Engine/AgeBand.cs` | Filiz/Spross (2-4), Fidan/Setzling (4-6), Meşe/Eiche (6-9). Die **einzige** Schwierigkeitsachse der App. |
+| `AgeBand` | `Engine/AgeBand.cs` | Filiz/Spross (2-4), Fidan/Setzling (4-6), Meşe/Eiche (6-9). Die Schwierigkeitsachse der App und das Einzige, was die Eltern einstellen. |
 | `BandValue<T>` | `Engine/Difficulty/` | Der Wert jedes Reglers eines Spiels je Altersstufe. Die Schwierigkeitstabelle steht in einer Zeile. |
 | `DifficultyProfile` | `Engine/Difficulty/` | Der gemeinsame Vertrag, an den sich jedes Spiel hält: Kann man verlieren, ist die Zeit sichtbar, wird Text verwendet. |
+| `AdaptiveDifficulty` | `Engine/Difficulty/` | Die Stufe **innerhalb** einer Altersstufe: Wer dasselbe Spiel dreimal hintereinander fehlerfrei schafft, spielt es eine Stufe schwerer. Wird aus der Rundenhistorie abgeleitet, nicht gespeichert. |
 | `GameCatalog` | `Engine/Catalog/` | Das einzige Verzeichnis aller Spiele. Sperre, Altersfilter und Elternbereich speisen sich daraus. |
 | `TurnController` | `Engine/Sessions/` | Die einzige Stelle, die Reihenfolge, Runden und Punkte führt. Auch im Einzelspiel läuft dieselbe Klasse. |
 | `ISessionTransport` | `Engine/Sessions/` | Der Kanal der Sitzungsereignisse. Heute geräteintern; lokales Netz und Familienverbindung kommen dahinter. |
@@ -163,6 +164,45 @@ Einstellungen (`screen_time:<Profil-ID>`).
 Das Limit ist **nicht** ans Abo gebunden. Eine Schutzfunktion für Kinder
 hinter eine Bezahlschranke zu stellen, wäre in einer Kinder-App nicht zu
 rechtfertigen.
+
+## Anpassung innerhalb der Altersstufe
+
+Drei Altersstufen sind grob. Ein Kind, das dasselbe Spiel dreimal
+hintereinander **fehlerfrei** beendet, lernt daran nichts mehr — also wird
+genau dieses eine Spiel eine Stufe schwerer und liest ab da die Regler der
+nächsten Altersstufe (`AdaptiveDifficulty`, `Player.KnobBand`).
+
+Was sich dabei *nicht* ändert:
+
+- **Die Altersstufe selbst.** Sie gehört den Eltern; die App verschiebt sie nie.
+- **`DifficultyProfile`.** Ein hochgestufter Spross sieht mehr Teile, aber
+  weiterhin keine Uhr, keinen Text und kein Verlieren — das sind keine
+  Schwierigkeits-, sondern Altersregeln.
+- **Die Sterne.** Bewertet wird mit der echten Altersstufe, die schwerere
+  Runde kürzt die Belohnung also nicht.
+- **Die Inhalte.** Buchstaben- und Zahlenvorräte kommen weiter aus der echten
+  Altersstufe; nur die Regler wandern.
+
+Vier Entscheidungen tragen die Sache:
+
+- **Nicht gespeichert, sondern abgeleitet.** Die Stufe wird bei jedem
+  Spielstart aus den letzten Runden neu berechnet. Ein gespeicherter Wert, der
+  falsch steht, korrigiert sich nie von selbst; ein abgeleiteter fällt beim
+  ersten schwereren Durchgang von allein zurück.
+- **Maßstab ist die fehlerfreie Runde, nicht der Stern.** Sterne bedeuten in
+  den drei Stufen drei verschiedene Dinge — beim Spross bekommt drei Sterne,
+  wer überhaupt fertig wird. Drei Sterne **und** null Fehler sagt in allen
+  drei dasselbe.
+- **Pro Spiel, nicht pro Kind.** Wer im Puzzle sicher ist, ist es im Labyrinth
+  noch lange nicht.
+- **Sichtbar.** Ein Spiel, das leise schwerer wird, wirkt auf Eltern wie ein
+  Fehler („gestern konnte sie das doch"). Deshalb: ein ↑ auf der Kachel, ein
+  Satz auf dem Ergebnisbildschirm, eine Markierung im Elternbericht — und ein
+  Schalter im Profil, mit dem sich das Ganze abschalten lässt (Standard: an).
+
+Grenze: Die Eiche ist die oberste Stufe, dort gibt es keine Spalte mehr, in
+die man ausweichen könnte. Eine vierte Zahl zu erfinden wäre schlechter als
+die fehlende Stufe.
 
 ## Die Stufen
 

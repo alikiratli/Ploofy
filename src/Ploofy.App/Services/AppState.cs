@@ -2,7 +2,6 @@ using Ploofy.App.Localization;
 using Ploofy.Data;
 using Ploofy.Engine;
 using Ploofy.Engine.Access;
-using Ploofy.Engine.Sessions;
 using Ploofy.Ui.Feedback;
 
 namespace Ploofy.App.Services;
@@ -28,9 +27,6 @@ public sealed class AppState(
     public AgeBand ActiveBand => ActiveProfile is null
         ? AgeBand.Fidan
         : AgeBandExtensions.FromId(ActiveProfile.AgeBandId);
-
-    public Player? ActivePlayer =>
-        ActiveProfile is null ? null : ProgressRepository.ToPlayer(ActiveProfile);
 
     public event EventHandler? ActiveProfileChanged;
 

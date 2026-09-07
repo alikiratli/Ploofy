@@ -157,7 +157,7 @@ public sealed partial class HuntViewModel : ObservableObject, IDisposable
             LocalizationService.Instance.CurrentLanguage,
             player.Band);
 
-        var round = HuntRound.ForBand(player.Band, HuntContent.KindFor(gameId), pool);
+        var round = HuntRound.ForBand(player.KnobBand, HuntContent.KindFor(gameId), pool);
         _round = round;
 
         Total = round.Total;

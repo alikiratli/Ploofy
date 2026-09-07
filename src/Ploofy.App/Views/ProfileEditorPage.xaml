@@ -158,6 +158,22 @@
                 <Label Text="{Binding ScreenTimeHint}" Style="{StaticResource HintLabel}" />
             </VerticalStackLayout>
 
+            <!-- Bant içi uyarlama. Üç bant kaba: bir oyunu üst üste hatasız
+                 bitiren çocuk için o oyun bir kademe zorlaşıyor. Varsayılanı
+                 açık, ama kapatacak yeri olmalı. -->
+            <VerticalStackLayout Spacing="6">
+                <Grid ColumnDefinitions="*,Auto" HeightRequest="{StaticResource TouchTarget}">
+                    <Label Text="{loc:Translate ProfileAdaptiveLabel}"
+                           Style="{StaticResource SectionLabel}"
+                           VerticalOptions="Center" />
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding AdaptiveEnabled}"
+                            VerticalOptions="Center" />
+                </Grid>
+
+                <Label Text="{Binding AdaptiveHint}" Style="{StaticResource HintLabel}" />
+            </VerticalStackLayout>
+
             <Button Text="{loc:Translate ProfileSave}"
                     Style="{StaticResource BigButton}"
                     IsEnabled="{Binding CanSave}"

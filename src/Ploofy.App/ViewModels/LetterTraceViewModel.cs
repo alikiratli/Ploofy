@@ -134,7 +134,7 @@ public sealed partial class LetterTraceViewModel : ObservableObject, IDisposable
         var pool = LetterTraceContent.PoolFor(
             LocalizationService.Instance.CurrentLanguage, player.Band);
 
-        var round = LetterTraceRound.ForBand(player.Band, pool);
+        var round = LetterTraceRound.ForBand(player.KnobBand, pool);
         _round = round;
 
         Total = round.Total;

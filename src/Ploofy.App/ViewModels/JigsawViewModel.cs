@@ -116,7 +116,7 @@ public sealed partial class JigsawViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = JigsawRound.ForBand(player.Band);
+        var round = JigsawRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

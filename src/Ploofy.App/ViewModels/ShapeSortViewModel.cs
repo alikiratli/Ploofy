@@ -117,7 +117,7 @@ public sealed partial class ShapeSortViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = ShapeSortRound.ForBand(player.Band);
+        var round = ShapeSortRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

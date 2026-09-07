@@ -116,7 +116,7 @@ public sealed partial class MazeTraceViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = MazeTraceRound.ForBand(player.Band);
+        var round = MazeTraceRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

@@ -68,6 +68,23 @@
                                TextColor="{StaticResource Ink}" />
                     </Border>
 
+                    <!-- Bir kademe zor: bu oyun üst üste hatasız bitirildiği
+                         için zorlaştı. İşaret ebeveyn için; çocuk için de
+                         "bu oyunu artık iyi oynuyorum" demek. -->
+                    <Border Grid.Row="0"
+                            IsVisible="{Binding IsStretched}"
+                            Padding="8,3"
+                            StrokeThickness="0"
+                            BackgroundColor="#E6FFFFFF"
+                            StrokeShape="RoundRectangle 12"
+                            HorizontalOptions="Start"
+                            VerticalOptions="End">
+                        <Label Text="{loc:Translate GameStretchedBadge}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Ink}" />
+                    </Border>
+
                     <Border Grid.Row="0"
                             IsVisible="{Binding ShowsComingSoon}"
                             Padding="8,3"

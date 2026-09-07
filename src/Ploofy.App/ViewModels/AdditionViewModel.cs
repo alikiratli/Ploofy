@@ -149,7 +149,7 @@ public sealed partial class AdditionViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = AdditionRound.ForBand(player.Band);
+        var round = AdditionRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

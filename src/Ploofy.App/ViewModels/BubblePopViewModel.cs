@@ -154,7 +154,7 @@ public sealed partial class BubblePopViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = BubblePopRound.ForBand(player.Band);
+        var round = BubblePopRound.ForBand(player.KnobBand);
         _round = round;
 
         ShowsTarget = round.TargetHue is not null;

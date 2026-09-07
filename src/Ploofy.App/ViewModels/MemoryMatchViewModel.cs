@@ -144,7 +144,7 @@ public sealed partial class MemoryMatchViewModel(
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        _round = MemoryMatchRound.ForBand(player.Band, SymbolPool);
+        _round = MemoryMatchRound.ForBand(player.KnobBand, SymbolPool);
         Columns = _round.Columns;
         TotalPairs = _round.TotalPairs;
         MatchedPairs = 0;

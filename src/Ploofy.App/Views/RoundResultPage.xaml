@@ -95,6 +95,20 @@
 
             <VerticalStackLayout Grid.Row="1" Spacing="10">
 
+                <!-- Kademe haberi: oyun bu turla bir kademe zorlaştı.
+                     Süre haberinin üstünde, çünkü o çocuğun bir sonraki
+                     hareketini belirliyor; bu ise ne olduğunu anlatıyor. -->
+                <Border IsVisible="{Binding HasStretchNotice}"
+                        Padding="14,10"
+                        StrokeThickness="0"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        StrokeShape="RoundRectangle 18">
+                    <Label Text="{Binding StretchText}"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}"
+                           HorizontalTextAlignment="Center" />
+                </Border>
+
                 <!-- Oyun süresi haberi: "son bir oyun kaldı" ya da "bugünlük
                      bu kadar". Düğmelerin hemen üstünde, çünkü çocuğun bir
                      sonraki hareketini belirleyen şey bu. -->

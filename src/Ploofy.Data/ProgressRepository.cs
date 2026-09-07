@@ -1,4 +1,6 @@
 using Ploofy.Engine;
+using Ploofy.Engine.Catalog;
+using Ploofy.Engine.Difficulty;
 using Ploofy.Engine.Progress;
 using Ploofy.Engine.Sessions;
 
@@ -58,6 +60,18 @@ public static class SettingKeys
     /// kimse sebebini bilmezdi. Bkz. <c>ScreenTimeBudget</c>.
     /// </remarks>
     public static string ScreenTimeLimit(int profileId) => $"screen_time:{profileId}";
+
+    /// <summary>
+    /// Bant içi uyarlama açık mı; profil başına.
+    /// </summary>
+    /// <remarks>
+    /// Oyun süresi sınırının tersine varsayılanı <b>açık</b>. Sebep farkı
+    /// şurada: sınır kapalıyken açılırsa çocuk birden kilitleniyor, uyarlama
+    /// ise yalnızca zaten ustalaşılmış tek bir oyunu bir kademe zorlaştırıyor
+    /// ve her yerde görünür duruyor. Anahtar yalnızca ebeveyn kapattığında
+    /// yazılıyor. Bkz. <c>AdaptiveDifficulty</c>.
+    /// </remarks>
+    public static string AdaptiveDifficulty(int profileId) => $"adaptive:{profileId}";
 }
 
 /// <summary>
@@ -144,14 +158,30 @@ public sealed class ProgressRepository(ProgressDatabase database)
         var screenTimeKey = SettingKeys.ScreenTimeLimit(id);
         await _database.Connection.Table<AppSettingRow>()
             .DeleteAsync(r => r.Key == screenTimeKey);
+
+        var adaptiveKey = SettingKeys.AdaptiveDifficulty(id);
+        await _database.Connection.Table<AppSettingRow>()
+            .DeleteAsync(r => r.Key == adaptiveKey);
     }
 
     /// <summary>Profili oyun oturumunda kullanılan oyuncuya çevirir.</summary>
+    /// <remarks>
+    /// <b>Kademesiz.</b> Oturum kuran her yer <see cref="ToPlayerAsync"/>
+    /// kullanmalı: bu aşırı yüklemeyle kurulan bir oyuncu bant içi uyarlamayı
+    /// sessizce devre dışı bırakır ve hata hiçbir yerde görünmez.
+    /// </remarks>
     public static Player ToPlayer(ChildProfileRow profile) => new(
         profile.Id,
         profile.DisplayName,
         AgeBandExtensions.FromId(profile.AgeBandId),
         profile.AvatarId);
+
+    /// <summary>Profili, <b>o oyundaki</b> kademesiyle birlikte oyuncuya çevirir.</summary>
+    public async Task<Player> ToPlayerAsync(ChildProfileRow profile, string gameId)
+    {
+        var player = ToPlayer(profile);
+        return player with { Step = await StepForAsync(player.ProfileId, gameId, player.Band) };
+    }
 
     // --- İlerleme ---
 
@@ -363,6 +393,115 @@ public sealed class ProgressRepository(ProgressDatabase database)
         {
             await SetSettingAsync(key, stars.ToString());
         }
+    }
+
+    // --- Bant içi uyarlama ---
+
+    /// <summary>Ebeveyn uyarlamayı açık bırakmış mı? Varsayılan açık.</summary>
+    public Task<bool> AdaptiveDifficultyEnabledAsync(int profileId) =>
+        GetBoolSettingAsync(SettingKeys.AdaptiveDifficulty(profileId), orElse: true);
+
+    public Task SetAdaptiveDifficultyAsync(int profileId, bool enabled) =>
+        SetBoolSettingAsync(SettingKeys.AdaptiveDifficulty(profileId), enabled);
+
+    /// <summary>
+    /// Bir oyunun son turları, yeniden eskiye.
+    /// </summary>
+    /// <remarks>
+    /// Kademe kuralının gördüğü tek şey bu. Tarihe göre değil sayıya göre
+    /// süzülüyor: bir ay ara verip dönen çocuk, bıraktığı yerde devam ediyor.
+    /// </remarks>
+    public async Task<IReadOnlyList<RoundHistoryRow>> RecentRoundsAsync(
+        int profileId, string gameId, AgeBand band, int count)
+    {
+        await _database.InitializeAsync();
+
+        var bandId = band.ToId();
+
+        return await _database.Connection.Table<RoundHistoryRow>()
+            .Where(r => r.ProfileId == profileId
+                && r.GameId == gameId
+                && r.AgeBandId == bandId)
+            .OrderByDescending(r => r.Id)
+            .Take(count)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Bir oyunun bu profildeki güncel kademesi.
+    /// </summary>
+    /// <remarks>
+    /// Ebeveyn uyarlamayı kapattıysa geçmişe hiç gidilmiyor; kapalıyken her
+    /// oyun açılışında yapılan bir sorgu bedavaya çalışırdı.
+    /// </remarks>
+    public async Task<DifficultyStep> StepForAsync(int profileId, string gameId, AgeBand band)
+    {
+        if (!AdaptiveDifficulty.CanStretch(band)
+            || !await AdaptiveDifficultyEnabledAsync(profileId))
+        {
+            return DifficultyStep.Base;
+        }
+
+        var recent = await RecentRoundsAsync(
+            profileId, gameId, band, AdaptiveDifficulty.PerfectRoundsToStretch);
+
+        return AdaptiveDifficulty.Evaluate(band, recent.Select(ToPlayedRound));
+    }
+
+    /// <summary>
+    /// Bantta oynanabilen bütün oyunların kademesi — ana ekranın ve ebeveyn
+    /// raporunun işareti buradan.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Oyun başına bir sorgu. Tek sorguya sığdırmak, "her oyunun son üç turu"nu
+    /// pencereli bir okumaya çevirirdi; o pencerenin dışında kalan bir oyunda
+    /// ana ekranın işareti oyunun gerçek kademesini tutmazdı.
+    /// </para>
+    /// <para>
+    /// Yeterince oynanmamış oyunlar sorulmadan eleniyor. Eleme kuralı elemiyor,
+    /// yalnızca zaten <see cref="DifficultyStep.Base"/> çıkacak sorguları
+    /// atıyor: kademe için o bantta en az üç tur gerekiyor ve tur sayısı
+    /// ilerleme satırında zaten duruyor. Elemesiz hâli, hiç oynanmamış her
+    /// oyun için bütün geçmişi baştan sona geziyordu — ana ekran her açıldığında.
+    /// </para>
+    /// </remarks>
+    public async Task<IReadOnlyDictionary<string, DifficultyStep>> StepsForAsync(
+        int profileId, AgeBand band)
+    {
+        var steps = new Dictionary<string, DifficultyStep>(StringComparer.Ordinal);
+
+        if (!AdaptiveDifficulty.CanStretch(band)
+            || !await AdaptiveDifficultyEnabledAsync(profileId))
+        {
+            return steps;
+        }
+
+        var bandId = band.ToId();
+        var played = (await ProgressForAsync(profileId))
+            .Where(r => r.AgeBandId == bandId
+                && r.PlayCount >= AdaptiveDifficulty.PerfectRoundsToStretch)
+            .Select(r => r.GameId)
+            .ToHashSet(StringComparer.Ordinal);
+
+        foreach (var game in GameCatalog.ForBand(band))
+        {
+            if (!played.Contains(game.Id))
+            {
+                continue;
+            }
+
+            var recent = await RecentRoundsAsync(
+                profileId, game.Id, band, AdaptiveDifficulty.PerfectRoundsToStretch);
+
+            var step = AdaptiveDifficulty.Evaluate(band, recent.Select(ToPlayedRound));
+            if (step != DifficultyStep.Base)
+            {
+                steps[game.Id] = step;
+            }
+        }
+
+        return steps;
     }
 
     // --- Ayarlar ---

@@ -116,7 +116,7 @@ public sealed partial class CountMatchViewModel : ObservableObject, IDisposable
         PlayerName = player.DisplayName;
         PlayerAvatar = player.AvatarId;
 
-        var round = CountMatchRound.ForBand(player.Band);
+        var round = CountMatchRound.ForBand(player.KnobBand);
         _round = round;
 
         Total = round.Total;

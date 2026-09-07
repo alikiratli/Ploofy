@@ -1,6 +1,6 @@
 # Ploofy — İlerleme Notu
 
-Son güncelleme: 03.09.2026
+Son güncelleme: 07.09.2026
 Depo: https://github.com/alikiratli/Ploofy (public)
 Web: https://alikiratli.github.io/ploofy-web/ (gizlilik politikası + Impressum)
 
@@ -19,10 +19,16 @@ yeni özellik yok denecek kadar az; yapılan iş uygulamayı mağazanın bugün
 geçerli zorunluluklarına taşımak ve ilk kez gerçek bir **sürüm (Release)**
 paketi üretip çalıştırmak oldu.
 
-**Son oturumda yapılan: yıldızların bir karşılığı oldu, kütüphane on
+**Son oturumda yapılan: içerik yol haritasının kalan tek maddesi — İ8, bant
+içi uyarlama.** Bir oyunu üst üste üç kez hatasız bitiren çocuk için
+<b>yalnızca o oyun</b> bir kademe zorlaşıyor; bant, yıldız ve ekranlar aynı
+kalıyor ve değişim dört yerde birden görünür oluyor. Ayrıntı aşağıda: "Bant
+içi uyarlama (İ8)". Yeni oyun eklenmedi, kütüphane on yedide; testler 436.
+
+**Bir önceki oturumda yapılan: yıldızların bir karşılığı oldu, kütüphane on
 dörtten on yediye çıktı, harf yazma defterdeki gibi numaralandı, mağaza
-vitrini yazıldı, oyun süresi sınırı (İ6) ve içerik yol haritasının son
-maddesi (İ7) eklendi.**
+vitrini yazıldı, oyun süresi sınırı (İ6) ve içerik yol haritasının üç oyunu
+(İ7) eklendi.**
 Sırayla: **İ5 — koleksiyon ve açılan avatarlar** (yıldız artık avatar
 açıyor), **Noktaları Birleştir** (rakamları sırayla takip ederek hayvan
 çizme), **Harf Yazma'ya numaralı darbe sırası ve yön okları**, ve yayın
@@ -32,11 +38,11 @@ emoji). Ayrıntı aşağıda: "Yıldızların karşılığı", "Noktaları Birle
 "Darbe numaraları", "Oyun süresi sınırı", "İ7: üç oyun birden",
 "Mağaza vitrini", "minSdk 26 ve emoji".
 
-**Bir önceki oturumda yapılan:** yayın anahtarı, gizlilik politikasının
+**Ondan önceki oturumda yapılan:** yayın anahtarı, gizlilik politikasının
 yayımlanması, abonelik yönetimi ve içerik yol haritasının ilk dördü
 (İ1 Harf Yazma, İ2 Örüntü, İ3 Ebeveyn raporu, İ4 Sırala).
 
-**Ondan önceki oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
+**En eski oturumda yapılan:** .NET 10'a geçiş, API 36 hedefi, yatay kilidin
 korunması, MAUI 10'un kaldırdığı çağrılar, SQLite'ta bir güvenlik açığı ve
 yanlış paketlenmiş bir yerel kütüphane. Sırayla:
 
@@ -777,27 +783,102 @@ ile `ploofy-web`'e taşındı.
 **Sayılar:** 329 test geçiyor · 13 oyun tanımlı, 13'ü oynanabilir ·
 13 ses dosyası · AAB 40 MB · targetSdk 36 · sürüm 1.0.
 
-## Nerede bırakıldı (03.09.2026, ikinci oturum)
+### Bant içi uyarlama (İ8)
 
-Bu oturumda: İ5 (koleksiyon), Noktaları Birleştir, darbe numaraları,
-mağaza vitrini, minSdk 26, İ6 (oyun süresi sınırı) ve İ7 (Kategori Ayırma,
-Basit Toplama, Boyama). Çalışma ağacı temiz ve `origin/main` ile eşit.
-**Kütüphane 17 oyun, testler 416.** İçerik yol haritası İ1-İ7 kapandı.
+Üç bant kaba. Bir oyunu üst üste üç kez **hatasız** bitiren çocuğa o oyun
+artık bir şey öğretmiyor; İ8, o durumu yakalayıp <b>yalnızca o oyunu</b> bir
+kademe yukarı alıyor — oyun bir üst bandın zorluk tablosunu okumaya başlıyor.
 
-### Yarın ilk iş: paketi üret ve Play'e yükle
+Beş karar özelliğin tamamını taşıyor:
+
+**Kademe saklanmıyor, geçmişten türetiliyor.** Yeni sütun, yeni ayar ve şema
+göçü olmamasının dışında asıl sebep şu: saklanan bir kademe yanlış kaldığında
+kendi kendine düzelmiyor. Türetilen kademe her oyun açılışında yeniden
+hesaplanıyor, yani çocuk zorlanmaya başladığı ilk turda kendiliğinden geri
+iniyor ve kimsenin bir şeyi sıfırlaması gerekmiyor. Kural
+`Engine/Difficulty/AdaptiveDifficulty.cs` içinde ve saf: girdisi o oyunun son
+üç turu, çıktısı `Base` ya da `Stretch`.
+
+**Ölçüt yıldız değil, kusursuz tur.** İlk yazılan kural yıldıza bakıyordu ve
+Filiz'de her çocuğu üç turda yukarı iterdi — o bantta bitiren herkes üç yıldız
+alıyor (`StarRating`). Yıldız üç bantta üç ayrı şey ölçüyor; **üç yıldız ve
+sıfır hata** üçünde de aynı şeyi söylüyor: bu tur çocuğa zor gelmedi. Fidan'da
+da fark yaratıyor, orada bir hata üç yıldızı bozmuyor.
+
+**Değişen yalnızca knob'lar.** Kademe `BandValue<T>` aramasını bir üst banda
+kaydırıyor (`Player.KnobBand`); `DifficultyProfile` çocuğun **gerçek** bandında
+kalıyor. Yani yukarı çıkan bir Filiz çocuğu daha çok parça görüyor ama
+zamanlayıcı, yazı ve kaybetme yine gelmiyor — onlar zorluk değil, yaşa
+uygunluk kuralları. Yıldız da gerçek bantla veriliyor, yani zorlaşmış tur
+çocuğun ödülünü kısmıyor. İçerik havuzları da gerçek banttan geliyor
+(`HuntContent`, `LetterTraceContent`): harf dağarcığı yaşa bağlı, tur
+uzunluğu kademeye.
+
+**Kademe oyun başına ve oyuncu başına.** Yapbozda ustalaşmış çocuk Yolu Bul'da
+usta değil; tek bir "seviye" bütün kütüphaneyi birden zorlaştırırdı. Sıralı
+oyunda da her oyuncunun kendi kademesi var — `Player` kaydına eklendi, yani
+kardeşler aynı turda farklı zorluklarda oynuyor. Bant da anahtarın parçası:
+bant değiştiren çocuk yeni bandına eski bandındaki ustalığıyla girmiyor.
+
+**Görünür olmak zorunda.** Sessizce zorlaşan bir oyun ebeveyne bozulmuş gibi
+görünür ("dün yapıyordu, bugün yapamıyor") ve rapordaki düşen yıldız gerileme
+sanılır. Dört yer birden:
+
+- ana ekranda kutucuğun üstünde bir **↑ Zorlu** rozeti (kalıcı işaret)
+- tur sonu ekranında bir cümle — kademe **o turla** atlandıysa (olayın kendisi)
+- ebeveyn raporunda oyun satırının yanında aynı işaret
+- profil ekranında bir anahtar: ebeveyn bütünüyle kapatabiliyor
+
+Anahtarın varsayılanı **açık** — oyun süresi sınırının tersine. Fark şurada:
+sınır kapalıyken açılırsa çocuk birden kilitleniyor, uyarlama ise yalnızca
+zaten ustalaşılmış tek bir oyunu bir kademe zorlaştırıyor ve her yerde görünür
+duruyor. Ayar profil başına (`adaptive:<profil>`), profil silinince o da
+siliniyor.
+
+İki ayrıntı yazarken çıktı:
+
+**"Tekrar oyna" kademeyi tazelemek zorunda.** Sonuç ekranı bekleyen oturuma
+dönüyor; oturumun kademesi yenilenmeseydi üst üste oynayan çocuk ana ekrana
+dönene kadar hiç yukarı çıkamazdı — yani tam da en çok oynayan çocuk.
+Tazeleme `RoundResultViewModel.RefreshStepsAsync` içinde, duyuru da orada.
+
+**Ana ekran oyun başına sorgu yapıyor.** Tek sorguya sığdırmak "her oyunun son
+üç turu"nu pencereli bir okumaya çevirirdi ve pencerenin dışında kalan bir
+oyunda rozet gerçeği tutmazdı. Bunun yerine **eleme**: bir oyunun kademesi için
+o bantta en az üç tur gerekiyor ve tur sayısı ilerleme satırında zaten duruyor,
+yani yeterince oynanmamış oyunlar hiç sorulmuyor. Elemesiz hâli, hiç oynanmamış
+her oyun için bütün geçmişi baştan sona geziyordu.
+
+**Bilinen sınır:** Meşe en üst bant, `BandValue<T>` içinde gidilecek bir sütun
+yok ve orada kademe hep `Base` kalıyor — 8-9 yaşındaki bir çocuk kütüphanenin
+tavanını görebilir. Karşılığı, üç değerlik tabloya dördüncü bir sütun uydurmak
+olurdu; uydurulan sayı, olmayan bir kademeden kötü.
+
+Motor tarafı `Engine/Difficulty/AdaptiveDifficulty.cs`, veri tarafı
+`ProgressRepository.StepForAsync` / `StepsForAsync`. 20 test.
+
+## Nerede bırakıldı (07.09.2026)
+
+Bu oturumda tek iş: **İ8 — bant içi uyarlama.** Yeni oyun yok, kütüphane 17'de.
+**Testler 436** (416'ydı; 12'si kuralın kendisi, 8'i veri tarafı).
+İçerik yol haritası İ1-İ8 ile **tamamen kapandı**.
+
+### Yarın ilk iş: paketi YENİDEN üret ve Play'e yükle
 
 Uygulama Play Console'a **hiç yüklenmedi**; ilk paket versionCode `1` ile
 gidiyor ve kanal **internal testing** olacak (production'a değil — gerçek
 tablette hiç oynanmadı ve production'a giden bir versionCode geri
 alınamıyor).
 
-Sıra:
+**Elde duran paket bayat.** 03.09.2026 23:41'de üretilen ve doğrulanan AAB
+(`io.ploofy.app`, versionCode **1**, versionName 1.0, minSdk 26, targetSdk 36,
+`arm64-v8a` + `x86_64`, imza `CN=Ali Kiratli, O=Ploofy`,
+SHA-256 `f7549556…4d27`) İ8'i **içermiyor**. Notun kendi kuralı: içerik koda
+bağlı, notta yazılana değil. Yükleme öncesi yeniden üretilecek ve `aapt2 dump
+badging` + `apksigner verify` ile yine kontrol edilecek; versionCode `1`
+kalıyor, çünkü henüz hiçbir şey yüklenmedi.
 
-**Paket hazır ve doğrulandı** (03.09.2026 23:41, on yedi oyunun tamamıyla):
-`io.ploofy.app`, versionCode **1**, versionName 1.0, minSdk 26, targetSdk 36,
-`arm64-v8a` + `x86_64`, imza `CN=Ali Kiratli, O=Ploofy`
-(SHA-256 `f7549556…4d27`). Manifest `aapt2 dump badging`, imza
-`apksigner verify` ile kontrol edildi.
+Sıra:
 
 1. Yüklenecek dosya:
    `src/Ploofy.App/bin/Release/net10.0-android/publish/io.ploofy.app-Signed.aab`
@@ -813,13 +894,13 @@ gerçek cihaz istiyor — internal testing bunları beklemeden yüklenebiliyor.
 
 ### Yazılım tarafında sıradaki
 
-**İ8 — bant içi uyarlama.** İçerik yol haritasının kalan tek maddesi; çocuk
-üst üste başarıyorsa zorluğu bir kademe artırmak. `BandValue<T>` mimarisi
-buna hazır. Riski var: gizli zorluk değişimi ebeveyni şaşırtır, o yüzden
-görünür olmalı.
+**İçerik yol haritasında madde kalmadı.** İ1-İ8 kapandı; buradan sonrası ya
+gerçek cihaz ya da bu makinenin dışında bir şey istiyor.
 
-**Ondan önce asıl bekleyen sesli yönerge** (5. bölümün sonu): dokuz
-öğretici oyunun yönergesi hâlâ tamamen görsel ve Filiz bandı okumuyor.
+**Asıl bekleyen sesli yönerge** (5. bölümün sonu): dokuz öğretici oyunun
+yönergesi hâlâ tamamen görsel ve Filiz bandı okumuyor. Sentez yetmiyor, üç
+dilde insan kaydı gerekiyor — yani bu makinede yazılabilecek bir iş değil,
+kaydedilecek bir iş.
 
 **Ama asıl bekleyen hâlâ gerçek tablet ve liste iyice uzadı.**
 Emülatör her şeyi gösterdi, iki şeyi ölçemiyor: parmağı ve hoparlörü.
@@ -845,6 +926,10 @@ Tableti USB'den tak, hata ayıklamayı aç,
 - **Harf Yazma'da harflerin estetiği.** S'nin kıvrımı, 6'nın halkası ve
   2'nin kuyruğu hiçbir ekranda görülmedi. Nokta listeleri `GlyphShapes.cs`
   içinde tek satırlık işler
+- **↑ Zorlu rozeti kutucukta nereye düşüyor.** Ana ekran kutucuğu 164 birim;
+  rozet simge dairesinin sol altına konuyor ve daireyle bir miktar üst üste
+  biniyor (ücretsiz rozetinin sol üstte yaptığı gibi). Kâğıt üstünde tutarlı;
+  gerçek ekranda çirkin durursa `HomePage.xaml` içinde tek satırlık iş
 - **Koleksiyon ekranı yatay ekrana sığıyor mu.** Otuz iki avatar, 72 birim
   genişliğinde kutucuklarla sarmalanıyor; kaydırma gerekiyorsa sorun değil
   ama sıradaki ödül kartı ekranın üstünde kalmalı
@@ -895,6 +980,10 @@ Sürümü bloke edenler 4. bölümde, içerik yol haritası 5. bölümde.
 - Üç dil (tr/en/de), ayarlardan çalışırken değiştirilebiliyor
 - Ekran yatayda kilitli; ana ekran sütun sayısını genişliğe göre seçiyor
 - Üç yaş bandı (Filiz/Fidan/Meşe) her oyunun parametrelerini gerçekten ölçekliyor
+- Bant içi uyarlama: bir oyunu üst üste üç kez hatasız bitiren çocuk için
+  yalnızca o oyun bir kademe zorlaşıyor. Bant, yıldız ve ekranlar aynı;
+  değişim ana ekranda, tur sonunda ve raporda görünüyor, profil ekranından
+  kapatılabiliyor
 - Eşleştirme Kartları: kart çevirme animasyonu, eşleşme zıplaması, sıralı oyun
 - Balon Patlatma: SkiaSharp yüzeyi, parlayan balonlar, patlama parçacıkları, hedef renk, süre
 - Şekil Ayırma: parmağı kare kare takip eden sürükleme, hayalet kutular, yanlış kutuda silkelenme
@@ -993,7 +1082,7 @@ bunu "Purchase history" başlığı altında beyan ettirebiliyor.
 ## 5. İçerik yol haritası — sürümden sonra
 
 Oyun kütüphanesi 1.0 için yeterliydi (10 oyun, beş etkileşim türü) ve şu an
-14'te. Buradakiler kütüphaneyi derinleştiriyor, sürümü bloke etmiyor. Sıra
+17'de. Buradakiler kütüphaneyi derinleştiriyor, sürümü bloke etmiyor. Sıra
 kasıtlı: önce boşluğu büyük olup teknik olarak ucuz olanlar.
 
 **İ1 — Harf ve rakam yazma. ✅ Bitti (02.09.2026).** Ayrıntı 1. bölümde,
@@ -1023,9 +1112,14 @@ Ayrıntı 1. bölümde, "İ7: üç oyun birden" başlığı. İki yerde nottan
 ayrıldık: ortak motor genelleştirilmedi (bant eksenleri farklı) ve toplama
 Meşe yerine Fidan'dan itibaren açıldı.
 
-**İ8 — Bant içi uyarlama.** Üç bant kaba; çocuk üst üste başarıyorsa zorluğu
-bir kademe artırmak. `BandValue<T>` mimarisi buna hazır. Riski var: gizli
-zorluk değişimi ebeveyni şaşırtır, o yüzden görünür olmalı.
+**İ8 — Bant içi uyarlama. ✅ Bitti (07.09.2026).** Ayrıntı 1. bölümde,
+"Bant içi uyarlama (İ8)" başlığı. Nottaki riski ("gizli zorluk değişimi
+ebeveyni şaşırtır") dört ayrı görünürlük noktası ve bir kapatma anahtarı
+karşılıyor. Bir yerde nottan ayrıldık: ölçüt yıldız değil **kusursuz tur**
+oldu, çünkü Filiz'de bitiren herkes üç yıldız alıyor.
+
+**Yol haritası bitti.** İ1-İ8'in hepsi kapandı. Buradan sonrası yeni bir
+liste isteyecek; bugünkü tek somut aday, aşağıdaki sesli yönerge.
 
 **Asıl darboğaz — sesli yönerge.** Öğretici üç oyunda yönerge tamamen görsel.
 Filiz bandı (2-4 yaş) henüz okumuyor, yani öğrenme oyunlarının o banda
@@ -1065,6 +1159,13 @@ karmaşıklığı değmiyor.
   bitirmek bant değiştirmeyi gerektiriyor. Kasıtlı — ödül yıllara yayılıyor —
   ama gerçek bir çocukta hızın nasıl hissettirdiği bilinmiyor. Aralık tek
   sabit: `RewardLadder.StarsPerUnlock`
+- Bant içi uyarlamanın tavanı Meşe. `BandValue<T>` üç değerli, yani en üst
+  bandın üstünde okunacak bir sütun yok ve orada kademe hep `Base` kalıyor;
+  8-9 yaşındaki bir çocuk kütüphanenin tavanını görebilir. Dördüncü bir sütun
+  uydurmak yerine sınır kabul edildi
+- Uyarlama hiç gerçek bir çocukta denenmedi: üç kusursuz tur eşiği ve bir
+  kademe yukarının ne kadar zor hissettirdiği ancak orada ölçülüyor. İkisi de
+  tek sabit: `AdaptiveDifficulty.PerfectRoundsToStretch` ve `KnobBand`
 - Uygulama yalnızca **yatay** çalışıyor. Dikey desteklenmiyor ve
   desteklenecekse her oyun için ikinci bir yerleşim gerekiyor
 - Emoji kapsamı **kapandı**: alt sınır 26 (Android 8.0) ve Unicode 11
@@ -1185,7 +1286,12 @@ numaralarının yerleşimi `LetterTraceSurface` içinde kaldı ama hesabı saf
 1. `Engine/Catalog/GameCatalog.cs` içine bir satır: id, etkileşim türü,
    katman, en küçük bant, çizim tekniği
 2. Kuralları `Engine/Games/` altında arayüzden bağımsız bir sınıf olarak yaz;
-   zorluk knob'larını `BandValue<T>` ile tanımla ve testini yaz
+   zorluk knob'larını `BandValue<T>` ile tanımla ve testini yaz. Görünüm
+   modelinde `ForBand` çağrısına **`player.KnobBand`** ver, `player.Band`
+   değil: bant içi uyarlama tam orada devreye giriyor ve unutulursa oyun
+   sessizce uyarlanmaz olur. `DifficultyProfile.For` ve `RoundOutcome` ise
+   `player.Band` almaya devam ediyor — kademe knob'ları kaydırıyor, yaşa
+   uygunluğu ve yıldızı değil
 3. `GamePresentation` içine ad anahtarı, simge ve rota
 4. `content/strings.tsv` içine üç dilde ad, sonra `tools/build_strings.py`
 5. `AppShell.xaml.cs` içinde rotayı kaydet, `MauiProgram` içinde sayfayı ve

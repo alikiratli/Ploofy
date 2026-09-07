@@ -568,6 +568,18 @@
   <data name="ScreenTimeHint" xml:space="preserve">
     <value>Only time inside a game counts. A game is never cut off in the middle — the limit is checked between games.</value>
   </data>
+  <data name="GameStretchedBadge" xml:space="preserve">
+    <value>↑ Harder</value>
+  </data>
+  <data name="GameStretchedNotice" xml:space="preserve">
+    <value>You've got this one! {0} is now a step harder.</value>
+  </data>
+  <data name="ProfileAdaptiveLabel" xml:space="preserve">
+    <value>Adapt difficulty</value>
+  </data>
+  <data name="AdaptiveHint" xml:space="preserve">
+    <value>When the same game is finished three times in a row without a mistake, that one game gets a step harder and is marked ↑. The age band, the stars and the screens stay the same, and one harder round brings it back.</value>
+  </data>
   <data name="GameCategorySort" xml:space="preserve">
     <value>Which Group?</value>
   </data>
