@@ -1261,6 +1261,23 @@ okunmuyor:
   `input swipe` yalnızca düz çizgi; eğri bir yolu takip etmek için
   DOWN/MOVE/UP dizisini bir betiğe yazıp cihaza gönderip `sh` ile çalıştırmak
   gerekiyor. Yolu Bul'un tur tamamlaması böyle doğrulandı.
+- **Bu makinede `strings` yok ve yokluğu sessiz.** Paketin içinde bir
+  sembol ararken `strings dosya | grep -q kelime` yazıldı; komut bulunamadı,
+  `grep` boş girdi aldı ve sonuç "YOK" çıktı — yani **arama başarısız oldu ama
+  cevap 'bulunamadı' gibi göründü.** Doğrulama yaptığını sanarken hiçbir şey
+  doğrulanmıyor. İkinci tuzak da yanında: .NET dizeleri UTF-16, yani `strings`
+  olsaydı bile varsayılan ASCII taraması metin sabitlerini kaçırırdı. İkisinin
+  de karşılığı ikili dosyayı Python'la okumak:
+
+  ```python
+  data = open(path, 'rb').read()
+  data.find(b"AdaptiveDifficulty")            # metadata: UTF-8
+  data.find("GameStretchedBadge".encode('utf-16-le'))  # dize sabiti: UTF-16
+  ```
+
+  Genel kural: **bir kontrolün "hayır" demesiyle çalışamamış olması aynı
+  görünüyorsa, o kontrol bir şey doğrulamıyor.** Kontrolü, kesin bulunması
+  gereken bir şeyle bir kez sına — bulamıyorsa kontrol bozuktur, arananlar değil.
 - **Emülatörün SystemUI'ı bu makinede takılıyor.** Takıldığında bütün ekran
   donuyor: ekran görüntüsü hep aynı kareyi gösteriyor, dokunuşlar işlemiyor ve
   uygulama kilitlenmiş gibi duruyor. Teşhis için

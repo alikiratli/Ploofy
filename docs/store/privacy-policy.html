@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="tr">
+<html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index, follow">
-<meta name="description" content="Ploofy gizlilik politikası — Türkçe, İngilizce, Almanca.">
-<title>Ploofy Gizlilik Politikası</title>
+<meta name="description" content="Ploofy Datenschutzerklärung — Deutsch, Türkçe, English.">
+<title>Ploofy Datenschutzerklärung</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0..100,0..1&family=Karla:wght@400;500;700&display=swap">
@@ -291,17 +291,17 @@
   </span>
 
 
-  <div class="langs" role="group" aria-label="Dil / Language / Sprache">
-    <button type="button" data-lang="tr" aria-pressed="true">TR</button>
+  <div class="langs" role="group" aria-label="Sprache / Dil / Language">
+    <button type="button" data-lang="de" aria-pressed="true">DE</button>
+    <button type="button" data-lang="tr" aria-pressed="false">TR</button>
     <button type="button" data-lang="en" aria-pressed="false">EN</button>
-    <button type="button" data-lang="de" aria-pressed="false">DE</button>
   </div>
 </div>
 
 <main>
 
 <!-- ============================= TÜRKÇE ============================= -->
-<article lang="tr" data-doc="tr">
+<article lang="tr" data-doc="tr" hidden>
   <p class="eyebrow">Gizlilik Politikası</p>
   <h1>Ploofy çocuğunuz hakkında hiçbir şey toplamıyor.</h1>
 
@@ -361,6 +361,8 @@
           <h3>Uygulama ayarları</h3>
           <ul>
             <li>Seçili profil, arayüz dili, ses ve titreşim tercihleri</li>
+            <li>Ebeveynin koyduğu günlük oyun süresi sınırı ve zorluk uyarlama
+              tercihi, çocuk profili başına</li>
             <li>Aboneliğin son bilinen durumu (yalnızca “var” / “yok” bilgisi)</li>
           </ul>
         </div>
@@ -542,6 +544,8 @@
           <h3>App settings</h3>
           <ul>
             <li>Selected profile, interface language, sound and vibration preferences</li>
+            <li>The daily play-time limit and the difficulty-adaptation preference
+              set by a parent, per child profile</li>
             <li>Last known subscription state (only “active” / “none”)</li>
           </ul>
         </div>
@@ -664,7 +668,7 @@
 </article>
 
 <!-- ============================= DEUTSCH ============================= -->
-<article lang="de" data-doc="de" hidden>
+<article lang="de" data-doc="de">
   <p class="eyebrow">Datenschutzerklärung</p>
   <h1>Ploofy erhebt keinerlei Daten über Ihr Kind.</h1>
 
@@ -725,6 +729,8 @@
           <h3>App-Einstellungen</h3>
           <ul>
             <li>Ausgewähltes Profil, Oberflächensprache, Ton- und Vibrationseinstellung</li>
+            <li>Das von einem Elternteil gesetzte tägliche Spielzeit-Limit und die
+              Einstellung zur Schwierigkeitsanpassung, je Kinderprofil</li>
             <li>Zuletzt bekannter Abo-Status (nur „aktiv“ / „keins“)</li>
           </ul>
         </div>
@@ -877,9 +883,30 @@
       btn.addEventListener("click", function () { show(btn.getAttribute("data-lang"), true); });
     });
 
-    var saved = null;
-    try { saved = localStorage.getItem(STORE); } catch (e) { /* okunamıyorsa varsayılan kalır */ }
-    show(saved === "en" || saved === "de" ? saved : "tr", false);
+    var known = ["de", "tr", "en"];
+
+    function preferred() {
+      // Sıra: ziyaretçinin daha önce seçtiği dil > tarayıcının dili >
+      // Almanca. Almanca varsayılan çünkü uygulama Almanya'da yayımlanıyor;
+      // ama Almanya'da yaşayan Türkçe bir tarayıcı yine Türkçe görüyor.
+      var saved = null;
+      try { saved = localStorage.getItem(STORE); } catch (e) { /* özel pencere */ }
+      if (known.indexOf(saved) >= 0) {
+        return saved;
+      }
+
+      var tags = navigator.languages || [navigator.language || ""];
+      for (var i = 0; i < tags.length; i++) {
+        var base = String(tags[i]).toLowerCase().split("-")[0];
+        if (known.indexOf(base) >= 0) {
+          return base;
+        }
+      }
+
+      return "de";
+    }
+
+    show(preferred(), false);
   })();
 </script>
 </body>

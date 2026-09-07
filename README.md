@@ -1,9 +1,11 @@
 # Ploofy
 
+**Deutsch** · [Türkçe](README.tr.md)
+
 Werbefreie Minispielsammlung für Kinder von 2 bis 9 Jahren. .NET MAUI
 (Android + iOS).
 
-Sieben Spaß- und drei Lernspiele; eine einzige Schwierigkeitsachse (drei
+Acht Spaß- und neun Lernspiele; eine einzige Schwierigkeitsachse (drei
 Altersstufen), eine einzige Sternesammlung, ein monatliches Abo. Kein Server,
 kein Konto, keine Werbung: Kein Datum des Kindes verlässt das Gerät.
 
@@ -267,8 +269,9 @@ nachträglich angeklebt:
   sie in einem **eigenen Repository** und wird von dort über GitHub Pages
   ausgeliefert; Play verlangt dafür eine öffentlich erreichbare URL:
 
-  - <https://alikiratli.github.io/ploofy-web/privacy-policy.html> (tr/en/de auf
-    einer Seite) — dieser Link, nicht die Wurzel, gehört in die Play Console
+  - <https://alikiratli.github.io/ploofy-web/privacy-policy.html> (de/tr/en auf
+    einer Seite, Deutsch als Vorgabe) — dieser Link, nicht die Wurzel, gehört
+    in die Play Console
   - <https://alikiratli.github.io/ploofy-web/impressum.html> (de/en)
   - <https://alikiratli.github.io/ploofy-web/> — die Wurzel für das Feld
     „Website“ im Store-Eintrag
