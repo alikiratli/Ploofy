@@ -89,11 +89,19 @@
             </Grid>
 
             <!-- Kutular. Dokunma hedefi kasten büyük: en küçük bantta iki
-                 kutu ekranı paylaşıyor, en zorunda üç. -->
+                 kutu ekranı paylaşıyor, en zorunda üç.
+
+                 AlignItems="Center" KALMALI. Burada bir süre `End` yazıyordu ve
+                 kutular çiziliyor ama **hiçbir dokunuş gitmiyordu**: FlexLayout
+                 end-hizaladığında çocukların dokunma alanı düzenin dışına
+                 düşüyor. Oyun bu yüzden tümüyle oynanamazdı ve ekran
+                 görüntüsünden anlaşılmıyordu — ancak cihazda kutuya dokunup
+                 kenarın yanmadığını görerek çıktı. Hizalamayı değiştirmek
+                 gerekirse cihazda parmakla dene. -->
             <FlexLayout Grid.Row="2"
                         BindableLayout.ItemsSource="{Binding Bins}"
                         JustifyContent="SpaceEvenly"
-                        AlignItems="End">
+                        AlignItems="Center">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="vm:CategoryBin">
                         <Border Padding="18,14"

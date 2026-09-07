@@ -225,3 +225,70 @@ internal sealed class FakeTimeProvider(DateTimeOffset start) : TimeProvider
 
     public void Advance(TimeSpan by) => _now += by;
 }
+
+/// <summary>
+/// Bitirilmiş abonelik gerçekten bitiyor mu?
+/// </summary>
+/// <remarks>
+/// Bu kural olmadan iptal edilen abonelik kâğıt üstünde bitiyor ama kilitler
+/// hiç geri gelmiyordu: hiçbir yol <see cref="SubscriptionStatus.Canceled"/>
+/// durumundan çıkmıyordu.
+/// </remarks>
+public class SubscriptionLapseTests
+{
+    private static readonly DateOnly Today = new(2026, 9, 7);
+
+    private static SubscriptionInfo Canceled(int endsInDays) =>
+        new(SubscriptionStatus.Canceled, Today.AddDays(endsInDays));
+
+    [Fact]
+    public void Access_lasts_to_the_last_paid_day()
+    {
+        // İptal yenilemeyi kapatır, ödenmiş günleri geri almaz — Play ve
+        // App Store da böyle davranıyor. Son gün de dahil.
+        Assert.True(Canceled(5).AsOf(Today).Entitlements.HasFullAccess);
+        Assert.True(Canceled(0).AsOf(Today).Entitlements.HasFullAccess);
+    }
+
+    [Fact]
+    public void The_day_after_the_period_the_locks_come_back()
+    {
+        var lapsed = Canceled(-1).AsOf(Today);
+
+        Assert.Equal(SubscriptionStatus.None, lapsed.Status);
+        Assert.False(lapsed.Entitlements.HasFullAccess);
+        Assert.Equal(Entitlements.FreeProfileLimit, lapsed.Entitlements.ProfileLimit);
+    }
+
+    [Fact]
+    public void An_active_subscription_is_never_dropped_on_a_stale_date()
+    {
+        // Aktif abonelikte tarih yalnızca son bilinen yenileme günü: mağaza
+        // yeniledikçe ileri kayıyor ve uygulama çevrimdışıyken sorulamıyor.
+        // Süresi geçmiş diye kapatmak, parasını ödemiş bir aileyi uçakta
+        // oyunlarından etmek olurdu.
+        var stale = new SubscriptionInfo(SubscriptionStatus.Active, Today.AddDays(-30));
+        Assert.Equal(stale, stale.AsOf(Today));
+        Assert.True(stale.AsOf(Today).Entitlements.HasFullAccess);
+
+        var grace = new SubscriptionInfo(SubscriptionStatus.Grace, Today.AddDays(-3));
+        Assert.Equal(grace, grace.AsOf(Today));
+    }
+
+    [Fact]
+    public void Without_a_date_nothing_is_dropped()
+    {
+        // Bilinmeyen bir tarih, bitmiş bir dönem değil. Eksik veriye dayanarak
+        // erişim kapatmak yanlış yönde bir hata.
+        var noDate = new SubscriptionInfo(SubscriptionStatus.Canceled);
+
+        Assert.Equal(noDate, noDate.AsOf(Today));
+        Assert.True(noDate.AsOf(Today).Entitlements.HasFullAccess);
+    }
+
+    [Fact]
+    public void The_free_tier_stays_free()
+    {
+        Assert.Equal(SubscriptionInfo.Free, SubscriptionInfo.Free.AsOf(Today));
+    }
+}

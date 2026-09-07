@@ -1,6 +1,6 @@
 # Ploofy — İlerleme Notu
 
-Son güncelleme: 07.09.2026
+Son güncelleme: 07.09.2026 (ikinci oturum)
 Depo: https://github.com/alikiratli/Ploofy (public)
 Web: https://alikiratli.github.io/ploofy-web/ (gizlilik politikası + Impressum)
 
@@ -857,11 +857,77 @@ olurdu; uydurulan sayı, olmayan bir kademeden kötü.
 Motor tarafı `Engine/Difficulty/AdaptiveDifficulty.cs`, veri tarafı
 `ProgressRepository.StepForAsync` / `StepsForAsync`. 20 test.
 
+### Gerçek cihaz: ilk üç hata
+
+Uygulama ilk kez emülatörde uçtan uca **oynandı** (ekran görüntüsü almak değil,
+dokunup sonucuna bakmak). Üç hata bildirildi, üçü de doğrulandı; ikisi
+ekranda, biri kuralda.
+
+**Kategori Ayırma: kutulara dokunmak hiçbir şey yapmıyordu.** Sebep tek bir
+öznitelik: kutuları taşıyan `FlexLayout` üzerinde `AlignItems="End"`. O
+hizalamayla kutular **çiziliyor ama dokunma alanı düzenin dışına düşüyor**;
+parmak hiçbir yere değmiyor. Bütün uygulamada `AlignItems="End"` yalnızca bu
+tek yerde vardı — diğer on dokuz kullanımın hepsi `Center`. Düzeltme de o:
+`Center`. Cihazda doğrulandı (0/12 → 1/12).
+
+Teşhisi geciktiren şey, ilk ölçütün yanlış olmasıydı: "sayaç artmıyorsa
+dokunuş gitmemiştir" diye bakıldı, oysa **yanlış kutu da sayacı artırmıyor**.
+Doğru gözlem kutunun kenarındaki 450 ms'lik geri bildirim; onu yakalamak için
+dokunuştan hemen sonra kare almak gerekti. Ders: bir hatayı ararken ölçütün
+"olmadı" ile "göremedim"i ayırdığından emin ol.
+
+**Noktaları Birleştir: noktalara dokunulamıyordu.** Üstteki bilgi şeridi
+ekranın **üçte ikisini** kaplıyor ve on dört noktanın onunu örtüyordu; şerit
+%95 opak beyaz olduğu için dokunuşları da yutuyordu. Sebep: şeridin içindeki
+`Grid` yalnızca `ColumnDefinitions` ile yazılmış ve **örtük tek satırı `*`**.
+Bu şerit yüzeyin üstünde yüzen bir katman, yani tam sayfa yüksekliğiyle
+ölçülüyor; içinde yüksekliği sonuna kadar isteyen bir çocuk olduğunda
+(burada `Auto` sütuna konmuş pip `FlexLayout`'u) o `*` satır bütün ekranı
+yutuyor. Düzeltme `RowDefinitions="Auto"`; pipler de diğer şeritlerdeki gibi
+esnek sütuna alındı. Cihazda doğrulandı: şerit inceldi, 1-5 arası noktalar
+sırayla bağlandı.
+
+Aynı yüzer şerit deseni **dokuz oyunda daha** var ve hepsi tek tek açılıp
+bakıldı — hiçbirinin şeridi büyümüyor, çünkü içlerinde yüksekliği sonuna kadar
+isteyen bir çocuk yok. Yine de yeni bir şerit yazarken `RowDefinitions="Auto"`
+koymak bedava.
+
+Not: bu sayfada üç şey birden değiştirildi (sarmalama, sütun, satır tanımı) ama
+hatayı kapatan **yalnızca `RowDefinitions="Auto"`** oldu; diğer ikisi tek
+başına denendi ve şerit yine ekranın yarısını kaplıyordu.
+
+**Abonelik bitirilince kilitler geri gelmiyordu.** Bunun bir yarısı kasıtlı:
+iptal yenilemeyi kapatır, erişim **ödenmiş dönemin sonuna kadar** sürer — Play
+ve App Store da böyle davranıyor ve erişimi iptal anında kesmek ebeveynin
+parasını yakmak olurdu. Ama diğer yarısı gerçek bir hataydı: **o dönem hiç
+bitmiyordu.** `Canceled` durumundan çıkan hiçbir yol yoktu, yani iptal edilen
+abonelik kâğıt üstünde bitiyor, uygulamada sonsuza kadar açık kalıyordu.
+
+Kural `SubscriptionInfo.AsOf(today)` olarak motora eklendi: `Canceled` +
+dönem geçmiş → `None`. `Active` ve `Grace` **düşürülmüyor** — orada tarih
+yalnızca son bilinen yenileme günü, mağaza yeniledikçe ileri kayıyor ve
+uygulama çevrimdışıyken sorulamıyor; süresi geçmiş diye kapatmak parasını
+ödemiş bir aileyi uçakta oyunlarından etmek olurdu. Tarih yoksa da
+düşürülmüyor: bilinmeyen bir tarih, bitmiş bir dönem değil.
+
+**Test tarafında not:** bugünkü sahte satın alma dönemi bir ay ileri atıyor,
+yani iptalden sonra kilitleri görmek için bir ay beklemek gerekiyor. Kilitli
+hâli hemen görmek isteyen, uygulama verisini silip abone olmadan bakmalı.
+
 ## Nerede bırakıldı (07.09.2026)
 
-Bu oturumda tek iş: **İ8 — bant içi uyarlama.** Yeni oyun yok, kütüphane 17'de.
-**Testler 436** (416'ydı; 12'si kuralın kendisi, 8'i veri tarafı).
-İçerik yol haritası İ1-İ8 ile **tamamen kapandı**.
+Bu oturumda iki iş: **İ8 — bant içi uyarlama**, ve **ilk gerçek oynanıştan
+gelen üç hatanın düzeltilmesi** (Kategori Ayırma'nın ölü kutuları, Noktaları
+Birleştir'in oyunu örten şeridi, bitmeyen abonelik). Yeni oyun yok, kütüphane
+17'de. **Testler 441** (416'ydı). İçerik yol haritası İ1-İ8 ile **tamamen
+kapandı**.
+
+On yedi oyunun on yedisi de emülatörde tek tek açıldı ve **ekranına bakıldı**;
+düzeltilen ikisi dışında hepsi doğru çiziliyor. Ayrım önemli: *oynanan* üç oyun
+var (Kategori Ayırma, Noktaları Birleştir, Basit Toplama — üçünde de dokunuş
+sonuca bağlandı), kalan on dördünde yalnızca ilk kare görüldü. Yani "doğru
+çiziliyor" kanıtlandı, "dokunuşu işliyor" kanıtlanmadı — Kategori Ayırma'nın
+hatası tam olarak bu ikisinin arasında duruyordu.
 
 ### Yarın ilk iş: paketi Play'e yükle
 
@@ -870,7 +936,8 @@ gidiyor ve kanal **internal testing** olacak (production'a değil — gerçek
 tablette hiç oynanmadı ve production'a giden bir versionCode geri
 alınamıyor).
 
-**Paket temiz derlemeyle üretildi ve doğrulandı** (07.09.2026 10:35):
+**Paket temiz derlemeyle üretildi ve doğrulandı** (07.09.2026, üç düzeltmeyle
+birlikte):
 `io.ploofy.app`, versionCode **1**, versionName 1.0, minSdk 26, targetSdk 36,
 `arm64-v8a` + `x86_64`, yatay kilit yerinde, imza `CN=Ali Kiratli, O=Ploofy`
 (SHA-256 `f7549556…4d27` — 03.09'daki paketle aynı sertifika). Manifest
@@ -934,9 +1001,9 @@ Tableti USB'den tak, hata ayıklamayı aç,
   (yıldız) cırlıyor mu. Ayarlardaki "Sesleri dene" düğmesi tam bunun için
 - **Yolu Bul'da Meşe toleransı** (0,055) parmak ucuyla tutturulabiliyor mu —
   bunların en riskli olanı hâlâ bu
-- **Noktaları Birleştir'de dokunma isabeti.** En dar tolerans 0,06, yani
-  yedi yüz piksellik kenarda 84 piksel çap. Kâğıt üstünde yeterli; parmakla
-  öyle mi. Özellikle en yoğun resim olan kelebekte (14 nokta)
+- **Noktaları Birleştir'de dokunma isabeti.** Emülatörde kelebeğin (14 nokta)
+  ilk beş noktası sırayla bağlandı, yani tolerans kâğıt üstünde değil gerçek
+  ekranda da tutuyor — ama fare imleciyle. Parmakla hâlâ denenmedi
 - **Harf Yazma'da rakamlar ve oklar okunuyor mu.** Yerleşim PNG'de
   doğrulandı ama gerçek yazı tipiyle, gerçek ekran yoğunluğunda değil.
   Rakam dairesinin çapı `band * 0.34` — küçük gelirse orası büyütülür
@@ -953,8 +1020,9 @@ Tableti USB'den tak, hata ayıklamayı aç,
 - **Boyama'da alanlara parmakla basılabiliyor mu.** En küçük alan balığın
   gözü (yarıçap 0,045) — ekranın kısa kenarında yaklaşık 60 piksel çap.
   Küçük gelirse gözü büyüt, `ColoringPictures.cs` içinde tek satır
-- **Kategori Ayırma'da kutular yatay ekrana sığıyor mu**, üç kutuda
-  dokunma hedefi 64 birimin altına düşüyor mu
+- **Kategori Ayırma'da kutular yatay ekrana sığıyor mu** — emülatörde üç kutu
+  rahat sığdı ve dokunma çalışıyor (bkz. `AlignItems` tuzağı); parmakla
+  hedefin yeterli olup olmadığı hâlâ ölçülmedi
 - **Toplama'da dokuz nesne yan yana sığıyor mu.** Meşe'de sağ küme dokuza
   kadar çıkıyor; sarmalanma çirkin durursa nesne boyutu küçültülür
 - **Sırala'da Meşe'nin ardışık miktarları** gerçekten sayılabiliyor mu
@@ -1297,6 +1365,26 @@ okunmuyor:
   ```bash
   python tools/verify_package.py       src/Ploofy.App/bin/Release/net10.0-android/publish/io.ploofy.app-Signed.apk       GameCatalog AdaptiveDifficulty KnobBand "↑ Zorlu"
   ```
+- **`AlignItems="End"` dokunmayı öldürüyor.** `FlexLayout` çocukları
+  end-hizalandığında **çiziliyor ama dokunma alanı düzenin dışına düşüyor**.
+  Kategori Ayırma'nın kutuları tam bu yüzden ölüydü. Depoda `Center` dışında
+  bir hizalama kullanma; gerekiyorsa cihazda parmakla dene, ekran görüntüsü
+  bunu göstermiyor.
+- **Yalnızca `ColumnDefinitions` yazılan `Grid`'in örtük satırı `*`.** Yüzer
+  bir katmanın (yüzeyin üstündeki bilgi şeridi) içinde bu, şeridi ekran boyu
+  büyütüyor: `*` satır verilen bütün yüksekliği alıyor ve içindeki aç gözlü
+  bir çocuk (ör. `Auto` sütuna konmuş `FlexLayout`) bunu tetikliyor. Şerit
+  oyunun üstünü örtüyor ve dokunuşları yutuyor. Bu tür şeritlerde
+  **`RowDefinitions="Auto"` yaz.**
+- **Debug APK'yı elle `adb install` etme.** Fast Deployment yüzünden
+  derlemeler pakette değil; uygulama açılışta
+  "No assemblies found ... Assuming this is part of Fast Deployment" diyip
+  çöküyor. Ya `dotnet build -t:Run` kullan ya da
+  `-p:EmbedAssembliesIntoApk=true` ile derle.
+- **Emülatörün ANR kutusunu baştan kapat.** `adb shell settings put global
+  hide_error_dialogs 1` — SystemUI bu makinede takılıyor ve ANR kutusu bütün
+  dokunuşları yutuyor, uygulama sağlamken bile. Bir kez emülatörü boşuna
+  yeniden başlattırdı.
 - **Emülatörün SystemUI'ı bu makinede takılıyor.** Takıldığında bütün ekran
   donuyor: ekran görüntüsü hep aynı kareyi gösteriyor, dokunuşlar işlemiyor ve
   uygulama kilitlenmiş gibi duruyor. Teşhis için

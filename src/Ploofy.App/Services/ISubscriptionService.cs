@@ -87,6 +87,12 @@ public sealed class LocalSubscriptionService(ProgressRepository repository) : IS
 
     private SubscriptionInfo _info = SubscriptionInfo.Free;
 
+    /// <summary>
+    /// Bugünün <b>yerel</b> tarihi. Ödenmiş dönemin son günü ebeveynin
+    /// takvimindeki gün; UTC'ye bakmak aboneliği bir gün erken bitirebilirdi.
+    /// </summary>
+    private static DateOnly Today => DateOnly.FromDateTime(DateTime.Now);
+
     public SubscriptionInfo Info => _info;
 
     public Entitlements Current => _info.Entitlements;
@@ -109,7 +115,18 @@ public sealed class LocalSubscriptionService(ProgressRepository repository) : IS
             ? parsed
             : SubscriptionStatus.None;
 
-        Apply(new SubscriptionInfo(status, await ReadPeriodEndAsync()));
+        var stored = new SubscriptionInfo(status, await ReadPeriodEndAsync());
+        var actual = stored.AsOf(Today);
+
+        if (actual == stored)
+        {
+            Apply(stored);
+            return;
+        }
+
+        // Bitirilmiş aboneliğin ödenmiş dönemi dolmuş: kilitler geri geliyor
+        // ve önbellek de düzeltiliyor, yoksa her açılışta yeniden hesaplanırdı.
+        await SetAsync(actual);
     }
 
     public async Task<bool> PurchaseAsync()
@@ -136,8 +153,10 @@ public sealed class LocalSubscriptionService(ProgressRepository repository) : IS
         }
 
         // Dönem sonu olduğu gibi kalıyor: iptal yenilemeyi kapatır, ödenmiş
-        // günleri geri almaz.
-        await SetAsync(_info with { Status = SubscriptionStatus.Canceled });
+        // günleri geri almaz — Play ve App Store da böyle davranıyor. Erişim
+        // o günden sonra kendiliğinden kapanıyor (bkz. SubscriptionInfo.AsOf);
+        // dönem zaten geçmişse iptal anında kapanıyor.
+        await SetAsync((_info with { Status = SubscriptionStatus.Canceled }).AsOf(Today));
         return true;
     }
 

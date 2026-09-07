@@ -42,4 +42,30 @@ public sealed record SubscriptionInfo(SubscriptionStatus Status, DateOnly? Perio
     /// <summary>Dönem sonuna kalan tam gün sayısı; dönem yoksa <c>null</c>.</summary>
     public int? DaysLeft(DateOnly today) =>
         PeriodEndsOn is { } end ? Math.Max(0, end.DayNumber - today.DayNumber) : null;
+
+    /// <summary>
+    /// Aboneliğin bugün gerçekte geldiği hâl.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Bitirilmiş bir aboneliğin ödenmiş dönemi dolduğunda erişim <b>kapanır</b>
+    /// ve kilitler geri gelir. Bunu söylemek için mağazaya sormaya gerek yok:
+    /// iptal edildiğinde mağaza zaten "yenilemeyecek" demiş oluyor, yani o
+    /// tarih kesin. Bu kural olmadan iptal edilen abonelik kâğıt üstünde
+    /// bitiyor ama uygulamada sonsuza kadar açık kalıyordu.
+    /// </para>
+    /// <para>
+    /// <see cref="SubscriptionStatus.Active"/> ve
+    /// <see cref="SubscriptionStatus.Grace"/> <b>düşürülmüyor</b>. Onlarda tarih
+    /// yalnızca son bilinen yenileme günü: mağaza yeniledikçe ileri kayıyor ve
+    /// uygulama çevrimdışıyken sorulamıyor. Süresi geçmiş diye kapatmak,
+    /// uçaktaki bir aileyi parasını ödedikleri oyunlardan etmek olurdu.
+    /// </para>
+    /// <para>
+    /// Tarih yoksa da düşürülmüyor: bilinmeyen bir tarih, bitmiş bir dönem
+    /// değil. Eksik veriye dayanarak erişim kapatmak yanlış yönde bir hata.
+    /// </para>
+    /// </remarks>
+    public SubscriptionInfo AsOf(DateOnly today) =>
+        Status == SubscriptionStatus.Canceled && HasExpired(today) ? Free : this;
 }

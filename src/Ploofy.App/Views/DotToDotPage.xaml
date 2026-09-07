@@ -30,7 +30,23 @@
                 <Shadow Brush="#40000000" Offset="0,4" Radius="12" Opacity="0.5" />
             </Border.Shadow>
 
-            <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto" ColumnSpacing="10">
+            <!-- RowDefinitions="Auto" ŞART; hatayı kapatan tek değişiklik buydu.
+                 Yalnızca ColumnDefinitions yazılan bir Grid'in örtük tek satırı
+                 `*` oluyor. Bu şerit yüzeyin üstünde yüzen bir katman, yani tam
+                 sayfa yüksekliğiyle ölçülüyor; içinde yüksekliği sonuna kadar
+                 isteyen bir çocuk varsa (burada Auto sütuna konmuş pip
+                 FlexLayout'u) o `*` satır bütün ekranı yutuyor. Şerit ekranın
+                 üçte ikisini kaplayıp noktaların üstünü örtüyordu ve çocuk
+                 hiçbir noktaya dokunamıyordu.
+
+                 Aynı yüzer şerit deseni dokuz oyunda daha var ve onlar
+                 sağlam — çünkü içlerinde aç gözlü bir çocuk yok. Yine de
+                 satırı yazmak bedava: ölçüyü içeriğe bağlıyor.
+
+                 Esnek sütun da piplere verildi (diğer şeritlerde de öyle);
+                 tek başına yetmiyordu ama aç gözlü çocuğu ortadan kaldırıyor.
+                 Yüzey şeride yalnızca %11 pay ayırıyor: DotToDotSurface.Layout. -->
+            <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto" ColumnSpacing="10">
 
                 <Label Grid.Column="0"
                        Text="{Binding PlayerAvatar}"
@@ -65,9 +81,10 @@
                            HorizontalOptions="Center" />
                 </Border>
 
+                <!-- Sarmalama YOK: bu şerit tek satır olmak zorunda. -->
                 <FlexLayout Grid.Column="4"
                             BindableLayout.ItemsSource="{Binding Pips}"
-                            Wrap="Wrap"
+                            Wrap="NoWrap"
                             JustifyContent="Center"
                             AlignItems="Center"
                             VerticalOptions="Center">
