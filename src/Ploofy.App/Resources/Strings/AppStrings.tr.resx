@@ -283,6 +283,12 @@
   <data name="SubscriptionEndedTitle" xml:space="preserve">
     <value>Abonelik bitirildi</value>
   </data>
+  <data name="SubscriptionEndsOnLong" xml:space="preserve">
+    <value>Oyunlar {0} tarihine kadar açık kalır.</value>
+  </data>
+  <data name="SubscriptionEndedNow" xml:space="preserve">
+    <value>Ödenmiş dönem zaten dolmuştu; abonelikteki oyunlar yeniden kilitlendi.</value>
+  </data>
   <data name="SubscriptionResume" xml:space="preserve">
     <value>Yeniden başlat</value>
   </data>

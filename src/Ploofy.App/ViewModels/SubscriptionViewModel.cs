@@ -191,9 +191,14 @@ public sealed partial class SubscriptionViewModel(
         }
 
         var l = LocalizationService.Instance;
+
+        // Tarih onay kutusunda da yazıyor: "dönem sonuna kadar açık kalır"
+        // cümlesi tek başına ebeveyne bir şey söylemiyor; karar verirken
+        // bilmek istediği şey hangi güne kadar olduğu.
         var confirmed = await Shell.Current.DisplayAlertAsync(
             l["SubscriptionEndConfirm"],
-            $"{l["SubscriptionEndBody"]}\n\n{l["SubscriptionEndKeeps"]}",
+            $"{l["SubscriptionEndBody"]}{UntilSentence(subscriptions.Info)}"
+                + $"\n\n{l["SubscriptionEndKeeps"]}",
             l["SubscriptionEndTitle"],
             l["CommonCancel"]);
 
@@ -212,7 +217,44 @@ public sealed partial class SubscriptionViewModel(
         {
             IsBusy = false;
         }
+
+        await AnnounceEndAsync();
     }
+
+    /// <summary>
+    /// İptalden sonra ne olduğunu tek cümleyle söyler.
+    /// </summary>
+    /// <remarks>
+    /// Ekrandaki rozet ve tarih zaten güncelleniyor, ama ebeveyn "bitir"e
+    /// bastıktan sonra gözü ekranın o köşesinde değil. Bu kutu, kararın
+    /// karşılığını kararın verildiği yerde gösteriyor.
+    ///
+    /// Ödenmiş dönem çoktan dolmuşsa erişim iptal anında kapanıyor
+    /// (<c>SubscriptionInfo.AsOf</c>); orada tarih söylemek yanlış olurdu,
+    /// cümle "kilitler geri geldi" diyor.
+    /// </remarks>
+    private async Task AnnounceEndAsync()
+    {
+        var l = LocalizationService.Instance;
+        var info = subscriptions.Info;
+
+        var body = info.Entitlements.HasFullAccess && info.PeriodEndsOn is { } end
+            ? l.Format("SubscriptionEndsOnLong", FormatDate(end))
+            : l["SubscriptionEndedNow"];
+
+        await Shell.Current.DisplayAlertAsync(
+            l["SubscriptionEndedTitle"], body, l["CommonOk"]);
+    }
+
+    /// <summary>Onay kutusuna eklenen tarih cümlesi; tarih bilinmiyorsa boş.</summary>
+    private static string UntilSentence(SubscriptionInfo info) =>
+        info.PeriodEndsOn is { } end
+            ? "\n\n" + LocalizationService.Instance.Format(
+                "SubscriptionEndsOnLong", FormatDate(end))
+            : string.Empty;
+
+    private static string FormatDate(DateOnly date) =>
+        date.ToString("d MMMM yyyy", LocalizationService.Instance.Culture);
 
     [RelayCommand]
     private static async Task CloseAsync() => await Shell.Current.GoToAsync("..");

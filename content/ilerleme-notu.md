@@ -966,13 +966,74 @@ kutucuklar eskisinden büyük ve kareye daha yakın.
 ama güzel değil. Ebeveyn kilidinin sistem diyaloğu da telefon yatayken
 klavyeyle tümüyle kapanıyor; soru ancak klavye kapatılınca görülüyor.
 
+### On yedi oyunun on yedisi de oynandı
+
+Bu oturuma kadar oyunların çoğu yalnızca **açılıp ekranına bakılmıştı**. Bu
+kez on yedisinin de bir hamlesi yapıldı ve sonucun kayda geçtiği görüldü —
+ayrım önemliydi, çünkü Kategori Ayırma'nın ölü kutuları tam olarak "doğru
+çiziliyor ama dokunuşu işlemiyor" boşluğunda duruyordu.
+
+| Oyun | Yapılan | Sonuç |
+|---|---|---|
+| Eşleştirme Kartları | iki kart çevrildi | eşleşti, 1/10 |
+| Balon Patlatma | hedef renkte balon patlatıldı | ilk pip doldu |
+| Şekil Ayırma | şekil kutusuna sürüklendi | 1/12 |
+| Yolu Bul | yol parmakla izlendi | izlenen bölüm yeşil, imleç ilerledi |
+| Yapboz | parça yerine sürüklendi | oturdu, 1/16 |
+| Sırayı Tekrarla | yanan tuş tekrarlandı | seviye geçildi, "izle"ye döndü |
+| Sepeti Tut | sepet sürüklendi, tur bitti | 4/14 yakalandı, tur 1 yıldızla kapandı |
+| Boyama | iki alan iki renge boyandı | ikisi de doldu |
+| Harf Avı | doğru harf | 1/10 |
+| Sayı Avı | doğru sayı | 1/10 |
+| Say ve Eşleştir | küme doğru rakama sürüklendi | 1/8 |
+| Harf Yazma | darbe izlendi | yeşil iz, imleç ilerledi |
+| Örüntü | doğru seçenek | 1/8 |
+| Sırala | en çok olan ilk yuvaya | yuvaya oturdu |
+| Noktaları Birleştir | noktalar sırayla | çizgiler çizildi |
+| Kategori Ayırma | doğru kutu | 1/12 |
+| Basit Toplama | doğru cevap | 1/6 |
+
+**Hiçbirinde yeni bir hata çıkmadı.** Ama üç kez "bozuk" sanıp yanıldım ve
+üçünde de sebep aynıydı: **ölçütüm gevşekti.**
+
+- Balon Patlatma'da on beş rastgele dokunuş hiçbir pip doldurmadı. Pip
+  yalnızca **hedef renkte** doluyor; altı renk arasında rastgele dokunmak
+  çoğunlukla yanlış renge gidiyor. Ekran görüntüsünden hedef rengin RGB'sini
+  okuyup aynı renkteki balonu bulan küçük bir betik yazınca ilk denemede
+  doldu.
+- Sırayı Tekrarla'da dokunuşlar işlemiyor sanıldı; koordinatım tuşun **alt
+  kenarındaydı**. Merkezden dokununca seviye geçildi.
+- Harf Yazma'da ilk elips darbenin dış kenarına oturmuştu; orta çizgiye
+  geçince iz tuttu.
+
+Ders: **"tepki vermedi" ile "yanlış yere dokundum" aynı görünüyor.** Bir oyunu
+bozuk ilan etmeden önce hamlenin doğru olduğundan emin ol — koordinatı ekran
+görüntüsünden ölç, hedefi renkle doğrula.
+
+Sürükleme için `input swipe` her zaman yetmiyor (Sepeti Tut'ta sepet
+kıpırdamadı): basılı tutan bir `input motionevent DOWN/MOVE...` dizisi
+gerekiyor, `UP` ayrı gönderiliyor.
+
+### İptalde bitiş tarihi
+
+Abonelik bitirilirken tarih iki yerde birden söyleniyor: onay kutusunda
+(karar verirken) ve iptalden hemen sonra bir bilgi kutusunda. Ekrandaki rozet
+ve tarih zaten güncelleniyordu ama ebeveynin gözü "bitir"e bastıktan sonra
+ekranın o köşesinde değil.
+
+Ödenmiş dönem çoktan dolmuşsa erişim iptal anında kapanıyor
+(`SubscriptionInfo.AsOf`); orada tarih söylemek yanlış olurdu, cümle
+"kilitler geri geldi" diyor. İkisi de cihazda görüldü.
+
 ## Nerede bırakıldı (07.09.2026)
 
-Bu oturumda üç iş: **İ8 — bant içi uyarlama**, **ilk gerçek oynanıştan gelen
+Bu oturumda beş iş: **İ8 — bant içi uyarlama**, **ilk gerçek oynanıştan gelen
 üç hatanın düzeltilmesi** (Kategori Ayırma'nın ölü kutuları, Noktaları
-Birleştir'in oyunu örten şeridi, bitmeyen abonelik) ve **kısa ekranda taşan
-beş tahtanın yeniden düzenlenmesi**. Yeni oyun yok, kütüphane 17'de.
-**Testler 441** (416'ydı). İçerik yol haritası İ1-İ8 ile **tamamen kapandı**.
+Birleştir'in oyunu örten şeridi, bitmeyen abonelik), **kısa ekranda taşan beş
+tahtanın yeniden düzenlenmesi**, **on yedi oyunun on yedisinin de oynanarak
+sınanması** ve **iptalde bitiş tarihini söyleyen mesaj**. Yeni oyun yok,
+kütüphane 17'de. **Testler 441** (416'ydı). İçerik yol haritası İ1-İ8 ile
+**tamamen kapandı**.
 
 On yedi oyunun on yedisi de emülatörde tek tek açıldı ve **ekranına bakıldı**;
 düzeltilen ikisi dışında hepsi doğru çiziliyor. Ayrım önemli: *oynanan* üç oyun
@@ -1401,6 +1462,16 @@ okunmuyor:
   `input swipe` yalnızca düz çizgi; eğri bir yolu takip etmek için
   DOWN/MOVE/UP dizisini bir betiğe yazıp cihaza gönderip `sh` ile çalıştırmak
   gerekiyor. Yolu Bul'un tur tamamlaması böyle doğrulandı.
+- **Oyunu "bozuk" ilan etmeden önce hamlenin doğruluğundan emin ol.** Üç
+  oyunda ("Balon Patlatma", "Sırayı Tekrarla", "Harf Yazma") tepki
+  gelmeyince hata sanıldı; üçünde de sebep yanlış hamleydi — yanlış renk,
+  tuşun alt kenarı, darbenin dış kenarı. "Tepki vermedi" ile "yanlış yere
+  dokundum" ekrandan aynı görünüyor. Koordinatı ekran görüntüsünden ölç,
+  hedefi renkle doğrula.
+- **Sürüklemede `input swipe` yetmeyebiliyor.** Sepeti Tut'un sepeti swipe
+  ile kıpırdamıyor; basılı tutan bir `input motionevent DOWN/MOVE ...`
+  dizisi gerekiyor ve `UP` ayrı gönderiliyor. Aynı yöntem Yolu Bul ve Harf
+  Yazma'nın çizgi takibinde de kullanılıyor.
 - **`adb install` sessizce başarısız oluyor ve eski paketi test ettiriyor.**
   Debug paketi hata ayıklama sertifikasıyla, Release paketi yayın anahtarıyla
   imzalı; birinin üstüne diğerini kurmak

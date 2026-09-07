@@ -283,6 +283,12 @@
   <data name="SubscriptionEndedTitle" xml:space="preserve">
     <value>Das Abo wurde beendet</value>
   </data>
+  <data name="SubscriptionEndsOnLong" xml:space="preserve">
+    <value>Die Spiele bleiben bis zum {0} geöffnet.</value>
+  </data>
+  <data name="SubscriptionEndedNow" xml:space="preserve">
+    <value>Der bezahlte Zeitraum war bereits abgelaufen, deshalb sind die Abo-Spiele wieder gesperrt.</value>
+  </data>
   <data name="SubscriptionResume" xml:space="preserve">
     <value>Erneut starten</value>
   </data>

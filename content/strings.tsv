@@ -73,6 +73,8 @@ SubscriptionEndBody	Automatic renewal stops. The games stay open until the end o
 SubscriptionEndKeeps	Stars, badges and profiles are kept. Nothing is deleted.	Yıldızlar, rozetler ve profiller korunur. Hiçbir şey silinmez.	Sterne, Abzeichen und Profile bleiben erhalten. Nichts wird gelöscht.
 SubscriptionEndConfirm	End the subscription?	Abonelik bitirilsin mi?	Das Abo beenden?
 SubscriptionEndedTitle	The subscription has been ended	Abonelik bitirildi	Das Abo wurde beendet
+SubscriptionEndsOnLong	The games stay open until {0}.	Oyunlar {0} tarihine kadar açık kalır.	Die Spiele bleiben bis zum {0} geöffnet.
+SubscriptionEndedNow	The paid period is already over, so the subscription games are locked again.	Ödenmiş dönem zaten dolmuştu; abonelikteki oyunlar yeniden kilitlendi.	Der bezahlte Zeitraum war bereits abgelaufen, deshalb sind die Abo-Spiele wieder gesperrt.
 SubscriptionResume	Start again	Yeniden başlat	Erneut starten
 PlaySolo	On my own	Tek başıma	Alleine
 PlayTogether	Take turns	Sırayla oynayalım	Abwechselnd spielen
