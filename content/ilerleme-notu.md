@@ -863,20 +863,26 @@ Bu oturumda tek iş: **İ8 — bant içi uyarlama.** Yeni oyun yok, kütüphane 
 **Testler 436** (416'ydı; 12'si kuralın kendisi, 8'i veri tarafı).
 İçerik yol haritası İ1-İ8 ile **tamamen kapandı**.
 
-### Yarın ilk iş: paketi YENİDEN üret ve Play'e yükle
+### Yarın ilk iş: paketi Play'e yükle
 
 Uygulama Play Console'a **hiç yüklenmedi**; ilk paket versionCode `1` ile
 gidiyor ve kanal **internal testing** olacak (production'a değil — gerçek
 tablette hiç oynanmadı ve production'a giden bir versionCode geri
 alınamıyor).
 
-**Elde duran paket bayat.** 03.09.2026 23:41'de üretilen ve doğrulanan AAB
-(`io.ploofy.app`, versionCode **1**, versionName 1.0, minSdk 26, targetSdk 36,
-`arm64-v8a` + `x86_64`, imza `CN=Ali Kiratli, O=Ploofy`,
-SHA-256 `f7549556…4d27`) İ8'i **içermiyor**. Notun kendi kuralı: içerik koda
-bağlı, notta yazılana değil. Yükleme öncesi yeniden üretilecek ve `aapt2 dump
-badging` + `apksigner verify` ile yine kontrol edilecek; versionCode `1`
-kalıyor, çünkü henüz hiçbir şey yüklenmedi.
+**Paket İ8 ile yeniden üretildi ve doğrulandı** (07.09.2026 08:21):
+`io.ploofy.app`, versionCode **1**, versionName 1.0, minSdk 26, targetSdk 36,
+`arm64-v8a` + `x86_64`, yatay kilit yerinde, imza `CN=Ali Kiratli, O=Ploofy`
+(SHA-256 `f7549556…4d27` — 03.09'daki paketle aynı sertifika). Manifest
+`aapt2 dump badging`, imza `apksigner verify --print-certs` ile kontrol
+edildi; AAB'nin imzalı olduğu `META-INF/PLOOFY.RSA` ile ayrıca doğrulandı
+(yanındaki imzasız `io.ploofy.app.aab` dosyasında o yok). İçeriğin gerçekten
+bu oturumun kodu olduğu, paketin içindeki derlemede `AdaptiveDifficulty` ve
+`GameStretchedBadge` aranarak görüldü.
+
+versionCode `1` kalıyor: henüz hiçbir şey yüklenmedi. **Koda bir daha
+dokunulursa paket yine yeniden üretilecek** — içerik koda bağlı, notta
+yazılana değil.
 
 Sıra:
 
@@ -886,8 +892,6 @@ Sıra:
    `.apk` yalnızca tablete USB'den kurmak için
 2. Console'daki metinler `docs/store/listing.md` içinden kopyalanacak
    (üç dil, Data safety cevapları, IARC anketi, hedef kitle beyanı)
-3. Koda dokunulduysa paketi **yeniden üret**: içeriği koda bağlı, notta
-   yazılana değil
 
 Ekran görüntüleri ve 1024×500 öne çıkan grafik hâlâ eksik ve ikisi de
 gerçek cihaz istiyor — internal testing bunları beklemeden yüklenebiliyor.
