@@ -77,23 +77,19 @@
             <!-- Tuşlar. Gösterim sırasında sönük duruyorlar ama ekrandan
                  kaybolmuyorlar: çocuk sıradaki tuşun nerede olduğunu
                  önceden görebilmeli. -->
-            <CollectionView Grid.Row="2"
-                            ItemsSource="{Binding Pads}"
-                            SelectionMode="None"
-                            VerticalOptions="Start">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"
-                                     Span="{Binding Columns}"
-                                     HorizontalItemSpacing="14"
-                                     VerticalItemSpacing="14" />
-                </CollectionView.ItemsLayout>
-
-                <CollectionView.ItemTemplate>
+            <!-- Tuşlar tahtanın kendisi: altı tuşun üçü ekranın altında
+                 kalınca oyun oynanamaz oluyordu. BoardView eldeki alanı
+                 bölüyor, tasarım boyu tavan olarak duruyor. -->
+            <ui:BoardView Grid.Row="2"
+                          ItemsSource="{Binding Pads}"
+                          Columns="{Binding Columns}"
+                          RowSpacing="14"
+                          ColumnSpacing="14">
+                <ui:BoardView.ItemTemplate>
                     <DataTemplate x:DataType="vm:SimonPadVm">
                         <ui:SimonPadView Symbol="{Binding Symbol}"
                                          HueIndex="{Binding HueIndex}"
-                                         State="{Binding State}"
-                                         HeightRequest="150">
+                                         State="{Binding State}">
                             <ui:SimonPadView.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={x:Reference Page}, Path=BindingContext.TapCommand, x:DataType=ContentPage}"
@@ -101,8 +97,8 @@
                             </ui:SimonPadView.GestureRecognizers>
                         </ui:SimonPadView>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ui:BoardView.ItemTemplate>
+            </ui:BoardView>
         </Grid>
 
         <!-- Devir katmanı -->

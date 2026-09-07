@@ -10,6 +10,7 @@ public partial class MemoryMatchPage : ContentPage
     {
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
+
     }
 
     /// <summary>

@@ -76,14 +76,14 @@
             <Grid Grid.Row="1" VerticalOptions="Center">
                 <Label Text="{Binding NextGlyph}"
                        IsVisible="{Binding HasNext}"
-                       FontSize="64"
+                       FontSize="{Binding NextFontSize}"
                        Opacity="0.25"
                        Margin="0,0,0,90"
                        HorizontalOptions="Center"
                        VerticalOptions="Center" />
 
                 <Label Text="{Binding CurrentGlyph}"
-                       FontSize="128"
+                       FontSize="{Binding ItemFontSize}"
                        HorizontalOptions="Center"
                        VerticalOptions="Center" />
             </Grid>

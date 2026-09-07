@@ -12,6 +12,13 @@ public partial class CategorySortPage : ContentPage
         BindingContext = _viewModel = viewModel;
     }
 
+    /// <summary>Ayrılacak parça sayfa yüksekliğine göre küçülüyor.</summary>
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        _viewModel.OnPageHeightChanged(height);
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();

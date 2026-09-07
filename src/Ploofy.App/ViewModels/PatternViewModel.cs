@@ -102,6 +102,30 @@ public sealed partial class PatternViewModel : ObservableObject, IDisposable
 
     public ObservableCollection<ProgressPip> Pips { get; } = [];
 
+    /// <summary>Dizideki kutucuğun boyu — kare, sayfa yüksekliğine göre.</summary>
+    /// <remarks>
+    /// Sabit 86'ydı ve kısa bir ekranda dizinin şeridi sıkışınca kutucuklar
+    /// <b>dikeyde kırpılıyordu</b>: kalpler ve altıgenler yarım dikdörtgenlere
+    /// dönüyor, örüntü okunmaz oluyordu.
+    /// </remarks>
+    [ObservableProperty]
+    public partial double SequenceTileSize { get; set; } = DesignSequenceTile;
+
+    /// <summary>Tasarımın istediği kutucuk boyu; geniş ekranda bu kullanılıyor.</summary>
+    private const double DesignSequenceTile = 86;
+
+    /// <summary>Bundan küçüğü örüntüyü göz kararı okunmaz yapıyor.</summary>
+    private const double MinSequenceTile = 44;
+
+    /// <summary>Sayfanın ölçüsü değişti.</summary>
+    public void OnPageHeightChanged(double height)
+    {
+        if (height > 0)
+        {
+            SequenceTileSize = Math.Clamp(height * 0.21, MinSequenceTile, DesignSequenceTile);
+        }
+    }
+
     public async Task LoadAsync()
     {
         var session = _flow.PendingSession;

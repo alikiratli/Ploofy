@@ -914,13 +914,65 @@ düşürülmüyor: bilinmeyen bir tarih, bitmiş bir dönem değil.
 yani iptalden sonra kilitleri görmek için bir ay beklemek gerekiyor. Kilitli
 hâli hemen görmek isteyen, uygulama verisini silip abone olmadan bakmalı.
 
+### Kısa ekranda tahtalar taşıyordu
+
+Bildirim: Sayı Avı, Harf Avı ve Eşleştirme Kartları "ekrana tam sığmıyor,
+aşağı kaydırmak gerekiyor". Doğrulandı ve **beş ekranda** çıktı. Sebep ortak:
+oyun tahtaları sabit piksel boyuyla yazılmıştı (kart 140, tuş 150, kutucuk
+160, dizi kutucuğu 86, parça 128 punto). Yatay tablette (800 birim yükseklik)
+sığıyor; **telefon yatayken yaklaşık 411 birim** ve sığmıyor.
+
+Çocuk kaydırmayı bilmiyor: onun gördüğü şey oyunun eksik olması.
+
+| Ekran | Kısa ekranda ne oluyordu |
+|---|---|
+| Harf / Sayı Avı | altı kutucuğun **hepsi** ekranın altında; çocuk aranan harfi görüyor, seçenekleri görmüyor |
+| Eşleştirme Kartları | yirmi kartın onu görünmüyor |
+| Sırayı Tekrarla | altı tuşun üçü görünmüyor — oyunun tamamı o tuşlar |
+| Örüntü | dizi şeridi dikeyde kırpılıyor, kalpler yarım dikdörtgene dönüyor |
+| Kategori Ayırma | parça kutuların üstüne biniyor ve bir kutunun dokunma hedefini kapatıyor |
+
+**Asıl hata kap seçimiydi.** Üç tahta `CollectionView` ile çiziliyordu. Ama
+bunlar liste değil **tahta**: kaydırma istemiyorlar, öğe geri dönüşümü
+istemiyorlar, hepsi aynı anda görünmek zorunda. Doğru kap `Grid` — hücreler
+`*` olduğunda parçalar eldeki alanı kendiliğinden paylaşıyor ve hiçbir yerde
+aritmetik kalmıyor. `Ploofy.Ui/Controls/BoardView.cs` bunu yapıyor.
+
+Önce boyu hesaplayıp `HeightRequest`'e bağlamak denendi; işe yaramadığını
+sandık ve mimariyi değiştirdik. **Sonradan anlaşıldı ki o denemenin
+başarısızlığı ölçülmemişti** — kurulum sessizce başarısız oluyordu (aşağıya
+bakın). Yine de `BoardView` doğru kap: hesabı tümüyle ortadan kaldırıyor.
+
+**Yassı hücre okunmaz.** Tek başına sığdırmak yetmedi: altı kutucuk 291×73
+birime düşünce harfler tümüyle kayboldu, geriye renkli çubuklar kaldı.
+`BoardView` bu yüzden hücre oranına bakıyor — hücre 3'ten yassıysa satırı
+azaltan bir üst **bölen** seçiyor (bölen, çünkü 20 parçayı 7 sütuna dizmek son
+satırı eksik bırakıp tahtayı yamultuyor). Harf Avı kısa ekranda böylece tek
+satır altı sütuna geçiyor ve harfler geri geliyor; tablette hiçbir şey
+değişmiyor, çünkü oradaki oranlar zaten eşiğin altında.
+
+Örüntü'nün sebebi ayrıydı: dizi **yatay bir `ScrollView`** içindeydi ve o
+dikeyde kendi boyunu bildirmiyor; sıkışınca içeriği kırpıyordu. Yüksekliği
+kutucuk boyuna bağlamak yetti.
+
+Kalan ikisi (Av'ın aranan-işaret kartı, Kategori Ayırma'nın parçası) tahtanın
+dışında duruyor, o yüzden sayfa yüksekliğinden oranla küçülüyorlar.
+
+**Yan kazanç:** tablette de tahtalar artık boş alanı kullanıyor; kartlar ve
+kutucuklar eskisinden büyük ve kareye daha yakın.
+
+**Bilinen kalıntı:** çok kısa ekranda Eşleştirme'nin kartları hâlâ yassı
+(5 sütun × 4 satır, oran 2,9 — eşiğin hemen altında). Sığıyor ve oynanıyor,
+ama güzel değil. Ebeveyn kilidinin sistem diyaloğu da telefon yatayken
+klavyeyle tümüyle kapanıyor; soru ancak klavye kapatılınca görülüyor.
+
 ## Nerede bırakıldı (07.09.2026)
 
-Bu oturumda iki iş: **İ8 — bant içi uyarlama**, ve **ilk gerçek oynanıştan
-gelen üç hatanın düzeltilmesi** (Kategori Ayırma'nın ölü kutuları, Noktaları
-Birleştir'in oyunu örten şeridi, bitmeyen abonelik). Yeni oyun yok, kütüphane
-17'de. **Testler 441** (416'ydı). İçerik yol haritası İ1-İ8 ile **tamamen
-kapandı**.
+Bu oturumda üç iş: **İ8 — bant içi uyarlama**, **ilk gerçek oynanıştan gelen
+üç hatanın düzeltilmesi** (Kategori Ayırma'nın ölü kutuları, Noktaları
+Birleştir'in oyunu örten şeridi, bitmeyen abonelik) ve **kısa ekranda taşan
+beş tahtanın yeniden düzenlenmesi**. Yeni oyun yok, kütüphane 17'de.
+**Testler 441** (416'ydı). İçerik yol haritası İ1-İ8 ile **tamamen kapandı**.
 
 On yedi oyunun on yedisi de emülatörde tek tek açıldı ve **ekranına bakıldı**;
 düzeltilen ikisi dışında hepsi doğru çiziliyor. Ayrım önemli: *oynanan* üç oyun
@@ -1251,6 +1303,13 @@ karmaşıklığı değmiyor.
 - Uyarlama hiç gerçek bir çocukta denenmedi: üç kusursuz tur eşiği ve bir
   kademe yukarının ne kadar zor hissettirdiği ancak orada ölçülüyor. İkisi de
   tek sabit: `AdaptiveDifficulty.PerfectRoundsToStretch` ve `KnobBand`
+- Kısa ekranda (telefon yatay, ~411 birim) Eşleştirme'nin kartları yassı
+  kalıyor: 5 sütun × 4 satır, hücre oranı 2,9 ve `BoardView`'ın eşiği 3.
+  Sığıyor ve oynanıyor ama güzel değil; eşiği düşürmek tabletteki tasarımı
+  da değiştirirdi
+- Ebeveyn kilidinin sistem diyaloğu telefon yatayken klavyeyle tümüyle
+  kapanıyor; soru ancak klavye kapatılınca görülüyor. Kendi diyaloğumuzu
+  yazmadan çözülmüyor
 - Uygulama yalnızca **yatay** çalışıyor. Dikey desteklenmiyor ve
   desteklenecekse her oyun için ikinci bir yerleşim gerekiyor
 - Emoji kapsamı **kapandı**: alt sınır 26 (Android 8.0) ve Unicode 11
@@ -1342,6 +1401,14 @@ okunmuyor:
   `input swipe` yalnızca düz çizgi; eğri bir yolu takip etmek için
   DOWN/MOVE/UP dizisini bir betiğe yazıp cihaza gönderip `sh` ile çalıştırmak
   gerekiyor. Yolu Bul'un tur tamamlaması böyle doğrulandı.
+- **`adb install` sessizce başarısız oluyor ve eski paketi test ettiriyor.**
+  Debug paketi hata ayıklama sertifikasıyla, Release paketi yayın anahtarıyla
+  imzalı; birinin üstüne diğerini kurmak
+  `INSTALL_FAILED_UPDATE_INCOMPATIBLE ... signatures do not match` veriyor.
+  Kurulum çıktısı `>/dev/null` ile yutulduğu için bu görülmedi ve **üç derleme
+  turu boyunca eski paket test edildi**; düzelttiğim şeyin çalışmadığı sanılıp
+  mimari değiştirildi. İki kural: kurulum çıktısını **asla** yutma, ve
+  yapılandırma değiştirirken önce `adb uninstall io.ploofy.app`.
 - **Sessizce başarısız olan bir doğrulama, doğrulama değildir.** Paketin
   içinde bir sembol ararken aynı gün **üç** kez yanlış "yok" cevabı alındı ve
   üçünde de arama bozuktu, aranan değil:

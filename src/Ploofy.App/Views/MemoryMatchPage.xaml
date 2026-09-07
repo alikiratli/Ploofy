@@ -49,27 +49,22 @@
                 </Grid>
             </Border>
 
-            <CollectionView Grid.Row="1"
-                            ItemsSource="{Binding Cards}"
-                            SelectionMode="None">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"
-                                     Span="{Binding Columns}"
-                                     HorizontalItemSpacing="10"
-                                     VerticalItemSpacing="10" />
-                </CollectionView.ItemsLayout>
-
-                <CollectionView.ItemTemplate>
+            <!-- Tahta, liste değil: kaydırma yok, hepsi aynı anda görünmek
+                 zorunda. BoardView eldeki alanı satır/sütuna eşit bölüyor,
+                 yani kart ekran kısaldıkça küçülüyor. Tasarım boyu tavan
+                 olarak duruyor ki geniş tablette kart eskisi gibi kalsın. -->
+            <ui:BoardView Grid.Row="1"
+                          ItemsSource="{Binding Cards}"
+                          Columns="{Binding Columns}"
+                          RowSpacing="10"
+                          ColumnSpacing="10">
+                <ui:BoardView.ItemTemplate>
                     <DataTemplate x:DataType="vm:MemoryCardVm">
                         <!-- Çevirme animasyonu kontrolün içinde; şablon yalnızca
                              durumu bağlıyor. -->
-                        <!-- Kart kareye yakın durmalı: tablette 5 sütunda
-                             100 birim yükseklik kartı basık bir çubuğa
-                             çeviriyordu. -->
                         <ui:MemoryCardView Symbol="{Binding Symbol}"
                                            IsRevealed="{Binding IsRevealed}"
-                                           IsMatched="{Binding IsMatched}"
-                                           HeightRequest="140">
+                                           IsMatched="{Binding IsMatched}">
                             <ui:MemoryCardView.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={x:Reference Page}, Path=BindingContext.FlipCommand, x:DataType=ContentPage}"
@@ -77,8 +72,8 @@
                             </ui:MemoryCardView.GestureRecognizers>
                         </ui:MemoryCardView>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ui:BoardView.ItemTemplate>
+            </ui:BoardView>
         </Grid>
 
         <!-- Devir katmanı: sıra kardeşe geçerken tahtayı tamamen kapatıyor.

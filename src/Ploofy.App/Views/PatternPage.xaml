@@ -81,7 +81,13 @@
                     StrokeShape="RoundRectangle 30"
                     Stroke="Transparent"
                     BackgroundColor="#B3FFFFFF">
-                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                <!-- Yatay ScrollView dikeyde kendi boyunu bildirmiyor ve
+                     sıkıştığında içeriği kırpıyordu: kalpler ve yıldızlar
+                     yarım dikdörtgenlere dönüyordu. Yüksekliği kutucuğa
+                     bağlamak şeridi tam boyunda tutuyor. -->
+                <ScrollView Orientation="Horizontal"
+                            HorizontalScrollBarVisibility="Never"
+                            HeightRequest="{Binding SequenceTileSize}">
                     <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Sequence}"
                                            Spacing="8"
                                            HorizontalOptions="Center">
@@ -91,8 +97,8 @@
                                                   Hue="{Binding Hue}"
                                                   IsEmpty="{Binding IsEmpty}"
                                                   IsWaiting="{Binding IsEmpty}"
-                                                  WidthRequest="86"
-                                                  HeightRequest="86" />
+                                                  WidthRequest="{Binding Source={x:Reference Page}, Path=BindingContext.SequenceTileSize, x:DataType=ContentPage}"
+                                                  HeightRequest="{Binding Source={x:Reference Page}, Path=BindingContext.SequenceTileSize, x:DataType=ContentPage}" />
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </HorizontalStackLayout>

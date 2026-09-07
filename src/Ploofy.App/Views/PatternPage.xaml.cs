@@ -12,6 +12,13 @@ public partial class PatternPage : ContentPage
         BindingContext = _viewModel = viewModel;
     }
 
+    /// <summary>Dizideki kutucuklar sayfa yüksekliğine göre küçülüyor.</summary>
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        _viewModel.OnPageHeightChanged(height);
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();

@@ -147,6 +147,36 @@ public sealed partial class CategorySortViewModel : ObservableObject, IDisposabl
 
     public ObservableCollection<ProgressPip> Pips { get; } = [];
 
+    /// <summary>Ayrılacak parçanın punto'su — sayfa yüksekliğine göre.</summary>
+    /// <remarks>
+    /// Sabit 128'di ve kısa bir ekranda parça <b>kutuların üstüne biniyordu</b>:
+    /// hem çirkin duruyor hem de bir kutunun dokunma hedefini kapatıyordu.
+    /// </remarks>
+    [ObservableProperty]
+    public partial double ItemFontSize { get; set; } = DesignItemFont;
+
+    /// <summary>Arkadaki soluk "sıradaki" parça; oran tasarımdaki 64/128.</summary>
+    [ObservableProperty]
+    public partial double NextFontSize { get; set; } = DesignItemFont / 2;
+
+    /// <summary>Tasarımın istediği punto; geniş ekranda bu kullanılıyor.</summary>
+    private const double DesignItemFont = 128;
+
+    /// <summary>Bundan küçüğünde parça ne olduğu seçilemiyor.</summary>
+    private const double MinItemFont = 56;
+
+    /// <summary>Sayfanın ölçüsü değişti.</summary>
+    public void OnPageHeightChanged(double height)
+    {
+        if (height <= 0)
+        {
+            return;
+        }
+
+        ItemFontSize = Math.Clamp(height * 0.26, MinItemFont, DesignItemFont);
+        NextFontSize = ItemFontSize / 2;
+    }
+
     public async Task LoadAsync()
     {
         var session = _flow.PendingSession;

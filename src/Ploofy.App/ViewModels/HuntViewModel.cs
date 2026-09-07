@@ -96,6 +96,21 @@ public sealed partial class HuntViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     public partial int Columns { get; set; } = 2;
 
+    /// <summary>
+    /// Aranan işaretin kartı — kare, yani genişlik de bu.
+    /// </summary>
+    /// <remarks>
+    /// Kart tahtayla aynı yüksekliği paylaşıyor; kısaldığında tahtaya yer
+    /// açması gerekiyor. Oran sayfa yüksekliğinden: geniş ekranda tasarımın
+    /// 150'si, dar ekranda dokunulabilir bir asgari.
+    /// </remarks>
+    [ObservableProperty]
+    public partial double TargetSize { get; set; } = DesignTargetSize;
+
+    /// <summary>Karttaki harfin punto'su; kartla birlikte küçülüyor.</summary>
+    [ObservableProperty]
+    public partial double TargetFontSize { get; set; } = DesignTargetSize * TargetFontRatio;
+
     [ObservableProperty]
     public partial bool ShowsHandoff { get; set; }
 
@@ -105,6 +120,15 @@ public sealed partial class HuntViewModel : ObservableObject, IDisposable
     public ObservableCollection<HuntChoiceVm> Choices { get; } = [];
 
     public ObservableCollection<ProgressPip> Pips { get; } = [];
+
+    /// <summary>Aranan işaret kartının tasarım boyu.</summary>
+    private const double DesignTargetSize = 150;
+
+    /// <summary>Kart bundan küçülmüyor: harfin okunur kalması gerekiyor.</summary>
+    private const double MinTargetSize = 92;
+
+    /// <summary>Karttaki punto / kart boyu — tasarımdaki 86/150.</summary>
+    private const double TargetFontRatio = 86d / 150d;
 
     public async Task LoadAsync()
     {
@@ -193,6 +217,25 @@ public sealed partial class HuntViewModel : ObservableObject, IDisposable
 
         // İki sütun ikiden fazla seçenekte dar kalıyor, üç sütun ikide boş.
         Columns = question.Choices.Count <= 2 ? 2 : 3;
+    }
+
+    /// <summary>
+    /// Sayfanın ölçüsü değişti — aranan işaretin kartı buna göre küçülüyor.
+    /// </summary>
+    /// <remarks>
+    /// Kart tahtanın kabında değil, onun üstündeki satırda; kabın
+    /// yüksekliğinden türetilemiyor. Oran (%30) tasarımın 150/500'üne yakın
+    /// ve alt sınırı dokunma hedefinden büyük tutuyor.
+    /// </remarks>
+    public void OnPageHeightChanged(double height)
+    {
+        if (height <= 0)
+        {
+            return;
+        }
+
+        TargetSize = Math.Clamp(height * 0.30, MinTargetSize, DesignTargetSize);
+        TargetFontSize = TargetSize * TargetFontRatio;
     }
 
     [RelayCommand]

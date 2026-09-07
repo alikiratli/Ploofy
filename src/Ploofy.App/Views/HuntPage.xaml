@@ -69,11 +69,11 @@
 
                 <Border Style="{StaticResource CardBorder}"
                         Padding="0"
-                        WidthRequest="150"
-                        HeightRequest="150"
+                        WidthRequest="{Binding TargetSize}"
+                        HeightRequest="{Binding TargetSize}"
                         HorizontalOptions="Center">
                     <Label Text="{Binding Target}"
-                           FontSize="86"
+                           FontSize="{Binding TargetFontSize}"
                            FontAttributes="Bold"
                            TextColor="{StaticResource Ink}"
                            HorizontalOptions="Center"
@@ -85,23 +85,19 @@
             <!-- Seçenekler hedefin hemen altında duruyor. Dikeyde ortalamak
                  tablette hedefle seçenekler arasında koca bir boşluk
                  bırakıyor ve ikisi ayrı ekran gibi görünüyor. -->
-            <CollectionView Grid.Row="2"
-                            ItemsSource="{Binding Choices}"
-                            SelectionMode="None"
-                            VerticalOptions="Start">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"
-                                     Span="{Binding Columns}"
-                                     HorizontalItemSpacing="14"
-                                     VerticalItemSpacing="14" />
-                </CollectionView.ItemsLayout>
-
-                <CollectionView.ItemTemplate>
+            <!-- Seçenekler tahtanın kendisi. Sabit 160 birimken kısa bir
+                 ekranda altısı da ekranın altında kalıyordu: çocuk aranan
+                 harfi görüyor ama seçeneklerin hiçbirini göremiyordu. -->
+            <ui:BoardView Grid.Row="2"
+                          ItemsSource="{Binding Choices}"
+                          Columns="{Binding Columns}"
+                          RowSpacing="14"
+                          ColumnSpacing="14">
+                <ui:BoardView.ItemTemplate>
                     <DataTemplate x:DataType="vm:HuntChoiceVm">
                         <ui:GlyphTileView Glyph="{Binding Glyph}"
                                           HueIndex="{Binding HueIndex}"
-                                          State="{Binding State}"
-                                          HeightRequest="160">
+                                          State="{Binding State}">
                             <ui:GlyphTileView.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={x:Reference Page}, Path=BindingContext.TapCommand, x:DataType=ContentPage}"
@@ -109,8 +105,8 @@
                             </ui:GlyphTileView.GestureRecognizers>
                         </ui:GlyphTileView>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ui:BoardView.ItemTemplate>
+            </ui:BoardView>
         </Grid>
 
         <!-- Devir katmanı -->

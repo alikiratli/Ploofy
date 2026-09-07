@@ -10,6 +10,18 @@ public partial class HuntPage : ContentPage
     {
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
+
+    }
+
+    /// <summary>
+    /// Aranan işaretin kartı sayfa yüksekliğine göre küçülüyor. Seçenek
+    /// kutucukları kendi kaplarını paylaşıyor (<c>BoardView</c>), yani onlar
+    /// için burada bir hesap yok.
+    /// </summary>
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        _viewModel.OnPageHeightChanged(height);
     }
 
     protected override async void OnAppearing()
