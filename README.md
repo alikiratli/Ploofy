@@ -25,6 +25,7 @@ docs/store/                    Datenschutzerklärung, Impressum und Startseite �
                                die Quelle der veröffentlichten Seiten
 tools/build_strings.py         strings.tsv -> Resources/Strings/*.resx
 tools/build_sounds.py          synthetisiert die Rückmeldungstöne -> Resources/Raw/sounds/
+tools/verify_package.py        prüft, was wirklich im gebauten APK/AAB steckt
 tests/Ploofy.Engine.Tests/     xUnit — Tests für Engine + Speicher
 ```
 
@@ -358,6 +359,24 @@ apksigner verify --print-certs src/Ploofy.App/bin/Release/net10.0-android/io.plo
 ```
 
 Steht dort `CN=Android Debug`, hat der Build den Schlüssel nicht gesehen.
+
+**Vor dem Hochladen `obj/Release` und `bin/Release` löschen.** Ein
+inkrementelles `publish` kann alte Zwischenstände weiterverwenden, ohne dass
+es auffällt — am 07.09.2026 war ein Paket deshalb 350 KB kleiner als dasselbe
+Paket aus einem sauberen Build. Der Zeitstempel beweist nichts.
+
+Was tatsächlich im Paket steckt, prüft:
+
+```bash
+python tools/verify_package.py     src/Ploofy.App/bin/Release/net10.0-android/publish/io.ploofy.app-Signed.apk     GameCatalog AdaptiveDifficulty KnobBand "↑ Schwerer"
+```
+
+Das erste Argument nach dem Paket ist ein **Canary**: ein Name, der ganz
+sicher enthalten ist. Wird er nicht gefunden, ist die Suche kaputt und nicht
+das Gesuchte — das Skript bricht dann ab, statt „nicht gefunden" zu melden.
+Nötig ist das, weil die verwalteten Assemblies im Paket LZ4-komprimiert
+vorliegen: Eine einfache Textsuche findet sie nicht und meldet trotzdem
+seelenruhig „nein".
 
 Nach Textänderungen die resx-Dateien neu erzeugen (sie werden nicht von Hand
 bearbeitet):

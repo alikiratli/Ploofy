@@ -870,15 +870,28 @@ gidiyor ve kanal **internal testing** olacak (production'a değil — gerçek
 tablette hiç oynanmadı ve production'a giden bir versionCode geri
 alınamıyor).
 
-**Paket İ8 ile yeniden üretildi ve doğrulandı** (07.09.2026 08:21):
+**Paket temiz derlemeyle üretildi ve doğrulandı** (07.09.2026 10:35):
 `io.ploofy.app`, versionCode **1**, versionName 1.0, minSdk 26, targetSdk 36,
 `arm64-v8a` + `x86_64`, yatay kilit yerinde, imza `CN=Ali Kiratli, O=Ploofy`
 (SHA-256 `f7549556…4d27` — 03.09'daki paketle aynı sertifika). Manifest
 `aapt2 dump badging`, imza `apksigner verify --print-certs` ile kontrol
 edildi; AAB'nin imzalı olduğu `META-INF/PLOOFY.RSA` ile ayrıca doğrulandı
-(yanındaki imzasız `io.ploofy.app.aab` dosyasında o yok). İçeriğin gerçekten
-bu oturumun kodu olduğu, paketin içindeki derlemede `AdaptiveDifficulty` ve
-`GameStretchedBadge` aranarak görüldü.
+(yanındaki imzasız `io.ploofy.app.aab` dosyasında o yok). İçeriğin bu
+oturumun kodu olduğu `tools/verify_package.py` ile, iki ABI için ayrı ayrı
+görüldü: `AdaptiveDifficulty`, `KnobBand`, `StepForAsync` ve rozetin üç
+dildeki metni.
+
+**Aynı gün üretilen ilk iki paket atıldı ve sebebi kayda değer.** Sabah
+08:21'de üretilen paket 41,21 MB'tı; aynı kaynaktan temiz derlenen bu paket
+41,56 MB. Kaynak değişmediği hâlde 350 KB fark var, yani 08:21'deki publish
+**eski ara çıktıları yeniden kullanmış** — Release `obj`'si 03.09'dan
+duruyordu ve XamlC o derlemede hiç çalışmamıştı (bu derlemede on dokuz
+XC0025 uyarısı çıkıyor, orada çıkmamıştı). Artımlı publish ile temiz publish
+arasındaki fark 29 bayt (zip zaman damgaları), yani asıl aykırı olan
+08:21'deki paketti ve İ8'i eksik taşıyor olabilirdi.
+
+Kural: **mağazaya gidecek paket `obj/Release` ve `bin/Release` silindikten
+sonra üretilecek.** Tarih damgası paketin güncelliğini kanıtlamıyor.
 
 versionCode `1` kalıyor: henüz hiçbir şey yüklenmedi. **Koda bir daha
 dokunulursa paket yine yeniden üretilecek** — içerik koda bağlı, notta
@@ -1261,23 +1274,29 @@ okunmuyor:
   `input swipe` yalnızca düz çizgi; eğri bir yolu takip etmek için
   DOWN/MOVE/UP dizisini bir betiğe yazıp cihaza gönderip `sh` ile çalıştırmak
   gerekiyor. Yolu Bul'un tur tamamlaması böyle doğrulandı.
-- **Bu makinede `strings` yok ve yokluğu sessiz.** Paketin içinde bir
-  sembol ararken `strings dosya | grep -q kelime` yazıldı; komut bulunamadı,
-  `grep` boş girdi aldı ve sonuç "YOK" çıktı — yani **arama başarısız oldu ama
-  cevap 'bulunamadı' gibi göründü.** Doğrulama yaptığını sanarken hiçbir şey
-  doğrulanmıyor. İkinci tuzak da yanında: .NET dizeleri UTF-16, yani `strings`
-  olsaydı bile varsayılan ASCII taraması metin sabitlerini kaçırırdı. İkisinin
-  de karşılığı ikili dosyayı Python'la okumak:
+- **Sessizce başarısız olan bir doğrulama, doğrulama değildir.** Paketin
+  içinde bir sembol ararken aynı gün **üç** kez yanlış "yok" cevabı alındı ve
+  üçünde de arama bozuktu, aranan değil:
 
-  ```python
-  data = open(path, 'rb').read()
-  data.find(b"AdaptiveDifficulty")            # metadata: UTF-8
-  data.find("GameStretchedBadge".encode('utf-16-le'))  # dize sabiti: UTF-16
+  1. `strings dosya | grep -q kelime` — bu makinede `strings` yok. Komut
+     bulunamadı, `grep` boş girdi aldı, sonuç "YOK" çıktı.
+  2. `strings` olsaydı bile varsayılan ASCII taraması .NET'in **UTF-16**
+     dize sabitlerini kaçırırdı.
+  3. Ham Python taraması da yetmedi: `libassembly-store.so` içindeki
+     yönetilen derlemelerin çoğu **LZ4 blok sıkıştırmalı** (`XALZ` başlığı,
+     bu pakette 138 tane). Sıkıştırılmamış birkaç derlemede rastlantıyla
+     bulunan iki sembol, yöntemin çalıştığı izlenimini verdi — oysa
+     `KnobBand` ve `StepForAsync` pakette olduğu hâlde "yok" diyordu.
+
+  Üçünün ortak kalıbı: **"hayır" cevabı ile "çalışamadım" aynı görünüyor.**
+  Karşılığı da tek: her kontrole, **bulunması kesin olan** bir canary koy.
+  Canary bulunamıyorsa kontrol bozuktur ve raporladığı hiçbir "yok"a
+  güvenilmez. `tools/verify_package.py` bunu zorunlu kılıyor: canary'yi
+  bulamazsa arananları hiç raporlamadan hata veriyor.
+
+  ```bash
+  python tools/verify_package.py       src/Ploofy.App/bin/Release/net10.0-android/publish/io.ploofy.app-Signed.apk       GameCatalog AdaptiveDifficulty KnobBand "↑ Zorlu"
   ```
-
-  Genel kural: **bir kontrolün "hayır" demesiyle çalışamamış olması aynı
-  görünüyorsa, o kontrol bir şey doğrulamıyor.** Kontrolü, kesin bulunması
-  gereken bir şeyle bir kez sına — bulamıyorsa kontrol bozuktur, arananlar değil.
 - **Emülatörün SystemUI'ı bu makinede takılıyor.** Takıldığında bütün ekran
   donuyor: ekran görüntüsü hep aynı kareyi gösteriyor, dokunuşlar işlemiyor ve
   uygulama kilitlenmiş gibi duruyor. Teşhis için

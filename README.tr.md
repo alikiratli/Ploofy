@@ -25,6 +25,7 @@ docs/store/                    Gizlilik politikası, Impressum ve açılış say
                                yayımlanan sayfaların kaynağı
 tools/build_strings.py         strings.tsv -> Resources/Strings/*.resx
 tools/build_sounds.py          geri bildirim seslerini üretir -> Resources/Raw/sounds/
+tools/verify_package.py        üretilmiş APK/AAB'nin içinde gerçekten ne var
 tests/Ploofy.Engine.Tests/     xUnit — motor + depo testleri
 ```
 
@@ -340,6 +341,23 @@ apksigner verify --print-certs src/Ploofy.App/bin/Release/net10.0-android/io.plo
 ```
 
 Orada `CN=Android Debug` yazıyorsa derleme anahtarı görmemiş demektir.
+
+**Yüklemeden önce `obj/Release` ve `bin/Release` silinmeli.** Artımlı bir
+`publish` eski ara çıktıları fark ettirmeden yeniden kullanabiliyor —
+07.09.2026'da bir paket bu yüzden aynı kaynaktan temiz derlenenden 350 KB
+küçük çıktı. Tarih damgası hiçbir şey kanıtlamıyor.
+
+Paketin içinde gerçekten ne olduğu şununla bakılıyor:
+
+```bash
+python tools/verify_package.py     src/Ploofy.App/bin/Release/net10.0-android/publish/io.ploofy.app-Signed.apk     GameCatalog AdaptiveDifficulty KnobBand "↑ Zorlu"
+```
+
+Paketten sonraki ilk argüman bir **canary**: kesinlikle içeride olan bir ad.
+Bulunamazsa bozuk olan aramadır, aranan değil — betik o durumda "bulunamadı"
+demek yerine hata veriyor. Buna ihtiyaç var çünkü paketteki yönetilen
+derlemeler LZ4 sıkıştırmalı: düz bir metin araması onları göremiyor ama yine
+de gayet rahat "yok" diyor.
 
 Metin değişikliğinden sonra resx dosyaları yeniden üretiliyor (elle
 düzenlenmiyorlar):
