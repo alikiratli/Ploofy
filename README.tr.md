@@ -2,6 +2,8 @@
 
 [Deutsch](README.md) · **Türkçe**
 
+> **Geliştirme:** Ali Kiratli'nin bireysel projesi; [Claude Code](https://claude.com/claude-code) ile yapay zekâ destekli geliştirildi. Gereksinimler, mimari, test stratejisi ve inceleme: Ali Kiratli.
+
 2-9 yaş çocuklar için reklamsız mini oyun koleksiyonu. .NET MAUI
 (Android + iOS).
 

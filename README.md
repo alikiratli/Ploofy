@@ -2,6 +2,8 @@
 
 **Deutsch** · [Türkçe](README.tr.md)
 
+> **Entwicklung:** Einzelprojekt von Ali Kiratli, KI-gestützt entwickelt mit [Claude Code](https://claude.com/claude-code). Anforderungen, Architektur, Teststrategie und Review: Ali Kiratli.
+
 Werbefreie Minispielsammlung für Kinder von 2 bis 9 Jahren. .NET MAUI
 (Android + iOS).
 
